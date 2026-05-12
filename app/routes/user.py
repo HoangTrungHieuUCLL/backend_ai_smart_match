@@ -15,11 +15,11 @@ def get_db():
     finally:
         db.close()
 
-@router.get("/users", response_model=UserResponse)
+@router.get("/users", response_model=list[UserResponse])
 def get_all_users(db: Session = Depends(get_db)):
     return service.get_all_users(db)
 
-@router.post("/users", response_model=UserResponse)
+@router.get("/users/{user_id}", response_model=UserResponse)
 def get_user_by_id(user_id: int, db: Session = Depends(get_db)):
     return service.get_user_by_id(db, user_id)
 

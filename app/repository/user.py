@@ -5,7 +5,7 @@ from app.schemas.user import UserCreate
 class UserRepository:
 
     def get_all(self, db: Session):
-        return db.query(User)
+        return db.query(User).all()
 
     def get_by_id(self, db: Session, user_id: int):
         return db.query(User).filter(User.id == user_id).first()
