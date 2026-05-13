@@ -12,3 +12,4 @@ pytz
 six
 soupsieve
 tzdata
+pydantic
