@@ -13,3 +13,7 @@ htmlcov/
 
 # OS junk
 .DS_Store
+
+.venv/
+
+_pycache__/
