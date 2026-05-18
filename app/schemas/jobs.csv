@@ -1,0 +1,143 @@
+id,company_name,position,date_posted,location,job_type,overview,responsibilities,requirements,offers,salary_usd,notes
+1,FPT Software,Database Administrator,2026-05-12,Hanoi,Data,"We are currently looking for a Database Administrator to join our project team, which is one of the UK’s leading financial and online retail corporations specializing in corporate travel solutions, with annual revenue exceeding £2.2 billion","Ensure stability, security, and performance of CTM’s database systems across on-premises and cloud environments.
+Install, configure, and maintain database management systems (e.g., SQL Server).
+Implement high-availability solutions such as replication, clustering, and Always On Availability Groups.
+Manage identity and access controls, encryption, and monitor database activity using SIEM tools.
+Optimize performance through query tuning, index optimization, and partitioning.
+Maintain documentation for configurations, maintenance procedures, and recovery plans.
+Conduct recovery tests and ensure compliance with disaster recovery and business continuity plans.","ITIL Foundation certification.
+Advanced knowledge of SQL Server and other DBMS platforms.
+Experience with backup strategies (full, incremental, differential) and recovery testing.
+Proficiency in performance monitoring tools (e.g., SQL Profiler, cloud-native tools).
+Strong analytical skills for identifying bottlenecks and system failures.
+Critical thinking for risk assessment and preventive measures.
+Ability to interpret system metrics and anticipate potential issues.
+Willingness to work rotational shifts in 24x7 or 24x5 services or UK time zone.","Performance-based bonuses up
+FPT Care insurance plan tailored for FPT employees
+Attractive annual summer vacation allowance
+Sponsored training courses for personal growth and up to 100% coverage for certification costs
+Global and inclusive workplace with monthly cross-cultural events
+International exposure and career growth across global locations
+Work-life balance benefits with a flexible leave policy and annual health check-ups to support employee well-being",2500,"3+ years of work experience with Database Administration"
+2,Crossing Hurdles,Site Reliability Engineer,2026-04-30,Vietnam,AI,"Position: Site Reliability Engineer
+Type: Hourly contract
+Compensation: $40 - $70/hour
+Location: Remote
+Commitment: 10–40 hours/week","Deploy, monitor, and recover containerized AI training environments.
+Troubleshoot infrastructure bottlenecks and resolve system failures in real time.
+Build and manage resilient systems for stability and performance optimization.
+Collaborate with engineering teams to improve CI/CD pipelines and automation.
+Manage filesystem structures, storage, and process scheduling in containerized environments.
+Execute dynamic replanning during runtime issues and system failures.
+Document system processes, solutions, and best practices.","Strong experience with terminal-based system administration and troubleshooting.
+Expertise in containerized environments such as Docker or Kubernetes.
+Strong Python skills for scripting, automation, and debugging.
+Proficiency in Bash and familiarity with additional programming languages.
+Strong understanding of infrastructure, build systems, and version control.
+Ability to manage dynamic infrastructure recovery in high-pressure scenarios.
+Excellent written and verbal communication skills.","",70/h,"Easy Apply on LinkedIn
+Check email for next steps
+Participate in resume evaluation & interview stage"
+3,Coc Coc,Data Engineer,2026-05-12,Hanoi,Data,"The Data Department’s mission is to consolidate company data (user, client, and internal), make it easily accessible, ensure its quality and trustworthiness, and enable teams across the company to build data-driven products, decisions, and processes.
+
+The Data Engineering team is responsible for building and operating the Data Platform, the foundation that stores, processes, serves, and governs data on a scale. We design reliable data pipelines, scalable storage systems, and self-service data capabilities that power analytics, BI, and advanced data use cases across the organization.","As a Senior Data Engineer, you will design, build, and operate large-scale data systems that serve the entire company.
+Design and develop robust data ingestion and transformation pipelines (batch & streaming)
+Build and optimize data storage and query layers (e.g. ClickHouse, PostgreSQL, Data Lake/Lakehouse)
+Develop reliable data services that support analytics, BI, and internal tools
+Ensure data quality, consistency, and observability across the platform
+Contribute to metadata, data governance, and data discoverability initiatives
+Research, design, and optimize complex components of the data platform for performance and scalability
+Participate in deployment, monitoring, and maintenance of production data systems
+Write high-quality, well-tested, well-documented code
+Review peers’ code and contribute to engineering best practices
+Collaborate closely with Data Analysts, Product teams, and Infrastructure teams on data-driven projects.","Must-have skills
+Strong experience with Python / Java / Go / C++
+Solid understanding of data structures, algorithms, and system design
+Strong experience working in Linux/UNIX environments
+Experience building or maintaining data pipelines (ETL/ELT)
+Experience working with databases or OLAP systems (e.g., ClickHouse, PostgreSQL, etc.)
+Understanding of data modeling and data warehousing concepts
+Ability to design systems for high throughput and scalability
+Willingness to learn new technologies and continuously improve
+
+Nice-to-have skills
+Experience with Kafka, Airflow, NiFi, or similar data tools
+Experience with large-scale data processing
+Familiarity with data lakehouse concepts (Parquet, Iceberg, object storage)
+Understanding of data quality, metadata, and data governance practices
+Experience supporting BI/Analytics teams
+Interest in exploring the meaning and impact of data
+Good communication skills in English and Vietnamese
+Experience or interest in machine learning / advanced analytics
+Strong analytical and problem-solving skills.","Competitive salary and bonus scheme with a 13th month salary.
+Performance review twice/year with opportunity to grow or rotate internally.
+Special annual leave policy with minimum 19 days/year, plus 1 day off on your birthday.
+Annual WFH policy.
+Advanced 24/7 Health Insurance for all employees.
+Great Trade Union benefits such as birthdays, marriage, new born child...","","Professional growth:
+Opportunities to learn and grow through regular training programs, coaching and internal sharing.
+Work in a diverse environment with talented colleagues and partners/customers, local and expats.
+
+Positive workplace:
+Different exciting internal events to make you part of the Cốc Cốc family.
+Cozy pantry with plenty of snacks, juice and coffee/tea every day.
+Many interesting hobby clubs to share your passions like English Club, Yoga, Billard or Football."
+4,Alignerr,Vietnamese Language Expert,2026-05-07,Vietnam,Language,"What if your fluency in Vietnamese could directly shape how AI communicates with millions of people around the world? We're looking for Vietnamese language experts to evaluate and improve AI-generated content — ensuring it sounds natural, accurate, and culturally right for real Vietnamese speakers.
+
+This is a fully remote, flexible contract role. No AI background needed — just a deep command of Vietnamese and a sharp eye for quality.","Review AI-generated Vietnamese translations and original content for accuracy and naturalness
+Identify mistranslations, unnatural phrasing, register mismatches, and cultural issues
+Suggest clear, idiomatic, and culturally appropriate improvements
+Provide structured, detailed feedback on linguistic and cultural quality
+Work independently and asynchronously — fully on your own schedule","Native or near-native fluency in Vietnamese
+Strong written communication skills in Vietnamese
+Solid command of contemporary Vietnamese usage across different contexts and registers
+Naturally detail-oriented with a consistent, methodical approach
+Comfortable evaluating written language quality across a variety of topics
+No prior AI or tech experience required
+
+Nice to Have
+Experience in translation, localization, editing, or linguistics
+Familiarity with AI tools or language evaluation workflows
+Knowledge of regional Vietnamese variations or dialectal differences
+Background in communications, education, journalism, or content review","",40 - 120/h,"Why join us
+Work on cutting-edge AI projects alongside leading research labs
+Fully remote and flexible — work when and where it suits you
+Freelance autonomy with the structure of meaningful, task-based work
+Contribute to work that meaningfully improves AI for Vietnamese speakers worldwide
+Potential for ongoing work and contract extension as new projects launch"
+5,Volga Partners,Language Data Quality Reviewer - Vietnamese (Entry-Level / L1),2026-04-13,Vietnam,Language,"This is a freelance, task-based role designed for individuals seeking flexible, supplemental work and hands-on experience in AI language data and quality operations.
+Work is offered on a first-come, first-served basis as tasks become available. Hours may be irregular and intermittent depending on client volume.
+This role is well suited for candidates who are detail-oriented, adaptable, and comfortable working within structured guidelines.
+Project hours may align with IST (Indian Standard Time) depending on workflow requirements.","Example Tasks
+Review content for grammar, spelling, and clarity
+Translate short, straightforward phrases
+Compare data against provided guidelines
+Apply basic data labels using step-by-step instructions
+Flag errors or inconsistencies
+
+Key Responsibilities
+Perform structured data and content reviews
+Execute quality checks (grammar, spelling, formatting)
+Apply data labeling and tagging
+Follow client workflows and instructions
+Maintain accuracy and quality standards
+Incorporate feedback to improve performance","You have advanced proficiency (C1/C2 or equivalent) in the required language(s)
+You are comfortable working on structured, guideline-based tasks
+You are detail-oriented and able to follow instructions closely
+You are interested in gaining experience in AI, data, and language operations
+You are flexible and able to work with intermittent task availability
+Must be able to read and write in required language(s)
+Must understand this is a task-based freelance role
+Must have a reliable computer or laptop
+Must have stable internet connection
+Must be comfortable with flexible and intermittent work
+
+Desired Qualifications
+Interest in AI, data, or language technology
+Prior experience in data entry, content review, QA, or similar (preferred, not required)
+Strong attention to detail
+Willingness to learn and adapt","","","This role is designed for supplemental, flexible engagement
+No guaranteed minimum hours
+No guaranteed end date
+Tasks are offered first-come, first-served
+While advancement is not guaranteed, future opportunities may evolve based on project needs, performance, and budget"

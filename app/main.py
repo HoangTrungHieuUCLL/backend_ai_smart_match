@@ -1,14 +1,19 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
+from starlette.middleware.cors import CORSMiddleware
+
 from app.database import Base, engine
 from app.routes.user import router as user_router
+from app.routes.job import router as job_router
+from app.seed import seed_jobs
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
     Base.metadata.create_all(bind=engine)
+    seed_jobs()
 
     yield
 
@@ -18,6 +23,15 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def read_root():
@@ -25,3 +39,4 @@ def read_root():
 
 
 app.include_router(user_router)
+app.include_router(job_router)
