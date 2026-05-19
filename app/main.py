@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 
 from starlette.middleware.cors import CORSMiddleware
 
+import app.models
 from app.database import Base, engine
 from app.routes.user import router as user_router
 from app.routes.job import router as job_router
