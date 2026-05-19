@@ -8,9 +8,8 @@ def seed_jobs():
     db = SessionLocal()
 
     try:
-        if db.query(Job).first():
-            print("Jobs table already seeded, skipping.")
-            return
+        db.query(Job).delete()
+        db.commit()
 
         csv_path = os.path.join("app", "schemas", "jobs.csv")
 
