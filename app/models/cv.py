@@ -17,7 +17,6 @@ class CV(Base):
         "Profile",
         back_populates="cv",
         uselist=False,
-        cascade="all, delete-orphan"
     )
 
 
@@ -25,7 +24,12 @@ class Profile(Base):
     __tablename__ = "profiles"
 
     id = Column(Integer, primary_key=True, index=True)
-    cv_id = Column(Integer, ForeignKey("cv.id", ondelete="CASCADE"), nullable=False, unique=True)
+    cv_id = Column(
+        Integer, 
+        ForeignKey("cv.id", ondelete="SET NULL"), 
+        nullable=True, 
+        unique=True
+        )
 
     given_name = Column(String, nullable=False)
     middle_name = Column(String, nullable=True)
