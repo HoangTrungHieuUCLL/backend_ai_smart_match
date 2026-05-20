@@ -3,9 +3,11 @@ from sqlalchemy.orm import Session
 
 from app.database import SessionLocal
 from app.service.cv import CVService
+from app.service.job import JobService
 
 router = APIRouter()
 service = CVService()
+job_service = JobService()
 
 def get_db():
     db = SessionLocal()
@@ -22,6 +24,7 @@ def upload_cv(
     givenName: str = Form(...),
     email: str = Form(...),
     cv: UploadFile = File(...),
+    db: Session = Depends(get_db)
 ):
     # basic metadata log
     print("CV received")
@@ -37,4 +40,6 @@ def upload_cv(
     for line in preview_lines:
         print(line)
 
-    return {"message": "CV received"}
+    scores = job_service.assign_placeholder_compatability_scores(db)
+
+    return scores
