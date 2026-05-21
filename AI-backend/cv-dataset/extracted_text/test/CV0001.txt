@@ -1,0 +1,101 @@
+CHRIS HOANG
+Official full name
+Hi¿u u Trung Hoàng
+Phone
++32 456 37 56 38
+Email
+trunghieu.hoang@student.ucll.be
+LinkedIn
+https://www.linkedin.com/in/chris-hoang-ucll/
+more personal
+tech projects
+PROFILE
+TECHNICAL SKILLS
+Former Server Administrator with two years of profes-
+sional experience. Driven by a passion for computers and 
+technology. Working in a Japanese corporation instilled in 
+me a disciplined, methodical work ethic, along with 
+strong problem-solving skills and a commitment to 
+efficiency.
+
+Currently pursuing a Bachelor's degree in Applied 
+Computer Science at UCLL. My experience in Machine 
+Leaning, Data analytics and Data engineering, combined 
+with my studies, has deepened my appreciation for 
+Python and its crucial role in streamlining processes 
+through automation and data analysis.
+Programming language
+Python
+HTML, CSS, JavaScript, Java, TypeScript
+SQL, ShinyR
+Microsoft Office Excel VBA
+
+Others
+LLMs, Neuron Networks
+Computer Vision (OpenCV, YOLO,...)
+Apache Airflow, Docker Image
+Azure, Postgres, MongoDB
+Data analytic techniques
+ACHIEVEMENTS & PROJECTS
+EXPERIENCE
+Generated labeled dataset with SIFT; trained and 
+evaluated a YOLO model in order to track and notice 
+faulty gas bottles for PrimaGaz (a belgian gas firm).
+Conducted an analysis on a stroke occurrence 
+prediction machine learning model and successfully 
+developed a Random Forest model that predicts stroke 
+occurrence with an accuracy of 80%.
+Developed a web application in a 10-member 
+SCRUM team for Belfius, a Belgian bank and insurance 
+company, using TypeScript, CSS, and Java over 5 sprints 
+(2 weeks each) to replace Google Forms for internal 
+event automated management.
+Implemented a LLM model integrated with OpenCV 
+to create an aid system of web app (React framework), 
+web extension and Python tools with the aim to assist 
+visually impaired individuals.
+Developed a Mario-inspired game using Python and 
+PyGame for UCLL IT Talents Days.
+Executed data cleaning, data validation and built RAG 
+pipelines monitored by Apache Airflow, stored the data 
+in Microsoft Azure Blob for two datasets of house price 
+and car price in Belgium.
+Successfully improved the monitoring of servers by 
+composing spreadsheet with VBA that tracks server 
+alerts automatically (5 hours reduced to 1 hour of work).
+Server Administrator | Apr 21 - Jul 23
+Rakuten Bank, Ltd. (Japan)
+Supported technologies:€Wi Windows Server, RedHat, Linux, 
+Oracle Solaris SunOS, Virtualization (VMware), Backup 
+and disaster recovery solutions (Logsystem), Database 
+management (SQL, Oracle), Networking (TCP/IP, DNS, 
+DHCP, VLANs)
+- Server/Network device monitoring via Zabbix
+   (e.g. CPU, GPU, log, memory, disk, trap)
+- Server/Network device maintenance, optimization and 
+   troubleshooting
+- Monthly hardware check-ups
+- Executing daily, monthly, and yearly server backups
+- Navigating network traffic for maintenance purposes
+- Composing standard operation procedures (SOPs)
+Helpdesk Support | Jan 20 - Mar 21
+Kyushu Institute of Information Sciences (Japan)
+- Provide computer support 
+   (Microsoft Office installment, error troubleshooting)
+- Provide hardware setup support
+   (help set up projector, internet cables)
+- Regularly inform teachers and students about new 
+   cyber attacks
+- Organize classes for teachers and students to raise 
+   awareness of network security
+Vietnamese ....................................................................... native
+English ................................................................................ fluent
+Japanese ........................................................................... fluent
+German .........................................................................beginner
+LANGUAGE PROFICIENCY
+EDUCATION
+EDUCATION
+B. of Applied Computer Science | Sep 23 - Now
+UC Leuven-Limburg (Belgium)
+B. of Informatics & Management | Apr 17 - Mar 21
+Kyushu Institute of Information Sciences (Japan)

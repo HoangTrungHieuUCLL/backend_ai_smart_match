@@ -13,3 +13,4 @@ six
 soupsieve
 tzdata
 pydantic
+httpx
