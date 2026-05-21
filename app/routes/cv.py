@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, UploadFile, File, Form
+from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException
 from sqlalchemy.orm import Session
 
 from app.database import SessionLocal
@@ -48,26 +48,69 @@ async def upload_cv(
 
     # return {"message": "CV received"}
 # send to AI service
-    async with httpx.AsyncClient() as client:
-        response = await client.post(
-            AI_URL,
-            files={
-                "file": (cv.filename, file_bytes, cv.content_type)
-            }
+    try:
+        async with httpx.AsyncClient(timeout=300.0) as client:
+            response = await client.post(
+                AI_URL,
+                files={"file": (cv.filename, file_bytes, cv.content_type)},
+            )
+
+    except httpx.ReadTimeout:
+        raise HTTPException(
+            status_code=504,
+            detail="AI service timed out while waiting for Gemini. Try again or increase timeout."
         )
 
-    if response.status_code != 200:
-        return {
-            "error": "AI service failed",
-            "details": response.text
-        }
+    except httpx.RequestError as exc:
+        raise HTTPException(
+            status_code=502,
+            detail=f"Could not reach AI service: {exc}"
+        )
 
-    ai_result = response.json()
+    # Important: check status code before reading response.json()
+    if response.status_code != 200:
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "message": "AI service failed before returning structured CV JSON",
+                "ai_status_code": response.status_code,
+                "ai_response": response.text,
+            },
+        )
+
+    try:
+        ai_result = response.json()
+
+    except ValueError:
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "message": "AI service returned a non-JSON response",
+                "ai_response": response.text,
+            },
+        )
+
+    try:
+        profile = service.save_ai_cv_result(
+            db,
+            filename=cv.filename or "uploaded_cv.pdf",
+            structured_data=ai_result,
+        )
+
+    except Exception as exc:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"AI result was parsed, but saving to database failed: {exc}",
+        ) from exc
 
     return {
-        "message": "CV processed",
-        "ai_result": ai_result
-    }   
+        "message": "CV processed and saved",
+        "cv_id": profile.cv_id,
+        "profile_id": profile.id,
+        "ai_result": ai_result,
+    }
     # scores = job_service.assign_placeholder_compatability_scores(db)
 
     # return scores
+

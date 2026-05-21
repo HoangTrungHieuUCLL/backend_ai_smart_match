@@ -42,6 +42,9 @@ class CandidateProfile(BaseModel):
     bio: Optional[str] = None
     skills: List[str] = []
 
+class Certification(BaseModel):
+    certification_name: Optional[str] = None
+    issue_date: Optional[str] = None
 
 class CVParsed(BaseModel):
     candidate_profile: Optional[CandidateProfile] = None
@@ -49,3 +52,4 @@ class CVParsed(BaseModel):
     education: List[Education] = []
     projects: List[Project] = []
     languages: List[CandidateLanguage] = []
+    certifications: List[Certification] = []
