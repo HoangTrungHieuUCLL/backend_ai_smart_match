@@ -58,3 +58,5 @@ uvicorn[standard]
 wasabi
 weasel
 wrapt
+google
+pytesseract

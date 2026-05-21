@@ -1,18 +1,27 @@
-from fastapi import APIRouter, Depends, UploadFile, File, Form
+from fastapi import APIRouter, Depends, UploadFile, File, Form, FastAPI
 from sqlalchemy.orm import Session
 
+from app.ai.pipelines.cv_pipeline import CVPipeline
 from app.database import SessionLocal
 from app.service.cv import CVService
 import httpx
 
 from app.models.cv import CV
+from app.service.gemini_cv_service import GeminiCVService
 from app.service.job import JobService
+from app.service.pdf_extractor import PDFTextExtractor
+from app.utils.text_cleaning import TextCleaner
 
+app = FastAPI()
 router = APIRouter()
 service = CVService()
 job_service = JobService()
+pipeline = CVPipeline()
+cleaner = TextCleaner()
+gemini_service = GeminiCVService()
+extractor = PDFTextExtractor()
 
-AI_URL = "http://ai:8001/parse-cv"
+AI_URL = "http://localhost:8000/parse-cv"
 
 def get_db():
     db = SessionLocal()
@@ -24,50 +33,24 @@ def get_db():
 
 @router.post("/parse-cv")
 async def upload_cv(
-    # familyName: str = Form(...),
-    # middleName: str = Form(None),
-    # givenName: str = Form(...),
-    # email: str = Form(...),
     cv: UploadFile = File(...),
     db: Session = Depends(get_db)
 ):
-    # # basic metadata log
-    # print("CV received")
-    # print("Name:", givenName, middleName, familyName)
-    # print("Email:", email)
-    # print("Filename:", cv.filename)
-    
     file_bytes = await cv.read()
-    # # read a small portion of the file
-    # content = cv.file.read().decode("utf-8", errors="ignore")
-    # preview_lines = content.splitlines()[:5]
 
-    # print("First lines of CV:")
-    # for line in preview_lines:
-    #     print(line)
+    # extract raw text from file bytes
+    raw_text = extractor.extract_from_bytes(file_bytes)
 
-    # return {"message": "CV received"}
-# send to AI service
-    async with httpx.AsyncClient() as client:
-        response = await client.post(
-            AI_URL,
-            files={
-                "file": (cv.filename, file_bytes, cv.content_type)
-            }
-        )
+    # clean extracted text
+    cleaned_text = cleaner.clean(raw_text)
 
-    if response.status_code != 200:
-        return {
-            "error": "AI service failed",
-            "details": response.text
-        }
-
-    ai_result = response.json()
+    # structured CV parsing via AI service
+    structured_cv = gemini_service.parse_cv(cleaned_text)
 
     return {
         "message": "CV processed",
-        "ai_result": ai_result
-    }   
+        "ai_result": structured_cv.model_dump()
+    }
     # scores = job_service.assign_placeholder_compatability_scores(db)
 
     # return scores
