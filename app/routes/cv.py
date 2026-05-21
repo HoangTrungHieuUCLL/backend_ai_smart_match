@@ -1,27 +1,20 @@
-from fastapi import APIRouter, Depends, UploadFile, File, Form, FastAPI
+from fastapi import APIRouter, Depends, UploadFile, File, HTTPException
 from sqlalchemy.orm import Session
 
-from app.ai.pipelines.cv_pipeline import CVPipeline
 from app.database import SessionLocal
 from app.service.cv import CVService
-import httpx
-
-from app.models.cv import CV
 from app.service.gemini_cv_service import GeminiCVService
 from app.service.job import JobService
 from app.service.pdf_extractor import PDFTextExtractor
 from app.utils.text_cleaning import TextCleaner
 
-app = FastAPI()
 router = APIRouter()
 service = CVService()
 job_service = JobService()
-pipeline = CVPipeline()
 cleaner = TextCleaner()
 gemini_service = GeminiCVService()
 extractor = PDFTextExtractor()
 
-AI_URL = "http://localhost:8000/parse-cv"
 
 def get_db():
     db = SessionLocal()
@@ -38,19 +31,37 @@ async def upload_cv(
 ):
     file_bytes = await cv.read()
 
-    # extract raw text from file bytes
     raw_text = extractor.extract_from_bytes(file_bytes)
-
-    # clean extracted text
     cleaned_text = cleaner.clean(raw_text)
 
-    # structured CV parsing via AI service
-    structured_cv = gemini_service.parse_cv(cleaned_text)
+    try:
+        parsed_cv = gemini_service.parse_cv(cleaned_text)
+    except ValueError as e:
+        raise HTTPException(
+            status_code=502,
+            detail={"message": "AI service failed to parse CV", "error": str(e)},
+        )
+
+    # dict for DB, json string for response
+    ai_result_dict = parsed_cv.model_dump()
+    ai_result_json = parsed_cv.model_dump_json()
+
+    try:
+        profile = service.save_ai_cv_result(
+            db,
+            filename=cv.filename or "uploaded_cv.pdf",
+            structured_data=ai_result_dict,
+        )
+    except Exception as exc:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"AI result was parsed, but saving to database failed: {exc}",
+        ) from exc
 
     return {
-        "message": "CV processed",
-        "ai_result": structured_cv.model_dump()
+        "message": "CV processed and saved",
+        "cv_id": profile.cv_id,
+        "profile_id": profile.id,
+        "ai_result": ai_result_json,
     }
-    # scores = job_service.assign_placeholder_compatability_scores(db)
-
-    # return scores
