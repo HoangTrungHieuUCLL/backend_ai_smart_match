@@ -12,14 +12,14 @@ class CVService:
         return self.repo.get_by_id(db, CV_id)
 
     def save_ai_cv_result(
-        self,
-        db: Session,
-        *,
-        filename: str,
-        structured_data: dict[str, any],
-    ): 
+    self,
+    db: Session,
+    *,
+    filename: str,
+    structured_data: dict,
+    ):
         return self.repo.save_ai_result(
             db,
             filename=filename,
-            sturctured_data= structured_data,
+            structured_data=structured_data,
         )

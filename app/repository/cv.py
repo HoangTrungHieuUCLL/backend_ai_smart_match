@@ -1,10 +1,6 @@
 from sqlalchemy.orm import Session
-
 from app.models import CV
 from app.models.job import Job
-
-from __future__ import annotations
-
 from datetime import date
 from typing import Any
 

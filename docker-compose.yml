@@ -46,14 +46,14 @@ services:
     depends_on:
       backend:
         condition: service_started
-  
+
   ai:
     build:
       context: ./AI-backend
     container_name: ai_smart_match_ai
     restart: unless-stopped
     environment:
-      GOOGLE_API_KEY: AIzaSyA6Yw6Mm-QGCRQMNhc22gMuG
+      GOOGLE_API_KEY: AIzaSyB2hRqKGNxU_tfweqdOuGuH43Ih6brLerI
     ports:
       - "8001:8001"
     volumes:
