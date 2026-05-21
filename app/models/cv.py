@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, DateTime, Date, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, DateTime, Date, ForeignKey, Float
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
@@ -17,6 +17,11 @@ class CV(Base):
         "Profile",
         back_populates="cv",
         uselist=False,
+    )
+
+    compatibility_scores = relationship(
+        "CompatibilityScore",
+        back_populates="cv"
     )
 
 
@@ -69,6 +74,12 @@ class Profile(Base):
 
     certifications = relationship(
         "Certification",
+        back_populates="profile",
+        cascade="all, delete-orphan"
+    )
+
+    compatibility_scores = relationship(
+        "CompatibilityScore",
         back_populates="profile",
         cascade="all, delete-orphan"
     )
@@ -135,3 +146,24 @@ class Certification(Base):
     issue_date = Column(Date, nullable=True)
 
     profile = relationship("Profile", back_populates="certifications")
+
+class CompatibilityScore(Base):
+    __tablename__ = "compatibility_score"
+
+    id = Column(Integer, primary_key=True, index=True)
+    profile_id = Column(
+        Integer,
+        ForeignKey("profiles.id", ondelete="CASCADE"),
+        nullable=False
+    )
+
+    cv_id = Column(
+        Integer,
+        ForeignKey("cv.id", ondelete="SET NULL"),
+        nullable=True
+    )
+
+    score = Column(Float, nullable=True)
+
+    profile = relationship("Profile", back_populates="compatibility_scores")
+    cv = relationship("CV", back_populates="compatibility_scores")
