@@ -18,3 +18,4 @@ htmlcov/
 
 _pycache__/
 cv-dataset/
+.env
