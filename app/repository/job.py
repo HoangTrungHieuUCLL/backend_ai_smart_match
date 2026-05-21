@@ -8,3 +8,16 @@ class JobRepository:
 
     def get_by_id(self, db: Session, job_id: int):
         return db.query(Job).filter(Job.id == job_id).first()
+
+    def update_by_id(self, db: Session, job_id: int, data: dict):
+        job = db.query(Job).filter(Job.id == job_id).first()
+        if not job:
+            return None
+
+        for key, value in data.items():
+            if hasattr(job, key):
+                setattr(job, key, value)
+
+        db.commit()
+        db.refresh(job)
+        return job

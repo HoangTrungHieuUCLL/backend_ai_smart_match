@@ -6,9 +6,11 @@ from app.service.cv import CVService
 import httpx
 
 from app.models.cv import CV
+from app.service.job import JobService
 
 router = APIRouter()
 service = CVService()
+job_service = JobService()
 
 AI_URL = "http://ai:8001/parse-cv"
 
@@ -27,6 +29,7 @@ async def upload_cv(
     # givenName: str = Form(...),
     # email: str = Form(...),
     cv: UploadFile = File(...),
+    db: Session = Depends(get_db)
 ):
     # # basic metadata log
     # print("CV received")
@@ -65,3 +68,6 @@ async def upload_cv(
         "message": "CV processed",
         "ai_result": ai_result
     }   
+    # scores = job_service.assign_placeholder_compatability_scores(db)
+
+    # return scores

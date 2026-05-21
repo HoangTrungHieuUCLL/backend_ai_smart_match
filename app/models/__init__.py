@@ -1,13 +1,11 @@
-from .user import User
 from .job import Job
 
 from .cv import (
     CV,
-    CandidateProfile,
-    Skill,
-    WorkExperience,
+    Profile,
+    Experience,
     Education,
     Project,
-    CandidateLanguage,
-    CVJobMatch,
+    Language,
+    Certification,
 )
