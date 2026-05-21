@@ -64,10 +64,28 @@ async def upload_cv(
 
     ai_result = response.json()
 
+    try:
+        # This is the new missing save layer.
+        profile = service.save_ai_cv_result(
+            db,
+            filename=cv.filename or "uploaded_cv.pdf",
+            structured_data=ai_result,
+        )
+
+    except Exception as exc:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"AI result was parsed, but saving to database failed: {exc}",
+        ) from exc
+
     return {
-        "message": "CV processed",
-        "ai_result": ai_result
-    }   
+        "message": "CV processed and saved",
+        "cv_id": profile.cv_id,
+        "profile_id": profile.id,
+        "ai_result": ai_result,
+    }
     # scores = job_service.assign_placeholder_compatability_scores(db)
 
     # return scores
+

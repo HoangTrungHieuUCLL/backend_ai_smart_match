@@ -9,11 +9,13 @@ import re
 
 load_dotenv()
 
-api_key = os.getenv("GEMINI_API_KEY")
+api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
 
 class GeminiCVService:
     def __init__(self):
-        self.client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+        self.client = genai.Client(
+            api_key=os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+        )
 
     def build_prompt(self, raw_text: str) -> str:
         schema = json.dumps(CVParsed.model_json_schema(), indent=2)
