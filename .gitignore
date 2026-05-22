@@ -17,3 +17,9 @@ htmlcov/
 .venv/
 
 _pycache__/
+
+# Local secrets
+.env
+*.env
+**/.env
+**/*.env

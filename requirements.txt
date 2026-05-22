@@ -14,3 +14,5 @@ soupsieve
 tzdata
 pydantic
 httpx
+pgvector
+google-genai
