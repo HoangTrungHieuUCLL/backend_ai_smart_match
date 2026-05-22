@@ -5,7 +5,7 @@ from typing import List, Optional
 # class Skill(BaseModel):
 #     skill_name: str
 
-
+# For backend
 class WorkExperience(BaseModel):
     job_title: Optional[str] = None
     company_name: Optional[str] = None

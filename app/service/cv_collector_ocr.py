@@ -4,7 +4,7 @@ import fitz
 import pytesseract
 from PIL import Image
 import io
-from services.pdf_extractor import PDFTextExtractor
+from app.service.pdf_extractor import PDFTextExtractor
 
 BASE_DIRECTORY = Path(__file__).resolve().parent.parent
 DATASET_DIRECTORY = BASE_DIRECTORY / "cv-dataset"
