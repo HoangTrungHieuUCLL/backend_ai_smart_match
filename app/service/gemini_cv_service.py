@@ -3,7 +3,7 @@ import json
 from google import genai
 from pydantic import ValidationError
 
-from models.cv_schema import CVParsed
+from app.models.cv_schema import CVParsed
 from dotenv import load_dotenv
 import re
 
@@ -13,7 +13,7 @@ api_key = os.getenv("GEMINI_API_KEY")
 
 class GeminiCVService:
     def __init__(self):
-        self.client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+        self.client = genai.Client(api_key=api_key)
 
     def build_prompt(self, raw_text: str) -> str:
         schema = json.dumps(CVParsed.model_json_schema(), indent=2)

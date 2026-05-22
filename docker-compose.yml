@@ -22,7 +22,8 @@ services:
     container_name: ai_smart_match_backend
     restart: unless-stopped
     env_file:
-      - app/.env
+      - path: app/.env
+        required: false
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/ai_smart_match
     ports:
@@ -48,19 +49,6 @@ services:
     depends_on:
       backend:
         condition: service_started
-  
-  ai:
-    build:
-      context: ./AI-backend
-    container_name: ai_smart_match_ai
-    restart: unless-stopped
-    environment:
-      GOOGLE_API_KEY: AIzaSyA6Yw6Mm-QGCRQMNhc22gMuG
-    ports:
-      - "8001:8001"
-    volumes:
-      - ./AI-backend:/app
-    command: uvicorn main:app --reload --host 0.0.0.0 --port 8001
 
 volumes:
   pgdata:

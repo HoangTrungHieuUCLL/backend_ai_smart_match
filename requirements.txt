@@ -1,7 +1,7 @@
-fastapi
+fastapi==0.136.1
 uvicorn[standard]
 psycopg2-binary
-sqlalchemy
+sqlalchemy==2.0.49
 python-multipart
 beautifulsoup4
 git-filter-repo
@@ -12,7 +12,14 @@ pytz
 six
 soupsieve
 tzdata
-pydantic
 httpx
 pgvector
 google-genai
+PyMuPDF
+Pillow==12.2.0
+protobuf==7.35.0
+pydantic==2.13.4
+pytesseract==0.3.13
+python-dotenv==1.2.2
+spacy==3.8.14
+starlette==1.0.1

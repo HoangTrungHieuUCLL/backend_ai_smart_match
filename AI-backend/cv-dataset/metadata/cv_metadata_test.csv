@@ -1,2 +1,0 @@
-cv_id,category,original_filename,source_folder,text_path,text_length,extraction_method,status,error
-CV0001,test,CV.pdf,C:\ucll\AISmartMatch\backend_ai_smart_match_team19\AI-backend\cv-dataset\raw\test,C:\ucll\AISmartMatch\backend_ai_smart_match_team19\AI-backend\cv-dataset\extracted_text\test\CV0001.txt,3937,pymupdf,success,
