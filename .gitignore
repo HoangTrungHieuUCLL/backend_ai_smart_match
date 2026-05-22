@@ -17,3 +17,5 @@ htmlcov/
 .venv/
 
 _pycache__/
+cv-dataset/
+.env

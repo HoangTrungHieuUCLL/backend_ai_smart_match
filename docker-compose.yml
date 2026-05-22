@@ -47,19 +47,6 @@ services:
       backend:
         condition: service_started
 
-  ai:
-    build:
-      context: ./AI-backend
-    container_name: ai_smart_match_ai
-    restart: unless-stopped
-    environment:
-      GOOGLE_API_KEY: AIzaSyB2hRqKGNxU_tfweqdOuGuH43Ih6brLerI
-    ports:
-      - "8001:8001"
-    volumes:
-      - ./AI-backend:/app
-    command: uvicorn main:app --reload --host 0.0.0.0 --port 8001
-
 volumes:
   pgdata:
   frontend_node_modules:

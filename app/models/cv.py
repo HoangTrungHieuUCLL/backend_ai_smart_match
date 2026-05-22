@@ -4,7 +4,7 @@ from datetime import datetime
 
 from app.database import Base
 
-
+# For Gemini
 class CV(Base):
     __tablename__ = "cv"
 
