@@ -24,7 +24,7 @@ def get_db():
         db.close()
 
 @router.post("/cv/upload")
-def upload_cv(
+async def upload_cv(
         familyName: str = Form(...),
         middleName: str = Form(None),
         givenName: str = Form(...),
@@ -32,19 +32,35 @@ def upload_cv(
         cv: UploadFile = File(...),
         db: Session = Depends(get_db)
 ):
-    # basic metadata log
-    print("CV received")
-    print("Name:", givenName, middleName, familyName)
-    print("Email:", email)
-    print("Filename:", cv.filename)
+    file_bytes = await cv.read()
 
-    # read a small portion of the file
-    content = cv.file.read().decode("utf-8", errors="ignore")
-    preview_lines = content.splitlines()[:5]
+    raw_text = extractor.extract_from_bytes(file_bytes)
+    cleaned_text = cleaner.clean(raw_text)
 
-    print("First lines of CV:")
-    for line in preview_lines:
-        print(line)
+    try:
+        parsed_cv = gemini_service.parse_cv(cleaned_text)
+    except ValueError as e:
+        raise HTTPException(
+            status_code=502,
+            detail={"message": "AI service failed to parse CV", "error": str(e)},
+        )
+
+    # dict for DB, json string for response
+    ai_result_dict = parsed_cv.model_dump()
+    ai_result_json = parsed_cv.model_dump_json()
+
+    try:
+        profile = service.save_ai_cv_result(
+            db,
+            filename=cv.filename or "uploaded_cv.pdf",
+            structured_data=ai_result_dict,
+        )
+    except Exception as exc:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"AI result was parsed, but saving to database failed: {exc}",
+        ) from exc
 
     scores = job_service.assign_placeholder_compatability_scores(db)
 
