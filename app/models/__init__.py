@@ -8,4 +8,5 @@ from .cv import (
     Project,
     Language,
     Certification,
+    CompatibilityScore,
 )
