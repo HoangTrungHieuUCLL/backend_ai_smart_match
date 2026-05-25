@@ -1,3 +1,4 @@
+from pgvector.sqlalchemy import Vector
 from sqlalchemy import Column, Integer, String, Text, DateTime, Date, ForeignKey, Float
 from sqlalchemy.orm import relationship
 from datetime import datetime
@@ -45,6 +46,7 @@ class Profile(Base):
     location = Column(String, nullable=True)
     email = Column(String, nullable=True)
     bio = Column(Text, nullable=True)
+    skills_embedding = Column(Vector(384), nullable=True)
 
     cv = relationship("CV", back_populates="candidate_profile")
 

@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
 from starlette.middleware.cors import CORSMiddleware
-
+from sqlalchemy import text
 import app.models
 from app.database import Base, engine
 from app.routes.job import router as job_router
@@ -12,6 +12,10 @@ from app.seed import seed_jobs
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    
+    with engine.connect() as conn:
+        conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
+        conn.commit()
     # Startup
     Base.metadata.create_all(bind=engine)
     seed_jobs()
