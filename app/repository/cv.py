@@ -92,6 +92,7 @@ class CVRepository:
         profile.location = self._clean_string(candidate.get("location"))
         profile.bio = self._clean_string(candidate.get("bio"))
         profile.skills = self._skills_to_string(candidate.get("skills"))
+        profile.skills_embedding = structured_data.get("skills_embedding")
 
         # Remove old extracted child data before inserting new extracted data.
         # This prevents duplicate rows when the same CV is uploaded again.

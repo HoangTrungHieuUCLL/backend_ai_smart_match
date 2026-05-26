@@ -7,6 +7,7 @@ from app.service.gemini_cv_service import GeminiCVService
 from app.service.job import JobService
 from app.service.pdf_extractor import PDFTextExtractor
 from app.utils.text_cleaning import TextCleaner
+from app.service.cv_embedding_service import embed_skills
 
 router = APIRouter()
 service = CVService()
@@ -88,7 +89,8 @@ async def upload_cv(
     # dict for DB, json string for response
     ai_result_dict = parsed_cv.model_dump()
     ai_result_json = parsed_cv.model_dump_json()
-
+    skills_embedding = embed_skills(ai_result_dict["candidate_profile"]["skills"])
+    ai_result_dict["skills_embedding"] = skills_embedding
     try:
         profile = service.save_ai_cv_result(
             db,
@@ -106,5 +108,5 @@ async def upload_cv(
         "message": "CV processed and saved",
         "cv_id": profile.cv_id,
         "profile_id": profile.id,
-        "ai_result": ai_result_json,
+        "ai_result": ai_result_dict,
     }

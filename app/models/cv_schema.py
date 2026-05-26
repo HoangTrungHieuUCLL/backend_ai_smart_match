@@ -32,13 +32,13 @@ class CandidateLanguage(BaseModel):
 
 
 class CandidateProfile(BaseModel):
-    given_name: Optional[str] = None
-    middle_name: Optional[str] = None
-    family_name: Optional[str] = None
+    # given_name: Optional[str] = None
+    # middle_name: Optional[str] = None
+    # family_name: Optional[str] = None
     current_title: Optional[str] = None
     phone: Optional[str] = None
     location: Optional[str] = None
-    email: Optional[str] = None
+    # email: Optional[str] = None
     bio: Optional[str] = None
     skills: List[str] = []
 
