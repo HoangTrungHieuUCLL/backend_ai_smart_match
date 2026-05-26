@@ -26,7 +26,6 @@ services:
         required: false
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/ai_smart_match
-      GEMINI_API_KEY: ${GEMINI_API_KEY}
     ports:
       - "8000:8000"
     volumes:
