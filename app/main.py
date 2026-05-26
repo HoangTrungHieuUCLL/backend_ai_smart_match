@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from starlette.middleware.cors import CORSMiddleware
 
 import app.models
-from app.database import Base, engine
+from app.database import Base, engine, ensure_vector_extension
 from app.routes.job import router as job_router
 from app.routes.cv import router as cv_router
 from app.seed import seed_jobs
@@ -13,6 +13,7 @@ from app.seed import seed_jobs
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
+    ensure_vector_extension()
     Base.metadata.create_all(bind=engine)
     seed_jobs()
 

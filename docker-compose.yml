@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:16-alpine
+    image: pgvector/pgvector:pg16
     container_name: ai_smart_match_db
     restart: unless-stopped
     environment:
@@ -21,6 +21,9 @@ services:
     build: .
     container_name: ai_smart_match_backend
     restart: unless-stopped
+    env_file:
+      - path: app/.env
+        required: false
     environment:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/ai_smart_match
     ports:
