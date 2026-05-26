@@ -1,10 +1,10 @@
+from pgvector.sqlalchemy import Vector
 from sqlalchemy import Column, Integer, String, Text, DateTime, Date, ForeignKey, Float
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
 from app.database import Base
 
-# For Gemini
 class CV(Base):
     __tablename__ = "cv"
 
@@ -18,13 +18,6 @@ class CV(Base):
         back_populates="cv",
         uselist=False,
     )
-
-    compatibility_scores = relationship(
-        "CompatibilityScore",
-        back_populates="cv"
-    )
-
-
 class Profile(Base):
     __tablename__ = "profiles"
 
@@ -45,6 +38,7 @@ class Profile(Base):
     location = Column(String, nullable=True)
     email = Column(String, nullable=True)
     bio = Column(Text, nullable=True)
+    skills_embedding = Column(Vector(384), nullable=True)
 
     cv = relationship("CV", back_populates="candidate_profile")
 
@@ -157,13 +151,13 @@ class CompatibilityScore(Base):
         nullable=False
     )
 
-    cv_id = Column(
+    job_id = Column(
         Integer,
-        ForeignKey("cv.id", ondelete="SET NULL"),
+        ForeignKey("jobs.id", ondelete="SET NULL"),
         nullable=True
     )
 
     score = Column(Float, nullable=True)
 
     profile = relationship("Profile", back_populates="compatibility_scores")
-    cv = relationship("CV", back_populates="compatibility_scores")
+    job = relationship("Job", back_populates="compatibility_scores")
