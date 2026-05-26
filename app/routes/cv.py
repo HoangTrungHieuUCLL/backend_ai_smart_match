@@ -23,6 +23,81 @@ def get_db():
     finally:
         db.close()
 
+@router.get("/cv/test")
+async def test():
+    return {
+        {
+          "candidate_profile": {
+            "id": 1,
+            "given_name": "Eren",
+            "family_name": "Derinbay",
+            "current_title": "Applied Computer Science student",
+            "phone": "+32 0498 51 50 67",
+            "email": "eren.derinbay@gmail.com",
+            "bio": "passionate problem solver. Strong at debugging and learning new technologies. Experienced working both independently and in Agile teams. Interested in programming from a young age and passionate about software development, UI/UX, and building tools that solve real problems.",
+            "skills": "TypeScript, JavaScript, HTML/CSS, Java, Python, C#, Ruby, React, Next.js, Node.js, Prisma ORM, .NET (MAUI), SQL, PostgreSQL, MySQL, MongoDB, Azure, AWS, GitHub, GitHub Actions, Linux CLI, Agile, Scrum, UI/UX",
+            "work_experiences": [
+              {
+                "id": 1,
+                "profile_id": 1,
+                "job_title": "Educational Assistant",
+                "company_name": "CodeFever",
+                "start_date": "March 2024",
+                "end_date": "June 2025"
+              }
+            ],
+            "educations": [
+              {
+                "id": 1,
+                "profile_id": 1,
+                "institution": "University Colleges Leuven-Limburg (UCLL)",
+                "degree": "Bachelor of Applied Computer Science",
+                "field_of_study": "Computer Science",
+                "start_date": "September 2023",
+                "end_date": "June 2026"
+              },
+              {
+                "id": 2,
+                "profile_id": 1,
+                "institution": "Atlantic Technological University (ATU)",
+                "start_date": "September 2025",
+                "end_date": "January 2026"
+              }
+            ],
+            "projects": [
+              {
+                "id": 1,
+                "profile_id": 1,
+                "project_name": "SteamList",
+                "description": "Personal project A social cataloging platform for Steam libraries, developed solo for over 8+ months..."
+              }
+            ],
+            "languages": [
+              {
+                "id": 1,
+                "profile_id": 1,
+                "language_name": "English",
+                "proficiency_level": "C2"
+              },
+              {
+                "id": 2,
+                "profile_id": 1,
+                "language_name": "Dutch",
+                "proficiency_level": "full professional"
+              },
+              {
+                "id": 3,
+                "profile_id": 1,
+                "language_name": "Turkish",
+                "proficiency_level": "native"
+              }
+            ],
+            "certifications": [],
+            "compatibility_scores": []
+          }
+        }
+    }
+
 @router.post("/cv/upload")
 async def upload_cv(
         familyName: str = Form(...),
