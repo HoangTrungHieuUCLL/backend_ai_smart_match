@@ -1,4 +1,5 @@
 import csv
+import json
 import os
 from sqlalchemy import text
 from app.database import SessionLocal, Base, engine, ensure_vector_extension
@@ -17,6 +18,19 @@ def ensure_job_columns():
         connection.execute(
             text("ALTER TABLE jobs ADD COLUMN IF NOT EXISTS requirements_embedding vector(384)")
         )
+
+
+def get_requirements_simplified(row: dict) -> str:
+    return row.get("requirements_simplified") or simplify_requirements(row["requirements"])
+
+
+def get_requirements_embedding(row: dict, requirements_simplified: str) -> list[float]:
+    raw_embedding = row.get("requirements_embedding")
+    if raw_embedding:
+        return json.loads(raw_embedding)
+
+    return vectorize_requirements(requirements_simplified)
+
 
 def seed_jobs():
     ensure_vector_extension()
@@ -44,13 +58,13 @@ def seed_jobs():
                     responsibilities=row["responsibilities"],
                     requirements=row["requirements"],
                     requirements_simplified=simplified,
-                    requirements_embedding=vectorize_requirements(simplified),
+                    requirements_embedding=get_requirements_embedding(row, simplified),
                     offers=row["offers"],
                     salary=row["salary_usd"],
                     notes=row["notes"],
                 )
                 for row in reader
-                for simplified in [simplify_requirements(row["requirements"])]
+                for simplified in [get_requirements_simplified(row)]
             ]
             db.bulk_save_objects(jobs)
             db.commit()

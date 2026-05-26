@@ -1,6 +1,4 @@
-import hashlib
 import json
-import math
 import re
 
 from google import genai
@@ -9,6 +7,7 @@ from app.config import GEMINI_API_KEY
 
 
 EMBEDDING_DIMENSIONS = 384
+EMBEDDING_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 
 _STOPWORDS = {
     "able",
@@ -49,6 +48,7 @@ _STOPWORDS = {
 }
 
 _gemini_client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
+_embedding_model = None
 
 
 def simplify_requirements(requirements: str | None) -> str:
@@ -118,20 +118,28 @@ def _extract_skills_without_llm(requirements: str) -> list[str]:
 
 
 def vectorize_requirements(requirements_simplified: str) -> list[float]:
-    vector = [0.0] * EMBEDDING_DIMENSIONS
-    tokens = [token.strip() for token in requirements_simplified.split(",") if token.strip()]
+    if not requirements_simplified:
+        return [0.0] * EMBEDDING_DIMENSIONS
 
-    for token in tokens:
-        digest = hashlib.sha256(token.encode("utf-8")).digest()
-        index = int.from_bytes(digest[:4], "big") % EMBEDDING_DIMENSIONS
-        sign = 1.0 if digest[4] % 2 == 0 else -1.0
-        vector[index] += sign
+    embedding = _get_embedding_model().encode(
+        requirements_simplified,
+        normalize_embeddings=True,
+    )
+    vector = embedding.astype(float).tolist()
+    if len(vector) != EMBEDDING_DIMENSIONS:
+        raise ValueError(
+            f"Expected {EMBEDDING_DIMENSIONS} embedding dimensions, got {len(vector)}"
+        )
+    return vector
 
-    norm = math.sqrt(sum(value * value for value in vector))
-    if norm == 0:
-        return vector
 
-    return [value / norm for value in vector]
+def _get_embedding_model():
+    global _embedding_model
+    if _embedding_model is None:
+        from sentence_transformers import SentenceTransformer
+
+        _embedding_model = SentenceTransformer(EMBEDDING_MODEL_NAME)
+    return _embedding_model
 
 
 def _normalize(value: str) -> str:

@@ -1,4 +1,4 @@
-id,company_name,position,date_posted,location,job_type,overview,responsibilities,requirements,offers,salary_usd,notes
+id,company_name,position,date_posted,location,job_type,overview,responsibilities,requirements,offers,salary_usd,notes,requirements_simplified,requirements_embedding
 1,FPT Software,Database Administrator,2026-05-12,Hanoi,Data,"We are currently looking for a Database Administrator to join our project team, which is one of the UK’s leading financial and online retail corporations specializing in corporate travel solutions, with annual revenue exceeding £2.2 billion","Ensure stability, security, and performance of CTM’s database systems across on-premises and cloud environments.
 Install, configure, and maintain database management systems (e.g., SQL Server).
 Implement high-availability solutions such as replication, clustering, and Always On Availability Groups.
