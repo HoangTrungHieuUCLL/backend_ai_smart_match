@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, UploadFile, File, HTTPException
+from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, Form
 from sqlalchemy.orm import Session
 
 from app.database import SessionLocal
@@ -23,6 +23,49 @@ def get_db():
         yield db
     finally:
         db.close()
+
+@router.post("/cv/upload")
+async def upload_cv(
+        familyName: str = Form(...),
+        middleName: str = Form(None),
+        givenName: str = Form(...),
+        email: str = Form(...),
+        cv: UploadFile = File(...),
+        db: Session = Depends(get_db)
+):
+    file_bytes = await cv.read()
+
+    raw_text = extractor.extract_from_bytes(file_bytes)
+    cleaned_text = cleaner.clean(raw_text)
+
+    try:
+        parsed_cv = gemini_service.parse_cv(cleaned_text)
+    except ValueError as e:
+        raise HTTPException(
+            status_code=502,
+            detail={"message": "AI service failed to parse CV", "error": str(e)},
+        )
+
+    # dict for DB, json string for response
+    ai_result_dict = parsed_cv.model_dump()
+    ai_result_json = parsed_cv.model_dump_json()
+
+    try:
+        profile = service.save_ai_cv_result(
+            db,
+            filename=cv.filename or "uploaded_cv.pdf",
+            structured_data=ai_result_dict,
+        )
+    except Exception as exc:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"AI result was parsed, but saving to database failed: {exc}",
+        ) from exc
+
+    scores = job_service.assign_placeholder_compatability_scores(db)
+
+    return scores
 
 
 @router.post("/parse-cv")
