@@ -17,5 +17,10 @@ htmlcov/
 .venv/
 
 _pycache__/
-cv-dataset/
+
+# Local secrets
 .env
+*.env
+**/.env
+**/*.env
+cv-dataset/

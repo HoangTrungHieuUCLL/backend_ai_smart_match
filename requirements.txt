@@ -12,3 +12,14 @@ starlette==0.46.2
 uvicorn[standard]==0.34.3
 psycopg2-binary==2.9.9
 google-genai==1.14.0
+pgvector
+beautifulsoup4
+git-filter-repo
+numpy
+pandas
+python-dateutil
+pytz
+six
+soupsieve
+tzdata
+httpx
