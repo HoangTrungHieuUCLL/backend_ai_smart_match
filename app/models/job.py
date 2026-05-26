@@ -20,3 +20,9 @@ class Job(Base):
     offers = Column(Text)
     salary = Column(String)
     notes = Column(Text)
+
+    compatibility_scores = relationship(
+        "CompatibilityScore",
+        back_populates="job",
+        cascade="all, delete-orphan"
+    )
