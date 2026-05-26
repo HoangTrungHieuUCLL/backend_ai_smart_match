@@ -5,7 +5,6 @@ from datetime import datetime
 
 from app.database import Base
 
-# For Gemini
 class CV(Base):
     __tablename__ = "cv"
 
@@ -19,13 +18,6 @@ class CV(Base):
         back_populates="cv",
         uselist=False,
     )
-
-    compatibility_scores = relationship(
-        "CompatibilityScore",
-        back_populates="cv"
-    )
-
-
 class Profile(Base):
     __tablename__ = "profiles"
 
@@ -159,13 +151,13 @@ class CompatibilityScore(Base):
         nullable=False
     )
 
-    cv_id = Column(
+    job_id = Column(
         Integer,
-        ForeignKey("cv.id", ondelete="SET NULL"),
+        ForeignKey("jobs.id", ondelete="SET NULL"),
         nullable=True
     )
 
     score = Column(Float, nullable=True)
 
     profile = relationship("Profile", back_populates="compatibility_scores")
-    cv = relationship("CV", back_populates="compatibility_scores")
+    job = relationship("Job", back_populates="compatibility_scores")

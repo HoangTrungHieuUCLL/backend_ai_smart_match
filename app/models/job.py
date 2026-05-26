@@ -1,4 +1,6 @@
 from sqlalchemy import Column, Integer, String, Text
+from sqlalchemy.orm import relationship
+from pgvector.sqlalchemy import Vector
 from app.database import Base
 
 class Job(Base):
@@ -13,6 +15,14 @@ class Job(Base):
     overview = Column(Text)
     responsibilities = Column(Text)
     requirements = Column(Text)
+    requirements_simplified = Column(Text)
+    requirements_embedding = Column(Vector(384))
     offers = Column(Text)
     salary = Column(String)
     notes = Column(Text)
+
+    compatibility_scores = relationship(
+        "CompatibilityScore",
+        back_populates="job",
+        cascade="all, delete-orphan"
+    )
