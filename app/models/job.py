@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Text
+from sqlalchemy.orm import relationship
 from app.database import Base
 
 class Job(Base):
@@ -16,3 +17,9 @@ class Job(Base):
     offers = Column(Text)
     salary = Column(String)
     notes = Column(Text)
+
+    compatibility_scores = relationship(
+        "CompatibilityScore",
+        back_populates="job",
+        cascade="all, delete-orphan"
+    )
