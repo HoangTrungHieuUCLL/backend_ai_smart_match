@@ -8,6 +8,7 @@ from app.service.job import JobService
 from app.service.pdf_extractor import PDFTextExtractor
 from app.utils.text_cleaning import TextCleaner
 from app.service.cv_embedding_service import embed_skills
+from app.utils.cv_filename import build_cv_filename
 
 router = APIRouter()
 service = CVService()
@@ -49,11 +50,24 @@ async def upload_cv(
     # dict for DB, json string for response
     ai_result_dict = parsed_cv.model_dump()
     ai_result_json = parsed_cv.model_dump_json()
+    candidate_profile = ai_result_dict.get("candidate_profile")
+    if not isinstance(candidate_profile, dict):
+        candidate_profile = {}
+        ai_result_dict["candidate_profile"] = candidate_profile
+    candidate_profile["given_name"] = givenName
+    candidate_profile["middle_name"] = middleName
+    candidate_profile["family_name"] = familyName
+    candidate_profile["email"] = email
+    normalized_filename = build_cv_filename(
+        given_name=givenName,
+        middle_name=middleName,
+        family_name=familyName,
+    )
 
     try:
         profile = service.save_ai_cv_result(
             db,
-            filename=cv.filename or "uploaded_cv.pdf",
+            filename=normalized_filename,
             structured_data=ai_result_dict,
         )
     except Exception as exc:
