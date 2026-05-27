@@ -22,12 +22,6 @@ class JobService:
     *,
     limit: int = 10,
     ) -> list[dict[str, Any]]:
-        """
-        Compare one CV skills embedding with every stored job requirements embedding.
-
-        Returns the highest scoring jobs first. The score is cosine similarity converted
-        to a percentage-like value between 0 and 100.
-        """
         if not cv_skills_embedding:
             return []
 
