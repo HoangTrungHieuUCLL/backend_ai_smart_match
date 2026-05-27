@@ -5,6 +5,9 @@ from sqlalchemy.orm import Session
 from app.repository.job import JobRepository
 import random
 
+from sentence_transformers import util
+import torch
+
 class JobService:
     def __init__(self):
         self.repo = JobRepository()
@@ -14,6 +17,24 @@ class JobService:
 
     def get_job_by_id(self, db: Session, job_id: int):
         return self.repo.get_by_id(db, job_id)
+    
+    def get_top_compatibility_scores_for_profile(
+        self,
+        db: Session,
+        profile_id: int,
+        *,
+        limit: int = 10,
+    ) -> dict[str, Any]:
+        scores = self.repo.get_top_compatibility_scores_for_profile(
+            db,
+            profile_id,
+            limit=limit,
+        )
+
+        return {
+            "profile_id": profile_id,
+            "top_10_compatibility_scores": scores,
+        }
     
     def calculate_top_compatibility_scores(
     self,
@@ -64,16 +85,14 @@ class JobService:
         if not first or not second or len(first) != len(second):
             return None
 
-        dot_product = sum(a * b for a, b in zip(first, second))
-        first_magnitude = sqrt(sum(a * a for a in first))
-        second_magnitude = sqrt(sum(b * b for b in second))
+        first_tensor = torch.tensor(first)
+        second_tensor = torch.tensor(second)
 
-        if first_magnitude == 0 or second_magnitude == 0:
-            return None
+        cosine_similarity = util.cos_sim(first_tensor, second_tensor).item()
 
-        cosine_similarity = dot_product / (first_magnitude * second_magnitude)
-        percentage = ((cosine_similarity + 1) / 2) * 100
-        return round(max(0, min(100, percentage)), 2)
+        percentage = max(0, cosine_similarity) * 100
+
+        return round(min(100, percentage), 2)
 
     @staticmethod
     def _to_float_list(vector: list[float] | Any) -> list[float] | None:

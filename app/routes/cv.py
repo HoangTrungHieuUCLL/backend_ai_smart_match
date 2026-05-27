@@ -140,6 +140,16 @@ async def parse_cv(
         "message": "CV processed and saved",
         "cv_id": profile.cv_id,
         "profile_id": profile.id,
-        "top_10_compatibility_scores": top_10_scores,
         "ai_result": ai_result_dict,
     }
+
+@router.get("/profiles/{profile_id}/top10")
+def get_top_10_compatibility_scores(
+    profile_id: int,
+    db: Session = Depends(get_db),
+):
+    return job_service.get_top_compatibility_scores_for_profile(
+        db,
+        profile_id,
+        limit=10,
+    )
