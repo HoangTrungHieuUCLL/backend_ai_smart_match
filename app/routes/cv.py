@@ -157,35 +157,6 @@ async def test():
       }
     }
 
-@router.post("/cv/upload")
-async def upload_cv(
-        db: Session = Depends(get_db)
-):
-    scores = job_service.assign_placeholder_compatability_scores(db)
-
-        try:
-            profile = service.save_ai_cv_result(
-                db,
-                filename=cv.filename or "uploaded_cv.pdf",
-                structured_data=ai_result_dict,
-                compatibility_scores=top_10_scores,
-            )
-        except Exception as exc:
-            db.rollback()
-            raise HTTPException(
-                status_code=500,
-                detail=f"AI result was parsed, but saving to database failed: {exc}",
-            ) from exc
-
-        return {
-            "message": "CV processed and saved",
-            "cv_id": profile.cv_id,
-            "profile_id": profile.id,
-            "top_10_compatibility_scores": top_10_scores,
-            "ai_result": ai_result_dict,
-        }
-
-
 @router.post("/parse-cv")
 async def parse_cv(
     cv: UploadFile = File(...),
@@ -196,6 +167,9 @@ async def parse_cv(
     db: Session = Depends(get_db)
 ):
     parsed_cv = await _parse_uploaded_cv(cv)
+    print("=======================")
+    print(parsed_cv)
+    print("=======================")
     ai_result_dict = _prepare_ai_result_with_skills_embedding(parsed_cv)
 
     top_10_scores = job_service.calculate_top_compatibility_scores(
@@ -216,7 +190,7 @@ async def parse_cv(
         ai_result_dict["candidate_profile"]["middle_name"] = middle_name
     if email:
         ai_result_dict["candidate_profile"]["email"] = email
-        
+
     ai_result_json = parsed_cv.model_dump_json()
     skills_embedding = embed_skills(ai_result_dict["candidate_profile"]["skills"])
     ai_result_dict["skills_embedding"] = skills_embedding
