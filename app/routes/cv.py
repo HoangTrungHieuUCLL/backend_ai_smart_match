@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, Form
 from sqlalchemy.orm import Session
+
 from app.database import SessionLocal
 from app.service.cv import CVService
 from app.service.gemini_cv_service import GeminiCVService
@@ -9,11 +10,13 @@ from app.utils.text_cleaning import TextCleaner
 from app.service.cv_embedding_service import embed_skills
 
 router = APIRouter()
+
 service = CVService()
 job_service = JobService()
 cleaner = TextCleaner()
 gemini_service = GeminiCVService()
 extractor = PDFTextExtractor()
+
 
 def get_db():
     db = SessionLocal()
@@ -21,7 +24,6 @@ def get_db():
         yield db
     finally:
         db.close()
-
 
 def _prepare_ai_result_with_skills_embedding(
     parsed_cv,
@@ -34,19 +36,20 @@ def _prepare_ai_result_with_skills_embedding(
     ai_result_dict = parsed_cv.model_dump()
     candidate_profile = ai_result_dict.setdefault("candidate_profile", {})
 
-    if given_name is not None:
+    if given_name:
         candidate_profile["given_name"] = given_name
-    if middle_name is not None:
+    if middle_name:
         candidate_profile["middle_name"] = middle_name
-    if family_name is not None:
+    if family_name:
         candidate_profile["family_name"] = family_name
-    if email is not None:
+    if email:
         candidate_profile["email"] = email
 
     skills = candidate_profile.get("skills") or []
     ai_result_dict["skills_embedding"] = embed_skills(skills)
 
     return ai_result_dict
+
 
 async def _parse_uploaded_cv(cv: UploadFile):
     file_bytes = await cv.read()
@@ -56,169 +59,66 @@ async def _parse_uploaded_cv(cv: UploadFile):
 
     try:
         return gemini_service.parse_cv(cleaned_text)
-    except ValueError as e:
+    except ValueError as exc:
         raise HTTPException(
             status_code=502,
-            detail={"message": "AI service failed to parse CV", "error": str(e)},
-        ) from e
+            detail={
+                "message": "AI service failed to parse CV",
+                "error": str(exc),
+            },
+        ) from exc
 
-@router.post("/cv/upload")
-async def upload_cv_with_form_data(
-        familyName: str = Form(...),
-        middleName: str = Form(None),
-        givenName: str = Form(...),
-        email: str = Form(...),
-        cv: UploadFile = File(...),
-        db: Session = Depends(get_db)
-):
-        parsed_cv = await _parse_uploaded_cv(cv)
-        ai_result_dict = _prepare_ai_result_with_skills_embedding(
-            parsed_cv,
-            given_name=givenName,
-            middle_name=middleName,
-            family_name=familyName,
-            email=email,
-        )
-
-        top_10_scores = job_service.calculate_top_compatibility_scores(
-            db,
-            ai_result_dict.get("skills_embedding"),
-        )
-@router.get("/cv/test")
-async def test():
-    return {
-          "candidate_profile": {
-            "id": 1,
-            "given_name": "Eren",
-            "family_name": "Derinbay",
-            "current_title": "Applied Computer Science student",
-            "phone": "+32 0498 51 50 67",
-            "email": "eren.derinbay@gmail.com",
-            "bio": "passionate problem solver. Strong at debugging and learning new technologies. Experienced working both independently and in Agile teams. Interested in programming from a young age and passionate about software development, UI/UX, and building tools that solve real problems.",
-            "skills": "TypeScript, JavaScript, HTML/CSS, Java, Python, C#, Ruby, React, Next.js, Node.js, Prisma ORM, .NET (MAUI), SQL, PostgreSQL, MySQL, MongoDB, Azure, AWS, GitHub, GitHub Actions, Linux CLI, Agile, Scrum, UI/UX",
-            "work_experiences": [
-              {
-                "id": 1,
-                "profile_id": 1,
-                "job_title": "Educational Assistant",
-                "company_name": "CodeFever",
-                "start_date": "March 2024",
-                "end_date": "June 2025"
-              }
-            ],
-            "educations": [
-              {
-                "id": 1,
-                "profile_id": 1,
-                "institution": "University Colleges Leuven-Limburg (UCLL)",
-                "degree": "Bachelor of Applied Computer Science",
-                "field_of_study": "Computer Science",
-                "start_date": "September 2023",
-                "end_date": "June 2026"
-              },
-              {
-                "id": 2,
-                "profile_id": 1,
-                "institution": "Atlantic Technological University (ATU)",
-                "start_date": "September 2025",
-                "end_date": "January 2026"
-              }
-            ],
-            "projects": [
-              {
-                "id": 1,
-                "profile_id": 1,
-                "project_name": "SteamList",
-                "description": "Personal project A social cataloging platform for Steam libraries, developed solo for over 8+ months..."
-              }
-            ],
-            "languages": [
-              {
-                "id": 1,
-                "profile_id": 1,
-                "language_name": "English",
-                "proficiency_level": "C2"
-              },
-              {
-                "id": 2,
-                "profile_id": 1,
-                "language_name": "Dutch",
-                "proficiency_level": "full professional"
-              },
-              {
-                "id": 3,
-                "profile_id": 1,
-                "language_name": "Turkish",
-                "proficiency_level": "native"
-              }
-            ],
-            "certifications": [],
-            "compatibility_scores": []
-      }
-    }
 
 @router.post("/parse-cv")
 async def parse_cv(
     cv: UploadFile = File(...),
-    given_name: str = Form(None),
-    middle_name: str = Form(None),
-    family_name: str = Form(None),
-    email: str = Form(None),
-    db: Session = Depends(get_db)
+    given_name: str | None = Form(None),
+    middle_name: str | None = Form(None),
+    family_name: str | None = Form(None),
+    email: str | None = Form(None),
+    db: Session = Depends(get_db),
 ):
+    parsed_cv = await _parse_uploaded_cv(cv)
+
+    ai_result_dict = _prepare_ai_result_with_skills_embedding(
+        parsed_cv,
+        given_name=given_name,
+        middle_name=middle_name,
+        family_name=family_name,
+        email=email,
+    )
+
+    try:
+        profile = service.save_ai_cv_result(
+            db,
+            filename=cv.filename or "uploaded_cv.pdf",
+            structured_data=ai_result_dict,
+            compatibility_scores=None,
+        )
+        
+    except Exception as exc:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"AI result was parsed, but saving to database failed: {exc}",
+        ) from exc
+
     return {
         "message": "CV processed and saved",
-        "cv_id": 1,
-        "profile_id": 1,
-        "ai_result": {
-            "candidate_profile": {
-                "current_title": "Applied Computer Science student",
-                "phone": "+32 0498 51 50 67",
-                "location": None,
-                "bio": "Passionate problem solver. Strong at debugging and learning new technologies. Experienced working both independently and in Agile teams. Interested in programming from a young age and passionate about software development, UI/UX, and building tools that solve real problems.",
-                "skills": [
-                    "TypeScript",
-                    "JavaScript",
-                    "HTML/CSS",
-                    "Java",
-                    "Python",
-                    "C#",
-                    "Ruby",
-                    "React",
-                    "Next.js",
-                    "Node.js",
-                    "Prisma ORM",
-                    ".NET (MAUI)",
-                    "SQL (PostgreSQL & MySQL)",
-                    "MongoDB",
-                    "Azure",
-                    "AWS",
-                    "GitHub",
-                    "GitHub Actions",
-                    "Linux CLI"
-                ],
-                "email": "e@e.e"
-            },
-            "work_experience": [],
-            "education": [],
-            "projects": [],
-            "languages": [],
-            "certifications": [],
-            "skills_embedding": [
-                -0.09753318130970001,
-                -0.021471455693244934,
-                -0.02764599211513996
-            ]
-        }
+        "cv_id": profile.cv_id,
+        "profile_id": profile.id,
+        "ai_result": ai_result_dict,
     }
 
-@router.get("/profiles/{profile_id}/all")
-def get_compatibility_scores(
+
+@router.post("/profiles/{profile_id}/all")
+def calculate_all_compatibility_scores_for_profile(
     profile_id: int,
     db: Session = Depends(get_db),
 ):
-    return job_service.get_top_compatibility_scores_for_profile(
+    result = job_service.calculate_and_save_scores_for_profile(
         db,
         profile_id,
-        limit=10,
     )
+
+    return result

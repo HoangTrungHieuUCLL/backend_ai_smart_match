@@ -1,12 +1,13 @@
-from math import sqrt
 from typing import Any
 
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from app.repository.job import JobRepository
-import random
-
 from sentence_transformers import util
 import torch
+
+from app.repository.job import JobRepository
+from app.models.cv import CompatibilityScore
+
 
 class JobService:
     def __init__(self):
@@ -17,13 +18,13 @@ class JobService:
 
     def get_job_by_id(self, db: Session, job_id: int):
         return self.repo.get_by_id(db, job_id)
-    
+
     def get_top_compatibility_scores_for_profile(
         self,
         db: Session,
         profile_id: int,
         *,
-        limit: int = 10,
+        limit: int | None = 10,
     ) -> dict[str, Any]:
         # scores = self.repo.get_top_compatibility_scores_for_profile(
         #     db,
@@ -128,25 +129,90 @@ class JobService:
             "profile_id": profile_id,
             "compatibility_scores": scores,
         }
-    
+
+    def calculate_and_save_scores_for_profile(
+        self,
+        db: Session,
+        profile_id: int,
+    ) -> dict[str, Any]:
+        profile = self.repo.get_profile_by_id(db, profile_id)
+
+        if profile is None:
+            raise HTTPException(status_code=404, detail="Profile not found")
+
+        if profile.skills_embedding is None:
+            raise HTTPException(
+                status_code=400,
+                detail="Profile does not have a skills embedding",
+            )
+
+        all_scores = self.calculate_top_compatibility_scores(
+            db,
+            profile.skills_embedding,
+            limit=None,
+        )
+
+        """
+        db.query(CompatibilityScore).filter(
+            CompatibilityScore.profile_id == profile_id
+        ).delete()
+        """
+        for item in all_scores:
+            db.add(
+                CompatibilityScore(
+                    profile_id=profile_id,
+                    job_id=item["job_id"],
+                    score=item["compatibility_score"],
+                )
+            )
+
+        db.commit()
+
+        return {
+            "profile_id": profile_id,
+            "saved_count": len(all_scores),
+            "jobs": all_scores,
+        }
+
     def calculate_top_compatibility_scores(
-    self,
-    db: Session,
-    cv_skills_embedding: list[float] | None,
-    *,
-    limit: int = 10,
+        self,
+        db: Session,
+        cv_skills_embedding: list[float] | None,
+        *,
+        limit: int | None = 10,
     ) -> list[dict[str, Any]]:
-        if not cv_skills_embedding:
+        if cv_skills_embedding is None:
+            print("DEBUG: cv_skills_embedding is None")
             return []
 
+        cv_vector = self._to_float_list(cv_skills_embedding)
+        print("DEBUG: cv embedding type:", type(cv_skills_embedding))
+        print("DEBUG: cv embedding length:", len(cv_vector or []))
+
         jobs = self.repo.get_all_with_requirements_embedding(db)
+        print("DEBUG: embedded jobs found:", len(jobs))
+
         scores: list[dict[str, Any]] = []
 
         for job in jobs:
+            job_vector = self._to_float_list(job.requirements_embedding)
+
+            print(
+                "DEBUG job:",
+                job.id,
+                job.position,
+                "raw type:",
+                type(job.requirements_embedding),
+                "vector length:",
+                len(job_vector or []),
+            )
+
             score = self._cosine_similarity_percentage(
                 cv_skills_embedding,
                 job.requirements_embedding,
             )
+
+            print("DEBUG score:", job.id, score)
 
             if score is None:
                 continue
@@ -164,8 +230,9 @@ class JobService:
                 }
             )
 
-        scores.sort(key=lambda item: item["compatibility_score"], reverse=True)
-        return scores[:limit]
+        print("DEBUG total scores created:", len(scores))
+        
+        return scores if limit is None else scores[:limit]
 
     @staticmethod
     def _cosine_similarity_percentage(
