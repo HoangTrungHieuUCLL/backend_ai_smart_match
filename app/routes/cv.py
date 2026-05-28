@@ -15,7 +15,6 @@ cleaner = TextCleaner()
 gemini_service = GeminiCVService()
 extractor = PDFTextExtractor()
 
-
 def get_db():
     db = SessionLocal()
     try:
@@ -23,6 +22,68 @@ def get_db():
     finally:
         db.close()
 
+
+def _prepare_ai_result_with_skills_embedding(
+    parsed_cv,
+    *,
+    given_name: str | None = None,
+    middle_name: str | None = None,
+    family_name: str | None = None,
+    email: str | None = None,
+) -> dict:
+    ai_result_dict = parsed_cv.model_dump()
+    candidate_profile = ai_result_dict.setdefault("candidate_profile", {})
+
+    if given_name is not None:
+        candidate_profile["given_name"] = given_name
+    if middle_name is not None:
+        candidate_profile["middle_name"] = middle_name
+    if family_name is not None:
+        candidate_profile["family_name"] = family_name
+    if email is not None:
+        candidate_profile["email"] = email
+
+    skills = candidate_profile.get("skills") or []
+    ai_result_dict["skills_embedding"] = embed_skills(skills)
+
+    return ai_result_dict
+
+async def _parse_uploaded_cv(cv: UploadFile):
+    file_bytes = await cv.read()
+
+    raw_text = extractor.extract_from_bytes(file_bytes)
+    cleaned_text = cleaner.clean(raw_text)
+
+    try:
+        return gemini_service.parse_cv(cleaned_text)
+    except ValueError as e:
+        raise HTTPException(
+            status_code=502,
+            detail={"message": "AI service failed to parse CV", "error": str(e)},
+        ) from e
+
+@router.post("/cv/upload")
+async def upload_cv_with_form_data(
+        familyName: str = Form(...),
+        middleName: str = Form(None),
+        givenName: str = Form(...),
+        email: str = Form(...),
+        cv: UploadFile = File(...),
+        db: Session = Depends(get_db)
+):
+        parsed_cv = await _parse_uploaded_cv(cv)
+        ai_result_dict = _prepare_ai_result_with_skills_embedding(
+            parsed_cv,
+            given_name=givenName,
+            middle_name=middleName,
+            family_name=familyName,
+            email=email,
+        )
+
+        top_10_scores = job_service.calculate_top_compatibility_scores(
+            db,
+            ai_result_dict.get("skills_embedding"),
+        )
 @router.get("/cv/test")
 async def test():
     return {
@@ -102,11 +163,31 @@ async def upload_cv(
 ):
     scores = job_service.assign_placeholder_compatability_scores(db)
 
-    return scores
+        try:
+            profile = service.save_ai_cv_result(
+                db,
+                filename=cv.filename or "uploaded_cv.pdf",
+                structured_data=ai_result_dict,
+                compatibility_scores=top_10_scores,
+            )
+        except Exception as exc:
+            db.rollback()
+            raise HTTPException(
+                status_code=500,
+                detail=f"AI result was parsed, but saving to database failed: {exc}",
+            ) from exc
+
+        return {
+            "message": "CV processed and saved",
+            "cv_id": profile.cv_id,
+            "profile_id": profile.id,
+            "top_10_compatibility_scores": top_10_scores,
+            "ai_result": ai_result_dict,
+        }
 
 
 @router.post("/parse-cv")
-async def upload_cv(
+async def parse_cv(
     cv: UploadFile = File(...),
     given_name: str = Form(None),
     middle_name: str = Form(None),
@@ -114,18 +195,13 @@ async def upload_cv(
     email: str = Form(None),
     db: Session = Depends(get_db)
 ):
-    file_bytes = await cv.read()
+    parsed_cv = await _parse_uploaded_cv(cv)
+    ai_result_dict = _prepare_ai_result_with_skills_embedding(parsed_cv)
 
-    raw_text = extractor.extract_from_bytes(file_bytes)
-    cleaned_text = cleaner.clean(raw_text)
-
-    try:
-        parsed_cv = gemini_service.parse_cv(cleaned_text)
-    except ValueError as e:
-        raise HTTPException(
-            status_code=502,
-            detail={"message": "AI service failed to parse CV", "error": str(e)},
-        )
+    top_10_scores = job_service.calculate_top_compatibility_scores(
+        db,
+        ai_result_dict.get("skills_embedding"),
+    )
 
     # dict for DB, json string for response
     ai_result_dict = parsed_cv.model_dump()
@@ -150,6 +226,7 @@ async def upload_cv(
             db,
             filename=cv.filename or "uploaded_cv.pdf",
             structured_data=ai_result_dict,
+            compatibility_scores=top_10_scores,
         )
     except Exception as exc:
         db.rollback()
@@ -164,3 +241,14 @@ async def upload_cv(
         "profile_id": profile.id,
         "ai_result": ai_result_dict,
     }
+
+@router.get("/profiles/{profile_id}/top10")
+def get_top_10_compatibility_scores(
+    profile_id: int,
+    db: Session = Depends(get_db),
+):
+    return job_service.get_top_compatibility_scores_for_profile(
+        db,
+        profile_id,
+        limit=10,
+    )
