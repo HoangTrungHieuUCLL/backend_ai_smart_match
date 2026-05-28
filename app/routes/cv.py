@@ -212,8 +212,8 @@ async def parse_cv(
         }
     }
 
-@router.get("/profiles/{profile_id}/top10")
-def get_top_10_compatibility_scores(
+@router.get("/profiles/{profile_id}/all")
+def get_compatibility_scores(
     profile_id: int,
     db: Session = Depends(get_db),
 ):
