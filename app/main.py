@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
+import asyncio
 
 from starlette.middleware.cors import CORSMiddleware
 from sqlalchemy import text
@@ -12,14 +13,21 @@ from app.seed import seed_jobs
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    
+
     with engine.connect() as conn:
         conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
         conn.commit()
-    # Startup
+
     ensure_vector_extension()
     Base.metadata.create_all(bind=engine)
-    seed_jobs()
+
+    async def seed_jobs_background():
+        try:
+            await asyncio.to_thread(seed_jobs)
+        except Exception as exc:
+            print(f"Background job seeding failed: {exc}")
+
+    asyncio.create_task(seed_jobs_background())
 
     yield
 
@@ -42,6 +50,11 @@ app.add_middleware(
 @app.get("/")
 def read_root():
     return {"message": "API running"}
+
+
+@app.get("/health")
+def healthcheck():
+    return {"status": "ok"}
 
 
 app.include_router(job_router)

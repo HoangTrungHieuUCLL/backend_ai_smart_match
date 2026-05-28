@@ -39,8 +39,8 @@ def seed_jobs():
     db = SessionLocal()
 
     try:
-        db.query(Job).delete()
-        db.commit()
+        if db.query(Job.id).first() is not None:
+            return
 
         csv_path = os.path.join("app", "schemas", "jobs.csv")
 
