@@ -111,7 +111,7 @@ async def parse_cv(
     }
 
 
-@router.post("/profiles/{profile_id}/all")
+@router.get("/profiles/{profile_id}/all")
 def calculate_all_compatibility_scores_for_profile(
     profile_id: int,
     db: Session = Depends(get_db),
