@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, Form
+from typing import Any
+
+from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, Body
 from sqlalchemy.orm import Session
 
 from app.database import SessionLocal
@@ -23,6 +25,44 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+def _normalise_edited_cv_payload(payload: dict[str, Any]) -> dict[str, Any]:
+    data = dict(payload)
+    candidate_profile = data.get("candidate_profile")
+
+    if not isinstance(candidate_profile, dict):
+        candidate_profile = {}
+        data["candidate_profile"] = candidate_profile
+
+    for nested_key, canonical_key in (
+        ("work_experiences", "work_experience"),
+        ("educations", "education"),
+        ("projects", "projects"),
+        ("languages", "languages"),
+        ("certifications", "certifications"),
+    ):
+        if canonical_key not in data and nested_key in candidate_profile:
+            data[canonical_key] = candidate_profile.get(nested_key)
+
+    skills = _skills_as_list(candidate_profile.get("skills"))
+    candidate_profile["skills"] = skills
+    data["skills_embedding"] = embed_skills(skills)
+
+    return data
+
+
+def _skills_as_list(value: Any) -> list[str]:
+    if value is None:
+        return []
+
+    if isinstance(value, list):
+        return [str(item).strip() for item in value if str(item).strip()]
+
+    if isinstance(value, str):
+        return [item.strip() for item in value.split(",") if item.strip()]
+
+    return [str(value).strip()] if str(value).strip() else []
 
 @router.get("/cv/test")
 async def test():
@@ -104,6 +144,41 @@ async def upload_cv(
     scores = job_service.assign_placeholder_compatability_scores(db)
 
     return scores
+
+
+@router.put("/cv/{profile_id}/extracted-data")
+async def update_extracted_cv_data(
+    profile_id: int,
+    cv_data: dict[str, Any] = Body(...),
+    db: Session = Depends(get_db),
+):
+    structured_data = _normalise_edited_cv_payload(cv_data)
+
+    try:
+        profile = service.update_ai_cv_result(
+            db,
+            profile_id=profile_id,
+            structured_data=structured_data,
+        )
+    except Exception as exc:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Edited CV data could not be saved: {exc}",
+        ) from exc
+
+    if profile is None:
+        raise HTTPException(status_code=404, detail="CV profile not found")
+
+    response_data = dict(structured_data)
+    response_data.pop("skills_embedding", None)
+
+    return {
+        "message": "CV data updated",
+        "cv_id": profile.cv_id,
+        "profile_id": profile.id,
+        "ai_result": response_data,
+    }
 
 
 @router.post("/parse-cv")

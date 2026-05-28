@@ -23,3 +23,16 @@ class CVService:
             filename=filename,
             structured_data=structured_data,
         )
+
+    def update_ai_cv_result(
+        self,
+        db: Session,
+        *,
+        profile_id: int,
+        structured_data: dict,
+    ):
+        return self.repo.update_ai_result(
+            db,
+            profile_id=profile_id,
+            structured_data=structured_data,
+        )

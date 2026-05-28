@@ -1,19 +1,16 @@
-import os
 import json
 from google import genai
+from google.genai import errors
 from pydantic import ValidationError
+
+from app.config import GEMINI_API_KEY
 from app.models.cv_schema import CVParsed
-from dotenv import load_dotenv
 import re
 from pathlib import Path
 
-load_dotenv()
-
-api_key = os.getenv("GEMINI_API_KEY")
-
 class GeminiCVService:
     def __init__(self):
-        self.client = genai.Client(api_key=api_key)
+        self.client = genai.Client(api_key=GEMINI_API_KEY)
 
     def build_filtered_schema_string(
         self,schema_file_path: str,unwanted_fields: list[str]
@@ -92,10 +89,19 @@ class GeminiCVService:
     """
     def normalize_skills(self, data: dict) -> dict:
         try:
-            skills = data.get("candidate_profile", {}).get("skills")
+            candidate_profile = data.get("candidate_profile")
+            if not isinstance(candidate_profile, dict):
+                data["candidate_profile"] = {}
+                candidate_profile = data["candidate_profile"]
+
+            skills = candidate_profile.get("skills")
+
+            if skills is None:
+                candidate_profile["skills"] = []
+                return data
 
             if isinstance(skills, str):
-                data["candidate_profile"]["skills"] = [
+                candidate_profile["skills"] = [
                     s.strip()
                     for s in skills.split(",")
                     if s.strip()
@@ -106,10 +112,13 @@ class GeminiCVService:
         return data
 
     def parse_cv(self, raw_text: str) -> CVParsed:
-        response = self.client.models.generate_content(
-            model= "gemini-2.5-flash-lite",
-            contents=self.build_prompt(raw_text)
-        )
+        try:
+            response = self.client.models.generate_content(
+                model= "gemini-2.5-flash-lite",
+                contents=self.build_prompt(raw_text)
+            )
+        except errors.APIError as e:
+            raise ValueError(f"Gemini API request failed: {e}") from e
 
         try:
             cleaned = re.sub(r"```json|```", "", response.text).strip()

@@ -86,6 +86,57 @@ class CVRepository:
             )
             profile.email = email
 
+        self._apply_structured_data(db, profile, structured_data)
+
+        db.commit()
+        db.refresh(profile)
+
+        return profile
+
+    def update_ai_result(
+        self,
+        db: Session,
+        *,
+        profile_id: int,
+        structured_data: dict[str, Any],
+    ) -> Profile | None:
+        profile = db.query(Profile).filter(Profile.id == profile_id).first()
+
+        if profile is None:
+            return None
+
+        candidate = structured_data.get("candidate_profile") or {}
+
+        if "given_name" in candidate:
+            profile.given_name = self._required_name(
+                candidate.get("given_name"),
+                profile.given_name,
+            )
+        if "middle_name" in candidate:
+            profile.middle_name = self._clean_string(candidate.get("middle_name"))
+        if "family_name" in candidate:
+            profile.family_name = self._required_name(
+                candidate.get("family_name"),
+                profile.family_name,
+            )
+        if "email" in candidate:
+            profile.email = self._clean_string(candidate.get("email"))
+
+        self._apply_structured_data(db, profile, structured_data)
+
+        db.commit()
+        db.refresh(profile)
+
+        return profile
+
+    def _apply_structured_data(
+        self,
+        db: Session,
+        profile: Profile,
+        structured_data: dict[str, Any],
+    ) -> None:
+        candidate = structured_data.get("candidate_profile") or {}
+
         # Update profile-level extracted fields.
         profile.current_title = self._clean_string(candidate.get("current_title"))
         profile.phone = self._clean_string(candidate.get("phone"))
@@ -105,7 +156,7 @@ class CVRepository:
         db.flush()
 
         # Save work experience rows.
-        for item in structured_data.get("work_experience") or []:
+        for item in self._get_collection(structured_data, "work_experience", "work_experiences"):
             profile.work_experiences.append(
                 Experience(
                     job_title=self._clean_string(item.get("job_title")),
@@ -116,7 +167,7 @@ class CVRepository:
             )
 
         # Save education rows.
-        for item in structured_data.get("education") or []:
+        for item in self._get_collection(structured_data, "education", "educations"):
             profile.educations.append(
                 Education(
                     institution=self._clean_string(item.get("institution")),
@@ -128,7 +179,7 @@ class CVRepository:
             )
 
         # Save project rows.
-        for item in structured_data.get("projects") or []:
+        for item in self._get_collection(structured_data, "projects"):
             profile.projects.append(
                 Project(
                     project_name=self._clean_string(item.get("project_name")),
@@ -137,7 +188,7 @@ class CVRepository:
             )
 
         # Save language rows.
-        for item in structured_data.get("languages") or []:
+        for item in self._get_collection(structured_data, "languages"):
             profile.languages.append(
                 Language(
                     language_name=self._clean_string(item.get("language_name")),
@@ -147,7 +198,7 @@ class CVRepository:
 
         # Your current Gemini schema may not return certifications yet,
         # but this is ready if you add certifications to cv_schema.py.
-        for item in structured_data.get("certifications") or []:
+        for item in self._get_collection(structured_data, "certifications"):
             profile.certifications.append(
                 Certification(
                     certification_name=self._clean_string(
@@ -157,10 +208,21 @@ class CVRepository:
                 )
             )
 
-        db.commit()
-        db.refresh(profile)
+    @staticmethod
+    def _get_collection(
+        structured_data: dict[str, Any],
+        *keys: str,
+    ) -> list[dict[str, Any]]:
+        candidate = structured_data.get("candidate_profile") or {}
 
-        return profile
+        for key in keys:
+            value = structured_data.get(key)
+            if value is None:
+                value = candidate.get(key)
+            if isinstance(value, list):
+                return [item for item in value if isinstance(item, dict)]
+
+        return []
 
     @staticmethod
     def _clean_string(value: Any) -> str | None:
