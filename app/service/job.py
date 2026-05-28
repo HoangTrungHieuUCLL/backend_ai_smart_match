@@ -33,7 +33,7 @@ class JobService:
 
         return {
             "profile_id": profile_id,
-            "top_10_compatibility_scores": scores,
+            "compatibility_scores": scores,
         }
     
     def calculate_top_compatibility_scores(

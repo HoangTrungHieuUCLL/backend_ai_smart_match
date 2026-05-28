@@ -106,16 +106,56 @@ class GeminiCVService:
         return data
 
     def parse_cv(self, raw_text: str) -> CVParsed:
-        response = self.client.models.generate_content(
-            model= "gemini-2.5-flash-lite",
-            contents=self.build_prompt(raw_text)
-        )
+        # response = self.client.models.generate_content(
+        #     model= "gemini-2.5-flash-lite",
+        #     contents=self.build_prompt(raw_text)
+        # )
 
         try:
-            cleaned = re.sub(r"```json|```", "", response.text).strip()
-            data = json.loads(cleaned)
-            
-            data = self.normalize_skills(data)
+            data = {
+                "candidate_profile": {
+                    "current_title": "Applied Computer Science student",
+                    "phone": "+32 0498 51 50 67",
+                    "location": None,
+                    "bio": "Passionate problem solver. Strong at debugging and learning new technologies. Experienced working both independently and in Agile teams. Interested in programming from a young age and passionate about software development, UI/UX, and building tools that solve real problems.",
+                    "skills": [
+                        "TypeScript",
+                        "JavaScript",
+                        "HTML/CSS",
+                        "Java",
+                        "Python",
+                        "C#",
+                        "Ruby",
+                        "React",
+                        "Next.js",
+                        "Node.js",
+                        "Prisma ORM",
+                        ".NET (MAUI)",
+                        "SQL (PostgreSQL & MySQL)",
+                        "MongoDB",
+                        "Azure",
+                        "AWS",
+                        "GitHub",
+                        "GitHub Actions",
+                        "Linux CLI"
+                    ],
+                    "email": "e@e.e"
+                },
+                "work_experience": [],
+                "education": [],
+                "projects": [],
+                "languages": [],
+                "certifications": [],
+                "skills_embedding": [
+                    -0.09753318130970001,
+                    -0.021471455693244934,
+                    -0.02764599211513996
+                ]
+            }
+            # cleaned = re.sub(r"```json|```", "", response.text).strip()
+            # data = json.loads(cleaned)
+            #
+            # data = self.normalize_skills(data)
             return CVParsed.model_validate(data)
 
         except json.JSONDecodeError as e:

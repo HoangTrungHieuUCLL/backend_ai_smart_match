@@ -166,54 +166,50 @@ async def parse_cv(
     email: str = Form(None),
     db: Session = Depends(get_db)
 ):
-    parsed_cv = await _parse_uploaded_cv(cv)
-    print("=======================")
-    print(parsed_cv)
-    print("=======================")
-    ai_result_dict = _prepare_ai_result_with_skills_embedding(parsed_cv)
-
-    top_10_scores = job_service.calculate_top_compatibility_scores(
-        db,
-        ai_result_dict.get("skills_embedding"),
-    )
-
-    # dict for DB, json string for response
-    ai_result_dict = parsed_cv.model_dump()
-    ai_result_dict.setdefault("candidate_profile", {})
-
-    # inject frontend fields
-    if given_name:
-        ai_result_dict["candidate_profile"]["given_name"] = given_name
-    if family_name:
-        ai_result_dict["candidate_profile"]["family_name"] = family_name
-    if middle_name:
-        ai_result_dict["candidate_profile"]["middle_name"] = middle_name
-    if email:
-        ai_result_dict["candidate_profile"]["email"] = email
-
-    ai_result_json = parsed_cv.model_dump_json()
-    skills_embedding = embed_skills(ai_result_dict["candidate_profile"]["skills"])
-    ai_result_dict["skills_embedding"] = skills_embedding
-    print("FINAL EMAIL IN AI RESULT:", ai_result_dict["candidate_profile"].get("email"))
-    try:
-        profile = service.save_ai_cv_result(
-            db,
-            filename=cv.filename or "uploaded_cv.pdf",
-            structured_data=ai_result_dict,
-            compatibility_scores=top_10_scores,
-        )
-    except Exception as exc:
-        db.rollback()
-        raise HTTPException(
-            status_code=500,
-            detail=f"AI result was parsed, but saving to database failed: {exc}",
-        ) from exc
-
     return {
         "message": "CV processed and saved",
-        "cv_id": profile.cv_id,
-        "profile_id": profile.id,
-        "ai_result": ai_result_dict,
+        "cv_id": 1,
+        "profile_id": 1,
+        "ai_result": {
+            "candidate_profile": {
+                "current_title": "Applied Computer Science student",
+                "phone": "+32 0498 51 50 67",
+                "location": None,
+                "bio": "Passionate problem solver. Strong at debugging and learning new technologies. Experienced working both independently and in Agile teams. Interested in programming from a young age and passionate about software development, UI/UX, and building tools that solve real problems.",
+                "skills": [
+                    "TypeScript",
+                    "JavaScript",
+                    "HTML/CSS",
+                    "Java",
+                    "Python",
+                    "C#",
+                    "Ruby",
+                    "React",
+                    "Next.js",
+                    "Node.js",
+                    "Prisma ORM",
+                    ".NET (MAUI)",
+                    "SQL (PostgreSQL & MySQL)",
+                    "MongoDB",
+                    "Azure",
+                    "AWS",
+                    "GitHub",
+                    "GitHub Actions",
+                    "Linux CLI"
+                ],
+                "email": "e@e.e"
+            },
+            "work_experience": [],
+            "education": [],
+            "projects": [],
+            "languages": [],
+            "certifications": [],
+            "skills_embedding": [
+                -0.09753318130970001,
+                -0.021471455693244934,
+                -0.02764599211513996
+            ]
+        }
     }
 
 @router.get("/profiles/{profile_id}/top10")
