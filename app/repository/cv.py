@@ -49,7 +49,7 @@ class CVRepository:
         profile = None
 
         # Use e-mail as the safest candidate identifier if Gemini extracted one.
-        if email:
+        if email is not None:
             profile = db.query(Profile).filter(Profile.email == email).first()
 
         # Always create a CV row for this uploaded file.
