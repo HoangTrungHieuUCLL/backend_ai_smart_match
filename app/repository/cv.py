@@ -12,6 +12,7 @@ from app.models.cv import (
     Project,
     Language,
     Certification,
+    CompatibilityScore,
 )
 
 class CVRepository:
@@ -28,6 +29,7 @@ class CVRepository:
         *,
         filename: str,
         structured_data: dict[str, Any],
+        compatibility_scores: list[dict[str, Any]] | None = None,
     ) -> Profile:
         """
         Persist the structured JSON returned by the AI service into the CV tables.
@@ -101,6 +103,7 @@ class CVRepository:
         profile.projects.clear()
         profile.languages.clear()
         profile.certifications.clear()
+        profile.compatibility_scores.clear()
 
         db.flush()
 
@@ -154,6 +157,14 @@ class CVRepository:
                         item.get("certification_name") or item.get("name")
                     ),
                     issue_date=self._parse_date(item.get("issue_date")),
+                )
+            )
+
+        for item in compatibility_scores or []:
+            profile.compatibility_scores.append(
+                CompatibilityScore(
+                    job_id=item.get("job_id"),
+                    score=item.get("compatibility_score"),
                 )
             )
 

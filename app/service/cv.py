@@ -17,9 +17,11 @@ class CVService:
     *,
     filename: str,
     structured_data: dict,
+    compatibility_scores: list[dict] | None = None,
     ):
         return self.repo.save_ai_result(
             db,
             filename=filename,
             structured_data=structured_data,
+            compatibility_scores=compatibility_scores,
         )
