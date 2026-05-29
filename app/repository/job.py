@@ -1,15 +1,18 @@
 from sqlalchemy.orm import Session
+
 from app.models.job import Job
-from app.models.cv import CompatibilityScore
+from app.models.cv import CompatibilityScore, Profile
 
 class JobRepository:
-
     def get_all(self, db: Session):
         return db.query(Job).all()
 
     def get_by_id(self, db: Session, job_id: int):
         return db.query(Job).filter(Job.id == job_id).first()
-    
+
+    def get_profile_by_id(self, db: Session, profile_id: int):
+        return db.query(Profile).filter(Profile.id == profile_id).first()
+
     def get_all_with_requirements_embedding(self, db: Session):
         return (
             db.query(Job)
