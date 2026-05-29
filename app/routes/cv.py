@@ -8,9 +8,9 @@ from app.service.job import JobService
 from app.service.pdf_extractor import PDFTextExtractor
 from app.utils.text_cleaning import TextCleaner
 from app.service.cv_embedding_service import embed_skills
+from app.utils.cv_filename import build_cv_filename
 
 router = APIRouter()
-
 service = CVService()
 job_service = JobService()
 cleaner = TextCleaner()
@@ -25,6 +25,7 @@ def get_db():
     finally:
         db.close()
 
+
 def _prepare_ai_result_with_skills_embedding(
     parsed_cv,
     *,
@@ -36,13 +37,13 @@ def _prepare_ai_result_with_skills_embedding(
     ai_result_dict = parsed_cv.model_dump()
     candidate_profile = ai_result_dict.setdefault("candidate_profile", {})
 
-    if given_name:
+    if given_name is not None:
         candidate_profile["given_name"] = given_name
-    if middle_name:
+    if middle_name is not None:
         candidate_profile["middle_name"] = middle_name
-    if family_name:
+    if family_name is not None:
         candidate_profile["family_name"] = family_name
-    if email:
+    if email is not None:
         candidate_profile["email"] = email
 
     skills = candidate_profile.get("skills") or []
@@ -95,7 +96,7 @@ async def parse_cv(
             structured_data=ai_result_dict,
             compatibility_scores=None,
         )
-        
+
     except Exception as exc:
         db.rollback()
         raise HTTPException(

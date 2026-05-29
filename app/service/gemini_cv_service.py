@@ -159,7 +159,8 @@ class GeminiCVService:
             return CVParsed.model_validate(data)
 
         except json.JSONDecodeError as e:
-            raise ValueError(f"Invalid JSON from Gemini: {e}\nRaw: {response.text}")
+            # raise ValueError(f"Invalid JSON from Gemini: {e}\nRaw: {response.text}")
+            raise ValueError(f"Invalid JSON from Gemini")
 
         except ValidationError as e:
             raise ValueError(f"Schema validation failed: {e}")
