@@ -4,6 +4,7 @@ import re
 class TextCleaner:
 
     def clean(self, text: str) -> str:
+        text = self._repair_letter_spaced_words(text)
 
         # normalize line endings
         text = text.replace("\r", "\n")
@@ -44,3 +45,17 @@ class TextCleaner:
             text = text.replace(section, f"\n\n{section}\n")
 
         return text.strip()
+
+    @staticmethod
+    def _repair_letter_spaced_words(text: str) -> str:
+        """
+        Some PDF resumes extract words as "P y t h o n" or "S e r v e r".
+        Repair those words before normalization so parsers and matchers can see
+        the actual skill names.
+        """
+
+        return re.sub(
+            r"(?<!\S)(?:[A-Za-z]\s){2,}[A-Za-z](?!\S)",
+            lambda match: match.group(0).replace(" ", ""),
+            text,
+        )

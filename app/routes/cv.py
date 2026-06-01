@@ -5,16 +5,17 @@ from app.database import SessionLocal
 from app.service.cv import CVService
 from app.service.gemini_cv_service import GeminiCVService
 from app.service.job import JobService
+from app.service.local_cv_parser_service import LocalCVParserService
 from app.service.pdf_extractor import PDFTextExtractor
 from app.utils.text_cleaning import TextCleaner
 from app.service.cv_embedding_service import embed_skills
-from app.utils.cv_filename import build_cv_filename
 
 router = APIRouter()
 service = CVService()
 job_service = JobService()
 cleaner = TextCleaner()
 gemini_service = GeminiCVService()
+local_parser_service = LocalCVParserService()
 extractor = PDFTextExtractor()
 
 
@@ -60,14 +61,8 @@ async def _parse_uploaded_cv(cv: UploadFile):
 
     try:
         return gemini_service.parse_cv(cleaned_text)
-    except ValueError as exc:
-        raise HTTPException(
-            status_code=502,
-            detail={
-                "message": "AI service failed to parse CV",
-                "error": str(exc),
-            },
-        ) from exc
+    except ValueError:
+        return local_parser_service.parse_cv(cleaned_text)
 
 
 @router.post("/parse-cv")

@@ -10,10 +10,15 @@ from pathlib import Path
 load_dotenv()
 
 api_key = os.getenv("GEMINI_API_KEY")
+disable_gemini = os.getenv("DISABLE_GEMINI_CV_PARSER", "").lower() in {
+    "1",
+    "true",
+    "yes",
+}
 
 class GeminiCVService:
     def __init__(self):
-        self.client = genai.Client(api_key=api_key)
+        self.client = genai.Client(api_key=api_key) if api_key and not disable_gemini else None
 
     def build_filtered_schema_string(
         self,schema_file_path: str,unwanted_fields: list[str]
@@ -106,61 +111,26 @@ class GeminiCVService:
         return data
 
     def parse_cv(self, raw_text: str) -> CVParsed:
-        # response = self.client.models.generate_content(
-        #     model= "gemini-2.5-flash-lite",
-        #     contents=self.build_prompt(raw_text)
-        # )
+        if self.client is None:
+            raise ValueError("GEMINI_API_KEY is not configured")
 
         try:
-            data = {
-                "candidate_profile": {
-                    "current_title": "Applied Computer Science student",
-                    "phone": "+32 0498 51 50 67",
-                    "location": None,
-                    "bio": "Passionate problem solver. Strong at debugging and learning new technologies. Experienced working both independently and in Agile teams. Interested in programming from a young age and passionate about software development, UI/UX, and building tools that solve real problems.",
-                    "skills": [
-                        "TypeScript",
-                        "JavaScript",
-                        "HTML/CSS",
-                        "Java",
-                        "Python",
-                        "C#",
-                        "Ruby",
-                        "React",
-                        "Next.js",
-                        "Node.js",
-                        "Prisma ORM",
-                        ".NET (MAUI)",
-                        "SQL (PostgreSQL & MySQL)",
-                        "MongoDB",
-                        "Azure",
-                        "AWS",
-                        "GitHub",
-                        "GitHub Actions",
-                        "Linux CLI"
-                    ],
-                    "email": "e@e.e"
-                },
-                "work_experience": [],
-                "education": [],
-                "projects": [],
-                "languages": [],
-                "certifications": [],
-                "skills_embedding": [
-                    -0.09753318130970001,
-                    -0.021471455693244934,
-                    -0.02764599211513996
-                ]
-            }
-            # cleaned = re.sub(r"```json|```", "", response.text).strip()
-            # data = json.loads(cleaned)
-            #
-            # data = self.normalize_skills(data)
+            response = self.client.models.generate_content(
+                model="gemini-2.5-flash-lite",
+                contents=self.build_prompt(raw_text),
+            )
+
+            cleaned = re.sub(r"```json|```", "", response.text).strip()
+            data = json.loads(cleaned)
+            data = self.normalize_skills(data)
+
             return CVParsed.model_validate(data)
 
         except json.JSONDecodeError as e:
-            # raise ValueError(f"Invalid JSON from Gemini: {e}\nRaw: {response.text}")
-            raise ValueError(f"Invalid JSON from Gemini")
+            raise ValueError(f"Invalid JSON from Gemini: {e}") from e
 
         except ValidationError as e:
-            raise ValueError(f"Schema validation failed: {e}")
+            raise ValueError(f"Schema validation failed: {e}") from e
+
+        except Exception as e:
+            raise ValueError(f"Gemini request failed: {e}") from e
