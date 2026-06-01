@@ -81,6 +81,12 @@ async def parse_cv(
 ):
     parsed_cv = await _parse_uploaded_cv(cv)
 
+    generated_cv_name = build_cv_filename(
+        given_name,
+        middle_name,
+        family_name,
+    )
+
     ai_result_dict = _prepare_ai_result_with_skills_embedding(
         parsed_cv,
         given_name=given_name,
@@ -92,7 +98,7 @@ async def parse_cv(
     try:
         profile = service.save_ai_cv_result(
             db,
-            filename=cv.filename or "uploaded_cv.pdf",
+            filename=generated_cv_name,
             structured_data=ai_result_dict,
             compatibility_scores=None,
         )
@@ -108,6 +114,7 @@ async def parse_cv(
         "message": "CV processed and saved",
         "cv_id": profile.cv_id,
         "profile_id": profile.id,
+        "cv_file_name": generated_cv_name,
         "ai_result": ai_result_dict,
     }
 
