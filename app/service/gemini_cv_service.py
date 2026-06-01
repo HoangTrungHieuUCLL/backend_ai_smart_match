@@ -123,7 +123,6 @@ class GeminiCVService:
         try:
             cleaned = re.sub(r"```json|```", "", response.text).strip()
             data = json.loads(cleaned)
-            
             data = self.normalize_skills(data)
             return CVParsed.model_validate(data)
 

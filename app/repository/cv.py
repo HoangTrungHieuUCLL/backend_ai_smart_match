@@ -12,6 +12,7 @@ from app.models.cv import (
     Project,
     Language,
     Certification,
+    CompatibilityScore,
 )
 
 class CVRepository:
@@ -28,6 +29,7 @@ class CVRepository:
         *,
         filename: str,
         structured_data: dict[str, Any],
+        compatibility_scores: list[dict[str, Any]] | None = None,
     ) -> Profile:
         """
         Persist the structured JSON returned by the AI service into the CV tables.
@@ -47,7 +49,7 @@ class CVRepository:
         profile = None
 
         # Use e-mail as the safest candidate identifier if Gemini extracted one.
-        if email:
+        if email is not None:
             profile = db.query(Profile).filter(Profile.email == email).first()
 
         # Always create a CV row for this uploaded file.
@@ -87,6 +89,16 @@ class CVRepository:
             profile.email = email
 
         self._apply_structured_data(db, profile, structured_data)
+        if compatibility_scores is not None:
+            profile.compatibility_scores.clear()
+            db.flush()
+            for item in compatibility_scores:
+                profile.compatibility_scores.append(
+                    CompatibilityScore(
+                        job_id=item.get("job_id"),
+                        score=item.get("compatibility_score"),
+                    )
+                )
 
         db.commit()
         db.refresh(profile)
