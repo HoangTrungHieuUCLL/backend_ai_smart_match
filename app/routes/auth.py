@@ -38,10 +38,3 @@ def get_current_admin(admin=Depends(require_admin)):
         "username": admin["sub"],
         "role": admin["role"],
     }
-
-
-@router.get("/executive-view")
-def executive_view(admin=Depends(require_admin)):
-    return {
-        "message": f"Hello, {admin['sub']}!",
-    }
