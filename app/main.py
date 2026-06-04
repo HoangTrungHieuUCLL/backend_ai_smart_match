@@ -8,6 +8,7 @@ from app.database import Base, engine, ensure_vector_extension
 from app.routes.job import router as job_router
 from app.routes.cv import router as cv_router
 from app.routes.auth import router as auth_router
+from app.routes.executive import router as executive_router
 from app.seed import seed_jobs
 
 
@@ -48,3 +49,4 @@ def read_root():
 app.include_router(job_router)
 app.include_router(cv_router)
 app.include_router(auth_router)
+app.include_router(executive_router)
