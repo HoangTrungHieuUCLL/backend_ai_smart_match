@@ -1,6 +1,20 @@
 from pydantic import BaseModel, validator
 from typing import Optional
 
+class JobCreate(BaseModel):
+    company_name: str
+    position: str
+    date: str
+    location: str
+    type: str
+    overview: str
+    responsibilities: str
+    requirements: str
+    requirements_simplified: str
+    offers: str
+    salary: Optional[str] = None
+    notes: Optional[str] = None
+
 class Job(BaseModel):
     id: int
     company_name: str

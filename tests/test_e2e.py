@@ -1,7 +1,10 @@
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+from types import SimpleNamespace
 
 from app.routes import cv as cv_routes
+from app.routes import job as job_routes
+from app.service.auth import auth_service
 
 
 class DummyProfile:
@@ -54,3 +57,58 @@ def test_parse_cv_endpoint_end_to_end(monkeypatch):
     assert payload["cv_file_name"] == "John_Doe_CV_20250101.pdf"
     assert payload["ai_result"]["skills_embedding"] == [0.5, 0.5, 0.5]
     assert payload["ai_result"]["candidate_profile"]["email"] == "john@example.com"
+
+
+def test_create_job_endpoint_requires_admin():
+    app = FastAPI()
+    app.include_router(job_routes.router)
+    app.dependency_overrides[job_routes.get_db] = override_get_db
+
+    client = TestClient(app)
+    response = client.post("/jobs", json={})
+
+    assert response.status_code == 401
+
+
+def test_create_job_endpoint_returns_created_job(monkeypatch):
+    app = FastAPI()
+    app.include_router(job_routes.router)
+    app.dependency_overrides[job_routes.get_db] = override_get_db
+
+    payload = {
+        "company_name": "HR Next",
+        "position": "Data Analyst",
+        "date": "2026-06-04",
+        "location": "Brussels",
+        "type": "Data",
+        "overview": "Analyze hiring data.",
+        "responsibilities": "Build dashboards.",
+        "requirements": "Python and SQL.",
+        "requirements_simplified": "Python, SQL",
+        "offers": "Flexible work.",
+        "salary": None,
+        "notes": None,
+    }
+
+    def fake_create_job(db, job):
+        data = job.model_dump()
+        data["id"] = 123
+        data["salary"] = data["salary"] or ""
+        data["notes"] = data["notes"] or ""
+        data["requirements_embedding"] = [0.1, 0.2, 0.3]
+        return SimpleNamespace(**data)
+
+    monkeypatch.setattr(job_routes.service, "create_job", fake_create_job)
+
+    token = auth_service.create_access_token("admin")
+    client = TestClient(app)
+    response = client.post(
+        "/jobs",
+        json=payload,
+        headers={"Authorization": f"Bearer {token}"},
+    )
+
+    assert response.status_code == 200
+    assert response.json()["id"] == 123
+    assert response.json()["position"] == "Data Analyst"
+    assert response.json()["requirements_embedding"] == [0.1, 0.2, 0.3]

@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
-from app.schemas.job import Job
+from app.schemas.job import Job, JobCreate
+from app.service.auth import require_admin
 from app.service.job import JobService
 
 
@@ -18,6 +19,14 @@ def get_db():
 @router.get("/jobs", response_model=list[Job])
 def get_all_jobs(db: Session = Depends(get_db)):
     return service.get_all_jobs(db)
+
+@router.post("/jobs", response_model=Job)
+def create_job(
+    job: JobCreate,
+    db: Session = Depends(get_db),
+    admin=Depends(require_admin),
+):
+    return service.create_job(db, job)
 
 @router.get("/jobs/{job_id}", response_model=Job)
 def get_job_by_id(job_id: int, db: Session = Depends(get_db)):
