@@ -12,16 +12,29 @@ class CVService:
         return self.repo.get_by_id(db, CV_id)
 
     def save_ai_cv_result(
-    self,
-    db: Session,
-    *,
-    filename: str,
-    structured_data: dict,
-    compatibility_scores: list[dict] | None = None,
+        self,
+        db: Session,
+        *,
+        filename: str,
+        structured_data: dict,
+        compatibility_scores: list[dict] | None = None,
     ):
         return self.repo.save_ai_result(
             db,
             filename=filename,
             structured_data=structured_data,
             compatibility_scores=compatibility_scores,
+        )
+
+    def update_ai_cv_result(
+        self,
+        db: Session,
+        *,
+        profile_id: int,
+        structured_data: dict,
+    ):
+        return self.repo.update_ai_result(
+            db,
+            profile_id=profile_id,
+            structured_data=structured_data,
         )

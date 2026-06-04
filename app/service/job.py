@@ -231,7 +231,7 @@ class JobService:
             )
 
         print("DEBUG total scores created:", len(scores))
-        
+
         return scores if limit is None else scores[:limit]
 
     @staticmethod
