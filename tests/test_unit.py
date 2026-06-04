@@ -3,6 +3,9 @@ from datetime import date
 import pytest
 
 from app.routes import cv as cv_routes
+from app.schemas.job import JobCreate
+from app.service import job as job_service_module
+from app.service.job import JobService
 from app.utils.cv_filename import build_cv_filename
 from app.utils.text_cleaning import TextCleaner
 
@@ -63,3 +66,43 @@ def test_prepare_ai_result_with_skills_embedding_injects_names_and_embeds_skills
     assert result["candidate_profile"]["family_name"] == "Can"
     assert result["candidate_profile"]["email"] == "berk@example.com"
     assert result["skills_embedding"] == [0.1, 0.2, 0.3]
+
+
+def test_create_job_vectorizes_simplified_requirements(monkeypatch):
+    captured = {}
+
+    class FakeJobRepository:
+        def create(self, db, data):
+            captured.update(data)
+            return data
+
+    service = JobService()
+    service.repo = FakeJobRepository()
+
+    monkeypatch.setattr(
+        job_service_module,
+        "vectorize_requirements",
+        lambda requirements: [0.1, 0.2, 0.3],
+    )
+
+    payload = JobCreate(
+        company_name="HR Next",
+        position="Data Analyst",
+        date="2026-06-04",
+        location="Brussels",
+        type="Data",
+        overview="Analyze hiring data.",
+        responsibilities="Build dashboards.",
+        requirements="Python and SQL.",
+        requirements_simplified="Python, SQL",
+        offers="Flexible work.",
+        salary=None,
+        notes=None,
+    )
+
+    result = service.create_job(db=object(), job_data=payload)
+
+    assert result["requirements_embedding"] == [0.1, 0.2, 0.3]
+    assert captured["requirements_simplified"] == "Python, SQL"
+    assert captured["salary"] == ""
+    assert captured["notes"] == ""
