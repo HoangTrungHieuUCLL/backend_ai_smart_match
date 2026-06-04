@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from app.database import SessionLocal
 from app.service.cv import CVService
 from app.service.cv_embedding_service import embed_skills
-from app.service.gemini_cv_service import GeminiCVService
+from app.service.cv_parsing_service import CVParsingService
 from app.service.job import JobService
 from app.service.pdf_extractor import PDFTextExtractor
 from app.utils.cv_filename import build_cv_filename
@@ -16,7 +16,7 @@ router = APIRouter()
 service = CVService()
 job_service = JobService()
 cleaner = TextCleaner()
-gemini_service = GeminiCVService()
+cv_parser_service = CVParsingService()
 extractor = PDFTextExtractor()
 
 
@@ -104,12 +104,12 @@ async def _parse_uploaded_cv(cv: UploadFile):
     cleaned_text = cleaner.clean(raw_text)
 
     try:
-        return gemini_service.parse_cv(cleaned_text)
+        return cv_parser_service.parse_cv(cleaned_text)
     except ValueError as exc:
         raise HTTPException(
             status_code=502,
             detail={
-                "message": "AI service failed to parse CV",
+                "message": "CV parser failed to structure the CV",
                 "error": str(exc),
             },
         ) from exc
@@ -142,6 +142,7 @@ async def upload_cv_with_form_data(
     top_10_scores = job_service.calculate_top_compatibility_scores(
         db,
         ai_result_dict.get("skills_embedding"),
+        cv_skills=ai_result_dict.get("candidate_profile", {}).get("skills"),
         limit=10,
     )
 
@@ -230,6 +231,7 @@ async def parse_cv(
     top_10_scores = job_service.calculate_top_compatibility_scores(
         db,
         ai_result_dict.get("skills_embedding"),
+        cv_skills=ai_result_dict.get("candidate_profile", {}).get("skills"),
         limit=10,
     )
 
