@@ -13,10 +13,13 @@ from app.models.cv_schema import (
 )
 from app.service.skill_taxonomy import canonicalize_skill_phrases
 from app.service.text_phrases import extract_key_phrases, normalize_phrase
+from app.service.ner_cv_extractor import NERCVExtractor
+from app.service.layoutlm_pdf_processor import normalize_bbox_for_layoutlm
 
 
 class CVParsingService:
     _section_model = None
+    _ner_extractor = None
     _SECTION_CUES = {
         "profile",
         "summary",
@@ -42,9 +45,34 @@ class CVParsingService:
         "certifications": ["certifications", "certificates", "certification"],
     }
 
-    def parse_cv(self, raw_text: str) -> CVParsed:
-        sections = self._split_into_sections(raw_text)
+    def parse_cv(self, raw_text: str, pages: list | None = None) -> CVParsed:
+        sections = self._split_into_sections(raw_text, pages)
         top_block = self._get_top_block(raw_text)
+
+        # If no explicit sections were detected, use a lightweight on-premise
+        # NER/heuristic extractor as a fallback (better for resumes without
+        # section cues and on machines without powerful GPUs).
+        non_top_sections = [k for k in sections.keys() if k != "__top_block__"]
+        if not non_top_sections:
+            extractor = self._get_ner_extractor()
+            extracted = extractor.extract(raw_text)
+            cp = extracted.get("candidate_profile", {})
+            candidate_profile = {
+                "current_title": cp.get("current_title"),
+                "phone": cp.get("phone"),
+                "location": cp.get("location"),
+                "bio": cp.get("bio"),
+                "skills": cp.get("skills", []),
+            }
+
+            return CVParsed(
+                candidate_profile=candidate_profile,
+                work_experience=extracted.get("work_experience", []),
+                education=extracted.get("education", []),
+                projects=extracted.get("projects", []),
+                languages=extracted.get("languages", []),
+                certifications=extracted.get("certifications", []),
+            )
 
         candidate_profile = {
             "current_title": self._extract_current_title(top_block),
@@ -63,14 +91,32 @@ class CVParsingService:
             certifications=self._extract_certifications(sections.get("certifications", "")),
         )
 
-    def _split_into_sections(self, text: str) -> dict[str, str]:
-        lines = [line.strip() for line in text.splitlines() if line.strip()]
+    def _split_into_sections(self, text: str, pages: list | None = None) -> dict[str, str]:
+        """Split text into sections. If `pages` is provided (from PDF extraction),
+        use page blocks (preserving layout) as the lines to detect sections.
+        """
+        if pages:
+            # Build lines from page blocks in visual order
+            lines = []
+            block_map = []
+            for page in pages:
+                for block in page.get("blocks", []):
+                    block_text = block.get("text", "").strip()
+                    if not block_text:
+                        continue
+                    lines.append(block_text)
+                    block_map.append(block)
+        else:
+            lines = [line.strip() for line in text.splitlines() if line.strip()]
+            block_map = [None] * len(lines)
+
         sections: dict[str, list[str]] = {}
         current_section: str | None = None
         top_block: list[str] = []
 
-        for line in lines:
-            detected_section = self._detect_section(line)
+        for idx, line in enumerate(lines):
+            block = block_map[idx]
+            detected_section = self._detect_section(line, block)
             if detected_section:
                 current_section = detected_section
                 sections.setdefault(current_section, [])
@@ -85,7 +131,7 @@ class CVParsingService:
         result["__top_block__"] = "\n".join(top_block).strip()
         return result
 
-    def _detect_section(self, line: str) -> str | None:
+    def _detect_section(self, line: str, block: dict | None = None) -> str | None:
         normalized = line.lower().replace(":", "").strip()
 
         for section, headers in self.SECTION_HEADERS.items():
@@ -99,13 +145,13 @@ class CVParsingService:
         if not any(cue in normalized for cue in self._SECTION_CUES):
             return None
 
-        semantic_section = self._detect_section_semantically(normalized)
+        semantic_section = self._detect_section_semantically(normalized, block)
         if semantic_section is not None:
             return semantic_section
 
         return None
 
-    def _detect_section_semantically(self, line: str) -> str | None:
+    def _detect_section_semantically(self, line: str, block: dict | None = None) -> str | None:
         model = self._get_section_model()
         labels = ["profile section", "skills section", "experience section", "education section", "projects section", "languages section", "certifications section"]
         label_to_section = {
@@ -117,13 +163,33 @@ class CVParsingService:
             "languages section": "languages",
             "certifications section": "certifications",
         }
+        try:
+            # If a block with word-level boxes is provided and the model supports
+            # box-aware encoding, use that path.
+            if block is not None and hasattr(model, "encode_with_boxes"):
+                words = [w.get("text") for w in block.get("words", []) if w.get("text")]
+                boxes = [normalize_bbox_for_layoutlm(w.get("bbox"), block_page_width := block.get("page_width", 1) if block.get("page_width") else 1, block_page_height := block.get("page_height", 1) if block.get("page_height") else 1) for w in block.get("words", []) if w.get("text")]
 
-        vectors = model.encode([line, *labels], normalize_embeddings=True)
-        similarities = [self._cosine_similarity(vectors[0], vector) for vector in vectors[1:]]
-        best_index = max(range(len(similarities)), key=similarities.__getitem__)
+                # If block doesn't include page size, fall back to 1000-normalized boxes
+                if not any(block.get("page_width") for _ in [block]):
+                    # assume boxes already normalized elsewhere; skip normalization
+                    boxes = [w.get("bbox") for w in block.get("words", []) if w.get("text")]
 
-        if similarities[best_index] >= 0.55:
-            return label_to_section[labels[best_index]]
+                # Document embedding for the block
+                block_vec = model.encode_with_boxes([words], [boxes], normalize_embeddings=True)[0]
+                label_vecs = model.encode(labels, normalize_embeddings=True)
+                similarities = [self._cosine_similarity(block_vec, lv) for lv in label_vecs]
+            else:
+                vectors = model.encode([line, *labels], normalize_embeddings=True)
+                similarities = [self._cosine_similarity(vectors[0], vector) for vector in vectors[1:]]
+
+            best_index = max(range(len(similarities)), key=similarities.__getitem__)
+
+            if similarities[best_index] >= 0.55:
+                return label_to_section[labels[best_index]]
+        except Exception:
+            # Any failure in the layout-aware path should fall back silently.
+            pass
 
         return None
 
@@ -147,11 +213,25 @@ class CVParsingService:
     @classmethod
     def _get_section_model(cls):
         if cls._section_model is None:
-            from sentence_transformers import SentenceTransformer
+            # Prefer a LayoutLM-based encoder when available (layout-aware),
+            # otherwise fall back to the small SentenceTransformer.
+            try:
+                from app.service.layoutlm_encoder import LayoutLMEncoder
 
-            cls._section_model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+                cls._section_model = LayoutLMEncoder()
+            except Exception:
+                from sentence_transformers import SentenceTransformer
+
+                cls._section_model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 
         return cls._section_model
+
+    @classmethod
+    def _get_ner_extractor(cls):
+        if cls._ner_extractor is None:
+            cls._ner_extractor = NERCVExtractor()
+
+        return cls._ner_extractor
 
     def _get_top_block(self, raw_text: str) -> str:
         lines = [line.strip() for line in raw_text.splitlines() if line.strip()]

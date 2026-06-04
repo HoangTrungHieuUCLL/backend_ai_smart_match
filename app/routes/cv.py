@@ -9,6 +9,7 @@ from app.service.cv_embedding_service import embed_skills
 from app.service.cv_parsing_service import CVParsingService
 from app.service.job import JobService
 from app.service.pdf_extractor import PDFTextExtractor
+from app.service.layoutlm_pdf_processor import extract_words_and_boxes_from_pdf_bytes
 from app.utils.cv_filename import build_cv_filename
 from app.utils.text_cleaning import TextCleaner
 
@@ -99,12 +100,19 @@ def _prepare_ai_result_with_skills_embedding(
 
 async def _parse_uploaded_cv(cv: UploadFile):
     file_bytes = await cv.read()
-
     raw_text = extractor.extract_from_bytes(file_bytes)
     cleaned_text = cleaner.clean(raw_text)
 
+    # extract word-level boxes for layout-aware models; if extractor fails
+    # the parsing will still proceed with text-only input.
+    pages = None
     try:
-        return cv_parser_service.parse_cv(cleaned_text)
+        pages = extract_words_and_boxes_from_pdf_bytes(file_bytes)
+    except Exception:
+        pages = None
+
+    try:
+        return cv_parser_service.parse_cv(cleaned_text, pages=pages)
     except ValueError as exc:
         raise HTTPException(
             status_code=502,
