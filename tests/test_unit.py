@@ -1,0 +1,65 @@
+from datetime import date
+
+import pytest
+
+from app.routes import cv as cv_routes
+from app.utils.cv_filename import build_cv_filename
+from app.utils.text_cleaning import TextCleaner
+
+
+def test_build_cv_filename_with_clean_name_parts():
+    result = build_cv_filename(
+        given_name="Hamza",
+        middle_name="M.",
+        family_name="Eren",
+        today=date(2025, 12, 31),
+    )
+
+    assert result == "HamzaMEren_CV_20251231.pdf"
+
+
+def test_build_cv_filename_defaults_to_unknown_when_no_name_parts_provided():
+    result = build_cv_filename(given_name=None, middle_name=None, family_name=None, today=date(2023, 1, 1))
+
+    assert result == "Unknown_CV_20230101.pdf"
+
+
+def test_build_cv_filename_strips_punctuation_and_accents():
+    result = build_cv_filename(
+        given_name="Ján",
+        middle_name="",
+        family_name="O'Neil",
+        today=date(2024, 5, 5),
+    )
+
+    assert result == "JanONeil_CV_20240505.pdf"
+
+
+def test_text_cleaner_removes_junk_and_normalizes_spacing():
+    cleaner = TextCleaner()
+    raw_text = "Hello\r\n• Python developer\r\nO @\r\nExperience:\nLine one\nLine two"
+    cleaned = cleaner.clean(raw_text)
+
+    assert "Python developer" in cleaned
+    assert "O @" not in cleaned
+    assert "Line one Line two" in cleaned
+
+
+def test_prepare_ai_result_with_skills_embedding_injects_names_and_embeds_skills(monkeypatch):
+    dummy_cv = type("DummyCV", (), {"model_dump": lambda self: {"candidate_profile": {"skills": ["Python", "FastAPI"]}}})()
+
+    monkeypatch.setattr(cv_routes, "embed_skills", lambda skills: [0.1, 0.2, 0.3])
+
+    result = cv_routes._prepare_ai_result_with_skills_embedding(
+        dummy_cv,
+        given_name="Berk",
+        middle_name="A.",
+        family_name="Can",
+        email="berk@example.com",
+    )
+
+    assert result["candidate_profile"]["given_name"] == "Berk"
+    assert result["candidate_profile"]["middle_name"] == "A."
+    assert result["candidate_profile"]["family_name"] == "Can"
+    assert result["candidate_profile"]["email"] == "berk@example.com"
+    assert result["skills_embedding"] == [0.1, 0.2, 0.3]
