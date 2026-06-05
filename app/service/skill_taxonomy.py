@@ -3,6 +3,50 @@ from __future__ import annotations
 import re
 from collections import OrderedDict
 
+# ---------------------------------------------------------------------------
+# Skill validation — reject obvious non-skill tokens produced by the NER model
+# ---------------------------------------------------------------------------
+
+_INVALID_SKILL_RE = re.compile(
+    r'(?:@|\.(?:com|net|org|io|vn|be|uk|nl|de|fr|edu))\b'  # email / domain fragments
+    r'|\d[)]\s*$'                        # language levels: "c2)", "b1)"
+    r'|\.\w+$',                          # malformed: "maui.developed"
+    re.IGNORECASE,
+)
+
+# Single-word tokens that the NER model sometimes mislabels as skills
+_NON_SKILL_WORDS: frozenset[str] = frozenset([
+    # Generic adjectives / adverbs
+    "new", "real", "modern", "scalable", "custom", "strong", "good",
+    "excellent", "advanced", "basic", "various", "multiple", "different",
+    "several", "proven", "practical", "key", "main", "primary", "general",
+    "common", "current", "previous", "full", "high", "low", "large",
+    "small", "fast", "easy", "hard", "open", "old", "core", "broad",
+    "independently", "effectively", "efficiently",
+    # Generic verbs / nouns that are not skills
+    "solve", "problems", "questions", "tools", "building", "experience",
+    "knowledge", "ability", "understanding", "background", "skills",
+    "work", "working", "team", "environment", "system", "process",
+    "results", "solutions", "platform", "application", "applications",
+    # Language-proficiency descriptors (not skills in themselves)
+    "native", "fluent", "certified", "proficient", "conversational",
+])
+
+
+def is_valid_skill(phrase: str) -> bool:
+    """Return False for obvious non-skill tokens (email fragments, lang levels, stopwords)."""
+    if not phrase:
+        return False
+    stripped = phrase.strip()
+    if len(stripped) < 2:
+        return False
+    if _INVALID_SKILL_RE.search(stripped):
+        return False
+    words = stripped.lower().split()
+    if len(words) == 1 and words[0] in _NON_SKILL_WORDS:
+        return False
+    return True
+
 
 _CANONICAL_SKILL_ALIASES: dict[str, tuple[str, ...]] = {
     "python": ("python", "python developer", "python scripting", "django", "flask", "fastapi"),

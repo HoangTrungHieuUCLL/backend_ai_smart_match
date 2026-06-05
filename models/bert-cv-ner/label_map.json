@@ -1,0 +1,40 @@
+{
+  "label2id": {
+    "O": 0,
+    "B-SKILL": 1,
+    "I-SKILL": 2,
+    "B-EDUCATION": 3,
+    "I-EDUCATION": 4,
+    "B-EXPERIENCE": 5,
+    "I-EXPERIENCE": 6,
+    "B-ORG": 7,
+    "I-ORG": 8,
+    "B-DATE": 9,
+    "I-DATE": 10,
+    "B-CONTACT": 11,
+    "I-CONTACT": 12,
+    "B-NAME": 13,
+    "I-NAME": 14,
+    "B-SECTION": 15,
+    "I-SECTION": 16
+  },
+  "id2label": {
+    "0": "O",
+    "1": "B-SKILL",
+    "2": "I-SKILL",
+    "3": "B-EDUCATION",
+    "4": "I-EDUCATION",
+    "5": "B-EXPERIENCE",
+    "6": "I-EXPERIENCE",
+    "7": "B-ORG",
+    "8": "I-ORG",
+    "9": "B-DATE",
+    "10": "I-DATE",
+    "11": "B-CONTACT",
+    "12": "I-CONTACT",
+    "13": "B-NAME",
+    "14": "I-NAME",
+    "15": "B-SECTION",
+    "16": "I-SECTION"
+  }
+}

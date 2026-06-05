@@ -4,6 +4,8 @@ from fastapi import APIRouter, Body, Depends, File, Form, HTTPException, UploadF
 from sqlalchemy.orm import Session
 
 from app.database import SessionLocal
+from app.models.cv import CompatibilityScore
+from app.service.bert_cv_classifier import get_bert_classifier
 from app.service.cv import CVService
 from app.service.cv_embedding_service import embed_skills
 from app.service.cv_parsing_service import CVParsingService
@@ -98,13 +100,31 @@ def _prepare_ai_result_with_skills_embedding(
     return ai_result_dict
 
 
-async def _parse_uploaded_cv(cv: UploadFile):
+async def _parse_uploaded_cv(cv: UploadFile) -> tuple[Any, list[dict]]:
+    """
+    Extract text from the uploaded PDF, then:
+    1. Run the fine-tuned DistilBERT classifier over all extracted tokens.
+    2. Group the BIO-tagged tokens into structured entity spans.
+    3. Map the entities to a CVParsed object.
+    Returns (CVParsed, classified_tokens).
+    classified_tokens is a list of {"word": str, "label": str} dicts that the
+    frontend can render as an annotated word-level view for user review.
+    Falls back to the heuristic CVParsingService if the BERT model is unavailable.
+    """
     file_bytes = await cv.read()
     raw_text = extractor.extract_from_bytes(file_bytes)
     cleaned_text = cleaner.clean(raw_text)
 
-    # extract word-level boxes for layout-aware models; if extractor fails
-    # the parsing will still proceed with text-only input.
+    # --- BERT path (primary) -------------------------------------------
+    classified_tokens: list[dict] = []
+    try:
+        bert = get_bert_classifier()
+        parsed_cv, classified_tokens = bert.extract_cv_structure(cleaned_text)
+        return parsed_cv, classified_tokens
+    except Exception:
+        pass  # fall through to heuristic parser
+
+    # --- Heuristic fallback --------------------------------------------
     pages = None
     try:
         pages = extract_words_and_boxes_from_pdf_bytes(file_bytes)
@@ -112,7 +132,8 @@ async def _parse_uploaded_cv(cv: UploadFile):
         pages = None
 
     try:
-        return cv_parser_service.parse_cv(cleaned_text, pages=pages)
+        parsed_cv = cv_parser_service.parse_cv(cleaned_text, pages=pages)
+        return parsed_cv, classified_tokens
     except ValueError as exc:
         raise HTTPException(
             status_code=502,
@@ -121,6 +142,25 @@ async def _parse_uploaded_cv(cv: UploadFile):
                 "error": str(exc),
             },
         ) from exc
+
+
+def _save_compatibility_scores(
+    db: Session,
+    profile_id: int,
+    scores: list[dict],
+) -> None:
+    """Replace existing compatibility scores for a profile with new ones."""
+    db.query(CompatibilityScore).filter(
+        CompatibilityScore.profile_id == profile_id
+    ).delete()
+    db.flush()
+    for item in scores:
+        db.add(CompatibilityScore(
+            profile_id=profile_id,
+            job_id=item.get("job_id"),
+            score=item.get("compatibility_score"),
+        ))
+    db.commit()
 
 
 @router.post("/cv/upload")
@@ -132,7 +172,7 @@ async def upload_cv_with_form_data(
     cv: UploadFile = File(...),
     db: Session = Depends(get_db),
 ):
-    parsed_cv = await _parse_uploaded_cv(cv)
+    parsed_cv, classified_tokens = await _parse_uploaded_cv(cv)
 
     ai_result_dict = _prepare_ai_result_with_skills_embedding(
         parsed_cv,
@@ -174,6 +214,7 @@ async def upload_cv_with_form_data(
         "profile_id": profile.id,
         "top_10_compatibility_scores": top_10_scores,
         "ai_result": ai_result_dict,
+        "classified_tokens": classified_tokens,
     }
 
 
@@ -201,6 +242,19 @@ async def update_extracted_cv_data(
     if profile is None:
         raise HTTPException(status_code=404, detail="CV profile not found")
 
+    # Recalculate compatibility scores with the confirmed (possibly edited) skills.
+    top_10_scores = job_service.calculate_top_compatibility_scores(
+        db,
+        structured_data.get("skills_embedding"),
+        cv_skills=structured_data.get("candidate_profile", {}).get("skills"),
+        limit=10,
+    )
+
+    try:
+        _save_compatibility_scores(db, profile_id, top_10_scores)
+    except Exception:
+        pass  # scoring is best-effort; don't fail the save
+
     response_data = dict(structured_data)
     response_data.pop("skills_embedding", None)
 
@@ -209,6 +263,7 @@ async def update_extracted_cv_data(
         "cv_id": profile.cv_id,
         "profile_id": profile.id,
         "ai_result": response_data,
+        "top_10_compatibility_scores": top_10_scores,
     }
 
 
@@ -221,7 +276,7 @@ async def parse_cv(
     email: str | None = Form(None),
     db: Session = Depends(get_db),
 ):
-    parsed_cv = await _parse_uploaded_cv(cv)
+    parsed_cv, classified_tokens = await _parse_uploaded_cv(cv)
 
     generated_cv_name = build_cv_filename(
         given_name,
@@ -264,6 +319,7 @@ async def parse_cv(
         "top_10_compatibility_scores": top_10_scores,
         "cv_file_name": generated_cv_name,
         "ai_result": ai_result_dict,
+        "classified_tokens": classified_tokens,
     }
 
 
