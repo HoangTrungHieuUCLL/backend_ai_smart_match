@@ -9,9 +9,9 @@ from sentence_transformers import util
 
 from app.repository.job import JobRepository
 from app.models.cv import CompatibilityScore
-from app.schemas.job import JobCreate
+from app.schemas.job import JobCreate, JobUpdate
 from app.service.compatibility_calibration import load_scoring_config
-from app.service.requirements_vectorizer import vectorize_requirements
+from app.service.requirements_vectorizer import simplify_requirements, vectorize_requirements
 from app.service.skill_taxonomy import canonicalize_skill_phrase
 
 
@@ -24,17 +24,64 @@ class JobService:
         return self.repo.get_all(db)
 
     def create_job(self, db: Session, job_data: JobCreate):
-        data = job_data.model_dump()
-        data["salary"] = data["salary"] or ""
-        data["notes"] = data["notes"] or ""
+        data = self._prepare_job_data(job_data.model_dump())
+
+        return self.repo.create(db, data)
+
+    def update_job(self, db: Session, job_id: int, job_data: JobUpdate):
+        data = self._prepare_job_data(job_data.model_dump())
+        job = self.repo.update_by_id(db, job_id, data)
+
+        if job is None:
+            raise HTTPException(status_code=404, detail="Job not found")
+
+        return job
+
+    def delete_job(self, db: Session, job_id: int):
+        job = self.repo.delete_by_id(db, job_id)
+
+        if job is None:
+            raise HTTPException(status_code=404, detail="Job not found")
+
+        return job
+
+    def get_job_by_id(self, db: Session, job_id: int):
+        return self.repo.get_by_id(db, job_id)
+
+    def _prepare_job_data(self, data: dict):
+        text_fields = [
+            "date",
+            "location",
+            "type",
+            "overview",
+            "responsibilities",
+            "requirements",
+            "requirements_simplified",
+            "offers",
+            "salary",
+            "notes",
+        ]
+
+        data["company_name"] = data["company_name"].strip()
+        data["position"] = data["position"].strip()
+
+        if not data["company_name"]:
+            raise HTTPException(status_code=422, detail="Company name is required")
+
+        if not data["position"]:
+            raise HTTPException(status_code=422, detail="Position is required")
+
+        for field in text_fields:
+            data[field] = (data.get(field) or "").strip()
+
+        if not data["requirements_simplified"]:
+            data["requirements_simplified"] = simplify_requirements(data["requirements"])
+
         data["requirements_embedding"] = vectorize_requirements(
             data["requirements_simplified"]
         )
 
-        return self.repo.create(db, data)
-
-    def get_job_by_id(self, db: Session, job_id: int):
-        return self.repo.get_by_id(db, job_id)
+        return data
 
     def get_top_compatibility_scores_for_profile(
         self,

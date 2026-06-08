@@ -40,6 +40,15 @@ class JobRepository:
         db.refresh(job)
         return job
 
+    def delete_by_id(self, db: Session, job_id: int):
+        job = db.query(Job).filter(Job.id == job_id).first()
+        if not job:
+            return None
+
+        db.delete(job)
+        db.commit()
+        return job
+
     def get_top_compatibility_scores_for_profile(
         self,
         db: Session,
