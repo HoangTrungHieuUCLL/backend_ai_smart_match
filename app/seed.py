@@ -39,41 +39,64 @@ def seed_jobs():
     db = SessionLocal()
 
     try:
-        db.query(Job).delete()
-        db.commit()
-
         csv_path = os.path.join("app", "schemas", "jobs.csv")
 
         with open(csv_path, newline="", encoding="utf-8") as f:
             reader = csv.DictReader(f)
-            jobs = [
-                Job(
-                    id=int(row["id"]),
-                    company_name=row["company_name"],
-                    position=row["position"],
-                    date=row["date_posted"],
-                    location=row["location"],
-                    type=row["job_type"],
-                    overview=row["overview"],
-                    responsibilities=row["responsibilities"],
-                    requirements=row["requirements"],
-                    requirements_simplified=simplified,
-                    requirements_embedding=get_requirements_embedding(row, simplified),
-                    offers=row["offers"],
-                    salary=row["salary_usd"],
-                    notes=row["notes"],
-                )
-                for row in reader
-                for simplified in [get_requirements_simplified(row)]
-            ]
-            db.bulk_save_objects(jobs)
+            seeded_count = 0
+
+            for row in reader:
+                job_id = int(row["id"])
+                simplified = get_requirements_simplified(row)
+                data = {
+                    "id": job_id,
+                    "company_name": row["company_name"],
+                    "position": row["position"],
+                    "date": row["date_posted"],
+                    "location": row["location"],
+                    "type": row["job_type"],
+                    "overview": row["overview"],
+                    "responsibilities": row["responsibilities"],
+                    "requirements": row["requirements"],
+                    "requirements_simplified": simplified,
+                    "requirements_embedding": get_requirements_embedding(row, simplified),
+                    "offers": row["offers"],
+                    "salary": row["salary_usd"],
+                    "notes": row["notes"],
+                }
+
+                existing_job = db.query(Job).filter(Job.id == job_id).first()
+                if existing_job:
+                    for key, value in data.items():
+                        setattr(existing_job, key, value)
+                else:
+                    db.add(Job(**data))
+
+                seeded_count += 1
+
             db.commit()
-            print(f"Seeded {len(jobs)} jobs.")
+            reset_job_id_sequence()
+            print(f"Seeded {seeded_count} jobs.")
     except Exception as e:
         db.rollback()
         raise e
     finally:
         db.close()
+
+
+def reset_job_id_sequence():
+    with engine.begin() as connection:
+        connection.execute(
+            text(
+                """
+                SELECT setval(
+                    pg_get_serial_sequence('jobs', 'id'),
+                    COALESCE((SELECT MAX(id) FROM jobs), 1),
+                    (SELECT MAX(id) IS NOT NULL FROM jobs)
+                )
+                """
+            )
+        )
 
 if __name__ == "__main__":
     seed_jobs()

@@ -9,7 +9,9 @@ from sentence_transformers import util
 
 from app.repository.job import JobRepository
 from app.models.cv import CompatibilityScore
+from app.schemas.job import JobCreate
 from app.service.compatibility_calibration import load_scoring_config
+from app.service.requirements_vectorizer import vectorize_requirements
 from app.service.skill_taxonomy import canonicalize_skill_phrase
 
 
@@ -20,6 +22,16 @@ class JobService:
 
     def get_all_jobs(self, db: Session):
         return self.repo.get_all(db)
+
+    def create_job(self, db: Session, job_data: JobCreate):
+        data = job_data.model_dump()
+        data["salary"] = data["salary"] or ""
+        data["notes"] = data["notes"] or ""
+        data["requirements_embedding"] = vectorize_requirements(
+            data["requirements_simplified"]
+        )
+
+        return self.repo.create(db, data)
 
     def get_job_by_id(self, db: Session, job_id: int):
         return self.repo.get_by_id(db, job_id)
