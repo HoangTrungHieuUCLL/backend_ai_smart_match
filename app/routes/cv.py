@@ -1,10 +1,11 @@
 from typing import Any
 
 from fastapi import APIRouter, Body, Depends, File, Form, HTTPException, UploadFile
+from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import Session
 
 from app.database import SessionLocal
-from app.models.cv import CompatibilityScore
+from app.models.cv import CompatibilityScore, Profile
 from app.service.bert_cv_classifier import get_bert_classifier
 from app.service.auth import require_admin
 from app.service.cv import CVService
@@ -164,6 +165,74 @@ def _save_compatibility_scores(
     db.commit()
 
 
+def _date_to_string(value: Any) -> str | None:
+    return value.isoformat() if value else None
+
+
+def _serialize_profile_for_review(profile: Profile) -> dict[str, Any]:
+    cv = profile.cv
+
+    return {
+        "message": "CV profile loaded",
+        "cv_id": profile.cv_id,
+        "profile_id": profile.id,
+        "cv_file_name": cv.filename if cv else None,
+        "ai_result": {
+            "candidate_profile": {
+                "given_name": profile.given_name,
+                "middle_name": profile.middle_name,
+                "family_name": profile.family_name,
+                "current_title": profile.current_title,
+                "phone": profile.phone,
+                "location": profile.location,
+                "email": profile.email,
+                "bio": profile.bio,
+                "skills": _skills_as_list(profile.skills),
+            },
+            "work_experience": [
+                {
+                    "job_title": item.job_title,
+                    "company_name": item.company_name,
+                    "start_date": _date_to_string(item.start_date),
+                    "end_date": _date_to_string(item.end_date),
+                }
+                for item in profile.work_experiences
+            ],
+            "education": [
+                {
+                    "institution": item.institution,
+                    "degree": item.degree,
+                    "field_of_study": item.field_of_study,
+                    "start_date": _date_to_string(item.start_date),
+                    "end_date": _date_to_string(item.end_date),
+                }
+                for item in profile.educations
+            ],
+            "projects": [
+                {
+                    "project_name": item.project_name,
+                    "description": item.description,
+                }
+                for item in profile.projects
+            ],
+            "languages": [
+                {
+                    "language_name": item.language_name,
+                    "proficiency_level": item.proficiency_level,
+                }
+                for item in profile.languages
+            ],
+            "certifications": [
+                {
+                    "certification_name": item.certification_name,
+                    "issue_date": _date_to_string(item.issue_date),
+                }
+                for item in profile.certifications
+            ],
+        },
+    }
+
+
 @router.post("/cv/upload")
 async def upload_cv_with_form_data(
     givenName: str = Form(...),
@@ -266,6 +335,31 @@ async def update_extracted_cv_data(
         "ai_result": response_data,
         "top_10_compatibility_scores": top_10_scores,
     }
+
+
+@router.get("/cv/{profile_id}/extracted-data")
+def get_extracted_cv_data(
+    profile_id: int,
+    db: Session = Depends(get_db),
+):
+    profile = (
+        db.query(Profile)
+        .options(
+            joinedload(Profile.cv),
+            joinedload(Profile.work_experiences),
+            joinedload(Profile.educations),
+            joinedload(Profile.projects),
+            joinedload(Profile.languages),
+            joinedload(Profile.certifications),
+        )
+        .filter(Profile.id == profile_id)
+        .first()
+    )
+
+    if profile is None:
+        raise HTTPException(status_code=404, detail="CV profile not found")
+
+    return _serialize_profile_for_review(profile)
 
 
 @router.delete("/cv/{cv_id}")

@@ -1,11 +1,32 @@
-from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+import base64
+import hashlib
+import hmac
+import json
+import time
+from urllib.parse import urlencode
 
+import httpx
+from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi.responses import RedirectResponse
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
+
+from app.config import settings
+from app.database import SessionLocal
+from app.service.cv import CVService
+from app.service.cv_embedding_service import embed_skills
 from app.service.auth import auth_service, require_admin
 from app.service.user_service import user_service
 import re
 
 router = APIRouter()
+cv_service = CVService()
+
+LINKEDIN_AUTH_URL = "https://www.linkedin.com/oauth/v2/authorization"
+LINKEDIN_TOKEN_URL = "https://www.linkedin.com/oauth/v2/accessToken"
+LINKEDIN_USERINFO_URL = "https://api.linkedin.com/v2/userinfo"
+LINKEDIN_SCOPES = "openid profile email"
+STATE_MAX_AGE_SECONDS = 600
 
 
 class LoginRequest(BaseModel):
@@ -20,6 +41,77 @@ class LoginResponse(BaseModel):
     access_token: str
     token_type: str
     email: str
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+def _base64url_encode(raw: bytes) -> str:
+    return base64.urlsafe_b64encode(raw).decode("ascii").rstrip("=")
+
+
+def _base64url_decode(value: str) -> bytes:
+    padding = "=" * (-len(value) % 4)
+    return base64.urlsafe_b64decode(value + padding)
+
+
+def _sign_state(payload: dict) -> str:
+    body = _base64url_encode(json.dumps(payload, separators=(",", ":")).encode("utf-8"))
+    signature = hmac.new(
+        settings.AUTH_SECRET_KEY.encode("utf-8"),
+        body.encode("ascii"),
+        hashlib.sha256,
+    ).digest()
+
+    return f"{body}.{_base64url_encode(signature)}"
+
+
+def _verify_state(state: str) -> dict:
+    try:
+        body, signature = state.split(".", 1)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail="Invalid LinkedIn state") from exc
+
+    expected = hmac.new(
+        settings.AUTH_SECRET_KEY.encode("utf-8"),
+        body.encode("ascii"),
+        hashlib.sha256,
+    ).digest()
+
+    if not hmac.compare_digest(_base64url_decode(signature), expected):
+        raise HTTPException(status_code=400, detail="Invalid LinkedIn state")
+
+    payload = json.loads(_base64url_decode(body))
+    issued_at = int(payload.get("iat", 0))
+
+    if issued_at < int(time.time()) - STATE_MAX_AGE_SECONDS:
+        raise HTTPException(status_code=400, detail="Expired LinkedIn state")
+
+    return payload
+
+
+def _frontend_redirect(path: str, **params: str | int | None) -> RedirectResponse:
+    filtered = {key: value for key, value in params.items() if value is not None}
+    query = urlencode(filtered)
+    url = f"{settings.FRONTEND_URL.rstrip('/')}{path}"
+
+    if query:
+        url = f"{url}?{query}"
+
+    return RedirectResponse(url)
+
+
+def _require_linkedin_config() -> None:
+    if not settings.LINKEDIN_CLIENT_ID or not settings.LINKEDIN_CLIENT_SECRET:
+        raise HTTPException(
+            status_code=500,
+            detail="LinkedIn import is not configured",
+        )
 
 def validate_password(password: str) -> bool:
     return (
@@ -109,3 +201,105 @@ def register(request: RegisterRequest):
         "token_type": "bearer",
         "email": request.email,
     }
+
+
+@router.get("/auth/linkedin/cv-start")
+def start_linkedin_cv_import():
+    _require_linkedin_config()
+
+    state = _sign_state({"iat": int(time.time()), "flow": "cv-import"})
+    params = {
+        "response_type": "code",
+        "client_id": settings.LINKEDIN_CLIENT_ID,
+        "redirect_uri": settings.LINKEDIN_REDIRECT_URI,
+        "state": state,
+        "scope": LINKEDIN_SCOPES,
+    }
+
+    return RedirectResponse(f"{LINKEDIN_AUTH_URL}?{urlencode(params)}")
+
+
+@router.get("/auth/linkedin/cv-callback")
+async def linkedin_cv_callback(
+    code: str | None = Query(None),
+    state: str | None = Query(None),
+    error: str | None = Query(None),
+    db: Session = Depends(get_db),
+):
+    if error or not code or not state:
+        return _frontend_redirect(
+            "/job-search-with-ai",
+            linkedinImport="failed",
+        )
+
+    try:
+        _require_linkedin_config()
+        _verify_state(state)
+
+        async with httpx.AsyncClient(timeout=10) as client:
+            token_response = await client.post(
+                LINKEDIN_TOKEN_URL,
+                data={
+                    "grant_type": "authorization_code",
+                    "code": code,
+                    "redirect_uri": settings.LINKEDIN_REDIRECT_URI,
+                    "client_id": settings.LINKEDIN_CLIENT_ID,
+                    "client_secret": settings.LINKEDIN_CLIENT_SECRET,
+                },
+                headers={"Content-Type": "application/x-www-form-urlencoded"},
+            )
+            token_response.raise_for_status()
+            access_token = token_response.json().get("access_token")
+
+            if not access_token:
+                raise ValueError("LinkedIn token response did not include access_token")
+
+            userinfo_response = await client.get(
+                LINKEDIN_USERINFO_URL,
+                headers={"Authorization": f"Bearer {access_token}"},
+            )
+            userinfo_response.raise_for_status()
+            userinfo = userinfo_response.json()
+
+        given_name = userinfo.get("given_name") or ""
+        family_name = userinfo.get("family_name") or ""
+        email = userinfo.get("email")
+
+        structured_data = {
+            "candidate_profile": {
+                "given_name": given_name or "Unknown",
+                "middle_name": None,
+                "family_name": family_name or "Unknown",
+                "current_title": None,
+                "phone": None,
+                "location": None,
+                "email": email,
+                "bio": None,
+                "skills": [],
+            },
+            "work_experience": [],
+            "education": [],
+            "projects": [],
+            "languages": [],
+            "certifications": [],
+            "skills_embedding": embed_skills([]),
+        }
+
+        profile = cv_service.save_ai_cv_result(
+            db,
+            filename="LinkedIn import",
+            structured_data=structured_data,
+            compatibility_scores=[],
+        )
+
+        return _frontend_redirect(
+            "/linkedin-cv-callback",
+            profileId=profile.id,
+            cvId=profile.cv_id,
+        )
+    except Exception:
+        db.rollback()
+        return _frontend_redirect(
+            "/job-search-with-ai",
+            linkedinImport="failed",
+        )
