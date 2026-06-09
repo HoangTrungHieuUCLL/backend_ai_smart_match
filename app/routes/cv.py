@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from app.database import SessionLocal
 from app.models.cv import CompatibilityScore
 from app.service.bert_cv_classifier import get_bert_classifier
+from app.service.auth import require_admin
 from app.service.cv import CVService
 from app.service.cv_embedding_service import embed_skills
 from app.service.cv_parsing_service import CVParsingService
@@ -265,6 +266,17 @@ async def update_extracted_cv_data(
         "ai_result": response_data,
         "top_10_compatibility_scores": top_10_scores,
     }
+
+
+@router.delete("/cv/{cv_id}")
+def delete_cv(
+    cv_id: int,
+    db: Session = Depends(get_db),
+    admin=Depends(require_admin),
+):
+    service.delete_CV_by_id(db, cv_id)
+
+    return {"message": "CV deleted successfully", "cv_id": cv_id}
 
 
 @router.post("/parse-cv")

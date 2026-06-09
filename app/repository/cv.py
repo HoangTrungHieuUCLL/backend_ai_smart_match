@@ -23,6 +23,23 @@ class CVRepository:
     def get_by_id(self, db: Session, cv_id: int):
         return db.query(CV).filter(CV.id == cv_id).first()
 
+    def delete_by_id(self, db: Session, cv_id: int):
+        cv = db.query(CV).filter(CV.id == cv_id).first()
+
+        if cv is None:
+            return None
+
+        profile = cv.candidate_profile
+
+        if profile is not None:
+            db.delete(profile)
+            db.flush()
+
+        db.delete(cv)
+        db.commit()
+
+        return cv
+
     def save_ai_result(
         self,
         db: Session,
