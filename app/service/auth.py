@@ -25,7 +25,7 @@ class AuthService:
             ADMIN_PASSWORD,
         )
 
-    def create_access_token(self, identity: str, role: str) -> str:
+    def create_access_token(self, identity: str, role: str = "admin") -> str:
         payload = {
             "sub": identity,
             "role": role,

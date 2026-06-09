@@ -3,6 +3,7 @@ from fastapi.testclient import TestClient
 from types import SimpleNamespace
 
 from app.routes import cv as cv_routes
+from app.routes import executive as executive_routes
 from app.routes import job as job_routes
 from app.service.auth import auth_service
 
@@ -68,6 +69,32 @@ def test_create_job_endpoint_requires_admin():
     response = client.post("/jobs", json={})
 
     assert response.status_code == 401
+
+
+def test_executive_view_endpoint_requires_authentication():
+    app = FastAPI()
+    app.include_router(executive_routes.router)
+    app.dependency_overrides[executive_routes.get_db] = override_get_db
+
+    client = TestClient(app)
+    response = client.get("/executive-view")
+
+    assert response.status_code == 401
+
+
+def test_executive_view_endpoint_rejects_regular_user_token():
+    app = FastAPI()
+    app.include_router(executive_routes.router)
+    app.dependency_overrides[executive_routes.get_db] = override_get_db
+
+    token = auth_service.create_access_token("user@example.com", "user")
+    client = TestClient(app)
+    response = client.get(
+        "/executive-view",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+
+    assert response.status_code == 403
 
 
 def test_create_job_endpoint_returns_created_job(monkeypatch):

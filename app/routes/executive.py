@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session, joinedload
 from app.database import SessionLocal
 from app.models.cv import CV, Profile
 from app.models.job import Job
+from app.service.auth import require_admin
 
 
 router = APIRouter(prefix="/executive-view", tags=["executive-view"])
@@ -110,6 +111,7 @@ def get_executive_view_dashboard(
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=50),
     db: Session = Depends(get_db),
+    admin=Depends(require_admin),
 ):
     total_jobs = db.query(func.count(Job.id)).scalar() or 0
     total_cvs = db.query(func.count(CV.id)).scalar() or 0
