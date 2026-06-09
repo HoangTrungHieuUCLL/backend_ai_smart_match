@@ -25,10 +25,10 @@ class AuthService:
             ADMIN_PASSWORD,
         )
 
-    def create_access_token(self, username: str) -> str:
+    def create_access_token(self, identity: str, role: str) -> str:
         payload = {
-            "sub": username,
-            "role": "admin",
+            "sub": identity,
+            "role": role,
             "exp": int(time.time()) + AUTH_TOKEN_EXPIRE_SECONDS,
         }
         encoded_payload = self._encode_json(payload)
@@ -49,8 +49,8 @@ class AuthService:
 
         payload = self._decode_json(encoded_payload)
 
-        if payload.get("role") != "admin":
-            raise HTTPException(status_code=403, detail="Admin access required")
+        # if payload.get("role") != "admin":
+        #     raise HTTPException(status_code=403, detail="Admin access required")
 
         if int(payload.get("exp", 0)) < int(time.time()):
             raise HTTPException(status_code=401, detail="Token expired")
@@ -95,6 +95,19 @@ auth_service = AuthService()
 
 
 def require_admin(
+    credentials: HTTPAuthorizationCredentials | None = Depends(security),
+) -> dict[str, Any]:
+    if credentials is None or credentials.scheme.lower() != "bearer":
+        raise HTTPException(status_code=401, detail="Authentication required")
+
+    payload = auth_service.verify_access_token(credentials.credentials)
+
+    if payload.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Admin access required")
+
+    return payload
+
+def require_authenticated(
     credentials: HTTPAuthorizationCredentials | None = Depends(security),
 ) -> dict[str, Any]:
     if credentials is None or credentials.scheme.lower() != "bearer":
