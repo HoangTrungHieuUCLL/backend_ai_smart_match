@@ -24,3 +24,10 @@ _pycache__/
 **/.env
 **/*.env
 cv-dataset/
+
+# Model weights are too large for standard Git (253 MB).
+# Commit everything else in models/ so the directory structure is tracked.
+# Use `git lfs track "models/**/*.safetensors"` to push the weights via Git LFS,
+# or copy model.safetensors manually when deploying to a new machine.
+models/**/*.safetensors
+models/**/*.bin

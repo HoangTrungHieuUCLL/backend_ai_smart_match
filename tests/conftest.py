@@ -87,16 +87,35 @@ _stub_module(
     },
 )
 
+def _dummy_vectorize_requirements(requirements):
+    return [0.0, 0.0, 0.0]
+
+
+class DummyJobService:
+    def __init__(self):
+        self.repo = None
+
+    def create_job(self, db, job_data):
+        data = job_data.model_dump()
+        data["salary"] = data["salary"] or ""
+        data["notes"] = data["notes"] or ""
+        data["requirements_embedding"] = sys.modules["app.service.job"].vectorize_requirements(
+            data["requirements_simplified"]
+        )
+
+        return self.repo.create(db, data)
+
+    def calculate_top_compatibility_scores(self, db, skills_embedding, limit=10):
+        return []
+
+    def calculate_and_save_scores_for_profile(self, db, profile_id):
+        return {"profile_id": profile_id, "compatibility_scores": []}
+
+
 _stub_module(
     "app.service.job",
     {
-        "JobService": type(
-            "JobService",
-            (),
-            {
-                "__init__": lambda self: None,
-                "calculate_and_save_scores_for_profile": lambda self, db, profile_id: {"profile_id": profile_id, "compatibility_scores": []},
-            },
-        ),
+        "JobService": DummyJobService,
+        "vectorize_requirements": _dummy_vectorize_requirements,
     },
 )
