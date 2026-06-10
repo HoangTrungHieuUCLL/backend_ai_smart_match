@@ -40,7 +40,7 @@ class DummySessionLocal:
 
         return DummySession()
 
-_stub_module("app.database", {"SessionLocal": DummySessionLocal()})
+_stub_module("app.database", {"Base": type("Base", (), {}), "SessionLocal": DummySessionLocal()})
 
 _stub_module(
     "app.service.pdf_extractor",
@@ -68,6 +68,35 @@ _stub_module(
     "app.service.cv_embedding_service",
     {
         "embed_skills": lambda skills: [0.0, 0.0, 0.0],
+    },
+)
+
+_stub_module(
+    "app.service.bert_cv_classifier",
+    {
+        "get_bert_classifier": lambda: type(
+            "DummyBertClassifier",
+            (),
+            {"extract_cv_structure": lambda self, text: (_stub_module("dummy_parsed_cv"), [])},
+        )(),
+    },
+)
+
+_stub_module(
+    "app.service.cv_parsing_service",
+    {
+        "CVParsingService": type(
+            "CVParsingService",
+            (),
+            {"parse_cv": lambda self, text, pages=None: type("DummyParsedCV", (), {"model_dump": lambda self: {"candidate_profile": {"skills": ["Python"]}}})()},
+        ),
+    },
+)
+
+_stub_module(
+    "app.service.layoutlm_pdf_processor",
+    {
+        "extract_words_and_boxes_from_pdf_bytes": lambda data: None,
     },
 )
 
@@ -105,7 +134,7 @@ class DummyJobService:
 
         return self.repo.create(db, data)
 
-    def calculate_top_compatibility_scores(self, db, skills_embedding, limit=10):
+    def calculate_top_compatibility_scores(self, db, skills_embedding, *, cv_skills=None, limit=10):
         return []
 
     def calculate_and_save_scores_for_profile(self, db, profile_id):
