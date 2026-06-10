@@ -20,7 +20,7 @@ class DummyParsedCV:
 
 
 async def dummy_parse_uploaded_cv(cv):
-    return DummyParsedCV()
+    return DummyParsedCV(), []
 
 
 def fake_save_ai_cv_result(db, filename, structured_data, compatibility_scores=None):
