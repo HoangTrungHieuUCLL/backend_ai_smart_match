@@ -110,8 +110,35 @@ def _require_linkedin_config() -> None:
     if not settings.LINKEDIN_CLIENT_ID or not settings.LINKEDIN_CLIENT_SECRET:
         raise HTTPException(
             status_code=500,
-            detail="LinkedIn import is not configured",
+            detail="LinkedIn authentication is not configured",
         )
+
+
+async def _fetch_linkedin_userinfo(code: str, redirect_uri: str) -> dict:
+    async with httpx.AsyncClient(timeout=10) as client:
+        token_response = await client.post(
+            LINKEDIN_TOKEN_URL,
+            data={
+                "grant_type": "authorization_code",
+                "code": code,
+                "redirect_uri": redirect_uri,
+                "client_id": settings.LINKEDIN_CLIENT_ID,
+                "client_secret": settings.LINKEDIN_CLIENT_SECRET,
+            },
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+        )
+        token_response.raise_for_status()
+        access_token = token_response.json().get("access_token")
+
+        if not access_token:
+            raise ValueError("LinkedIn token response did not include access_token")
+
+        userinfo_response = await client.get(
+            LINKEDIN_USERINFO_URL,
+            headers={"Authorization": f"Bearer {access_token}"},
+        )
+        userinfo_response.raise_for_status()
+        return userinfo_response.json()
 
 def validate_password(password: str) -> bool:
     return (
@@ -219,6 +246,122 @@ def start_linkedin_cv_import():
     return RedirectResponse(f"{LINKEDIN_AUTH_URL}?{urlencode(params)}")
 
 
+@router.get("/auth/linkedin/login-start")
+def start_linkedin_login():
+    _require_linkedin_config()
+
+    state = _sign_state({"iat": int(time.time()), "flow": "login"})
+    params = {
+        "response_type": "code",
+        "client_id": settings.LINKEDIN_CLIENT_ID,
+        "redirect_uri": settings.LINKEDIN_LOGIN_REDIRECT_URI,
+        "state": state,
+        "scope": LINKEDIN_SCOPES,
+    }
+
+    return RedirectResponse(f"{LINKEDIN_AUTH_URL}?{urlencode(params)}")
+
+
+@router.get("/auth/linkedin/register-start")
+def start_linkedin_register():
+    _require_linkedin_config()
+
+    state = _sign_state({"iat": int(time.time()), "flow": "register"})
+    params = {
+        "response_type": "code",
+        "client_id": settings.LINKEDIN_CLIENT_ID,
+        "redirect_uri": settings.LINKEDIN_REGISTER_REDIRECT_URI,
+        "state": state,
+        "scope": LINKEDIN_SCOPES,
+    }
+
+    return RedirectResponse(f"{LINKEDIN_AUTH_URL}?{urlencode(params)}")
+
+
+@router.get("/auth/linkedin/login-callback")
+async def linkedin_login_callback(
+    code: str | None = Query(None),
+    state: str | None = Query(None),
+    error: str | None = Query(None),
+):
+    if error or not code or not state:
+        return _frontend_redirect("/login", linkedinLogin="failed")
+
+    try:
+        _require_linkedin_config()
+        state_payload = _verify_state(state)
+
+        if state_payload.get("flow") != "login":
+            raise ValueError("LinkedIn state flow did not match login")
+
+        userinfo = await _fetch_linkedin_userinfo(
+            code,
+            settings.LINKEDIN_LOGIN_REDIRECT_URI,
+        )
+        email = (userinfo.get("email") or "").strip().lower()
+
+        if not email:
+            return _frontend_redirect("/login", linkedinLogin="missing_email")
+
+        user = user_service.find_by_email(email)
+
+        if not user:
+            return _frontend_redirect("/login", linkedinLogin="not_found")
+
+        token = auth_service.create_access_token(email, user["role"])
+
+        return _frontend_redirect(
+            "/linkedin-login-callback",
+            token=token,
+            email=email,
+            role=user["role"],
+        )
+    except Exception:
+        return _frontend_redirect("/login", linkedinLogin="failed")
+
+
+@router.get("/auth/linkedin/register-callback")
+async def linkedin_register_callback(
+    code: str | None = Query(None),
+    state: str | None = Query(None),
+    error: str | None = Query(None),
+):
+    if error or not code or not state:
+        return _frontend_redirect("/register", linkedinRegister="failed")
+
+    try:
+        _require_linkedin_config()
+        state_payload = _verify_state(state)
+
+        if state_payload.get("flow") != "register":
+            raise ValueError("LinkedIn state flow did not match registration")
+
+        userinfo = await _fetch_linkedin_userinfo(
+            code,
+            settings.LINKEDIN_REGISTER_REDIRECT_URI,
+        )
+        email = (userinfo.get("email") or "").strip().lower()
+
+        if not email:
+            return _frontend_redirect("/register", linkedinRegister="missing_email")
+
+        user = user_service.find_by_email(email)
+
+        if not user:
+            user = user_service.create_oauth_user(email, role="user")
+
+        token = auth_service.create_access_token(email, user["role"])
+
+        return _frontend_redirect(
+            "/linkedin-login-callback",
+            token=token,
+            email=email,
+            role=user["role"],
+        )
+    except Exception:
+        return _frontend_redirect("/register", linkedinRegister="failed")
+
+
 @router.get("/auth/linkedin/cv-callback")
 async def linkedin_cv_callback(
     code: str | None = Query(None),
@@ -234,32 +377,12 @@ async def linkedin_cv_callback(
 
     try:
         _require_linkedin_config()
-        _verify_state(state)
+        state_payload = _verify_state(state)
 
-        async with httpx.AsyncClient(timeout=10) as client:
-            token_response = await client.post(
-                LINKEDIN_TOKEN_URL,
-                data={
-                    "grant_type": "authorization_code",
-                    "code": code,
-                    "redirect_uri": settings.LINKEDIN_REDIRECT_URI,
-                    "client_id": settings.LINKEDIN_CLIENT_ID,
-                    "client_secret": settings.LINKEDIN_CLIENT_SECRET,
-                },
-                headers={"Content-Type": "application/x-www-form-urlencoded"},
-            )
-            token_response.raise_for_status()
-            access_token = token_response.json().get("access_token")
+        if state_payload.get("flow") != "cv-import":
+            raise ValueError("LinkedIn state flow did not match CV import")
 
-            if not access_token:
-                raise ValueError("LinkedIn token response did not include access_token")
-
-            userinfo_response = await client.get(
-                LINKEDIN_USERINFO_URL,
-                headers={"Authorization": f"Bearer {access_token}"},
-            )
-            userinfo_response.raise_for_status()
-            userinfo = userinfo_response.json()
+        userinfo = await _fetch_linkedin_userinfo(code, settings.LINKEDIN_REDIRECT_URI)
 
         given_name = userinfo.get("given_name") or ""
         family_name = userinfo.get("family_name") or ""
