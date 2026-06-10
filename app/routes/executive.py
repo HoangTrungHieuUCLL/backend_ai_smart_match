@@ -1,13 +1,15 @@
 from collections import Counter
 from datetime import date, datetime
+from typing import Literal
 
-from fastapi import APIRouter, Depends
-from sqlalchemy import func
+from fastapi import APIRouter, Depends, Query
+from sqlalchemy import func, or_
 from sqlalchemy.orm import Session, joinedload
 
 from app.database import SessionLocal
 from app.models.cv import CV, Profile
 from app.models.job import Job
+from app.service.auth import require_admin
 
 
 router = APIRouter(prefix="/executive-view", tags=["executive-view"])
@@ -102,7 +104,15 @@ def _normalize_skill(skill: str):
 
 
 @router.get("")
-def get_executive_view_dashboard(db: Session = Depends(get_db)):
+def get_executive_view_dashboard(
+    search: str = "",
+    sort_by: Literal["id", "filename", "candidate_name", "skills"] = "id",
+    sort_direction: Literal["asc", "desc"] = "desc",
+    page: int = Query(1, ge=1),
+    page_size: int = Query(20, ge=1, le=50),
+    db: Session = Depends(get_db),
+    admin=Depends(require_admin),
+):
     total_jobs = db.query(func.count(Job.id)).scalar() or 0
     total_cvs = db.query(func.count(CV.id)).scalar() or 0
 
@@ -115,9 +125,44 @@ def get_executive_view_dashboard(db: Session = Depends(get_db)):
             if normalized:
                 skill_counts[normalized] += 1
 
+    cv_query = db.query(CV).outerjoin(Profile)
+    normalized_search = search.strip()
+
+    if normalized_search:
+        search_pattern = f"%{normalized_search}%"
+        cv_query = cv_query.filter(
+            or_(
+                Profile.given_name.ilike(search_pattern),
+                Profile.middle_name.ilike(search_pattern),
+                Profile.family_name.ilike(search_pattern),
+                Profile.skills.ilike(search_pattern),
+            )
+        )
+
+    total_matching_cvs = cv_query.count()
+
+    if sort_by == "filename":
+        sort_columns = [CV.filename]
+    elif sort_by == "candidate_name":
+        sort_columns = [Profile.given_name, Profile.middle_name, Profile.family_name]
+    elif sort_by == "skills":
+        sort_columns = [Profile.skills]
+    else:
+        sort_columns = [CV.id]
+
+    ordered_columns = [
+        column.asc().nullslast() if sort_direction == "asc" else column.desc().nullslast()
+        for column in sort_columns
+    ]
+
+    if sort_by != "id":
+        ordered_columns.append(CV.id.desc())
+
+    total_pages = max(1, (total_matching_cvs + page_size - 1) // page_size)
+    offset = (page - 1) * page_size
+
     cvs = (
-        db.query(CV)
-        .options(
+        cv_query.options(
             joinedload(CV.candidate_profile).joinedload(Profile.work_experiences),
             joinedload(CV.candidate_profile).joinedload(Profile.educations),
             joinedload(CV.candidate_profile).joinedload(Profile.projects),
@@ -125,7 +170,9 @@ def get_executive_view_dashboard(db: Session = Depends(get_db)):
             joinedload(CV.candidate_profile).joinedload(Profile.certifications),
             joinedload(CV.candidate_profile).joinedload(Profile.compatibility_scores),
         )
-        .order_by(CV.id.desc())
+        .order_by(*ordered_columns)
+        .offset(offset)
+        .limit(page_size)
         .all()
     )
 
@@ -137,4 +184,10 @@ def get_executive_view_dashboard(db: Session = Depends(get_db)):
             for skill, count in skill_counts.most_common(15)
         ],
         "cvs": [_serialize_cv(cv) for cv in cvs],
+        "cv_table": {
+            "total_count": total_matching_cvs,
+            "page": page,
+            "page_size": page_size,
+            "total_pages": total_pages,
+        },
     }

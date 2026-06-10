@@ -228,9 +228,10 @@ class JobService:
         cv_skills: list[str],
         job_requirements: list[str],
     ) -> float | None:
-        all_phrases = cv_skills + job_requirements
-        if not all_phrases:
+        if not cv_skills or not job_requirements:
             return None
+
+        all_phrases = cv_skills + job_requirements
 
         embeddings = self._encode_phrases(all_phrases)
         labels = self._dbscan(
@@ -368,6 +369,9 @@ class JobService:
 
     @staticmethod
     def _cosine_similarity(first: list[float], second: list[float]) -> float:
+        if not first or not second or len(first) != len(second):
+            return 0.0
+
         dot_product = sum(a * b for a, b in zip(first, second))
         first_norm = math.sqrt(sum(a * a for a in first))
         second_norm = math.sqrt(sum(b * b for b in second))

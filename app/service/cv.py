@@ -1,4 +1,6 @@
 from sqlalchemy.orm import Session
+from fastapi import HTTPException
+
 from app.repository.cv import CVRepository
 
 class CVService:
@@ -10,6 +12,14 @@ class CVService:
 
     def get_CV_by_id(self, db: Session, CV_id: int):
         return self.repo.get_by_id(db, CV_id)
+
+    def delete_CV_by_id(self, db: Session, CV_id: int):
+        cv = self.repo.delete_by_id(db, CV_id)
+
+        if cv is None:
+            raise HTTPException(status_code=404, detail="CV not found")
+
+        return cv
 
     def save_ai_cv_result(
         self,

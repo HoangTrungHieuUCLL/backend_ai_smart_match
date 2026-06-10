@@ -66,17 +66,17 @@ def test_verify_access_token_rejects_expired_token(auth_service, monkeypatch):
     assert exc_info.value.detail == "Token expired"
 
 
-def test_verify_access_token_rejects_non_admin_role(auth_service, monkeypatch):
+def test_verify_access_token_returns_payload_for_non_admin_role(auth_service, monkeypatch):
     monkeypatch.setattr(auth_module.time, "time", lambda: 1000)
     token = _signed_token(
         auth_service,
         {"sub": "test-admin", "role": "user", "exp": 1060},
     )
 
-    with pytest.raises(HTTPException) as exc_info:
-        auth_service.verify_access_token(token)
+    payload = auth_service.verify_access_token(token)
 
-    assert exc_info.value.status_code == 403
+    assert payload["sub"] == "test-admin"
+    assert payload["role"] == "user"
 
 
 def test_verify_access_token_rejects_malformed_token(auth_service):
