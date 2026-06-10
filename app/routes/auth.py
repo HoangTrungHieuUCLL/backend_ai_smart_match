@@ -15,7 +15,7 @@ from app.config import settings
 from app.database import SessionLocal
 from app.service.cv import CVService
 from app.service.cv_embedding_service import embed_skills
-from app.service.auth import auth_service, require_admin
+from app.service.auth import auth_service, require_admin, require_authenticated
 from app.service.user_service import user_service
 import re
 
@@ -36,6 +36,10 @@ class LoginRequest(BaseModel):
 class RegisterRequest(BaseModel):
     email: str
     password: str
+
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str
 
 class LoginResponse(BaseModel):
     access_token: str
@@ -104,6 +108,19 @@ def _frontend_redirect(path: str, **params: str | int | None) -> RedirectRespons
         url = f"{url}?{query}"
 
     return RedirectResponse(url)
+
+
+def _linkedin_profile_redirect_params(userinfo: dict) -> dict[str, str | int | None]:
+    return {
+        "linkedinLinked": "true",
+        "linkedinName": userinfo.get("name"),
+        "linkedinGivenName": userinfo.get("given_name"),
+        "linkedinFamilyName": userinfo.get("family_name"),
+        "linkedinPicture": userinfo.get("picture"),
+        "linkedinEmailVerified": str(bool(userinfo.get("email_verified"))).lower()
+        if "email_verified" in userinfo
+        else None,
+    }
 
 
 def _require_linkedin_config() -> None:
@@ -230,6 +247,33 @@ def register(request: RegisterRequest):
     }
 
 
+@router.post("/auth/change-password")
+def change_password(
+    request: ChangePasswordRequest,
+    current_user=Depends(require_authenticated),
+):
+    if not validate_password(request.new_password):
+        raise HTTPException(
+            status_code=400,
+            detail="INVALID_PASSWORD",
+        )
+
+    user = user_service.find_by_email(current_user["sub"])
+
+    if not user:
+        raise HTTPException(status_code=404, detail="USER_NOT_FOUND")
+
+    if not user_service.verify_password(
+        request.current_password,
+        user["password_hash"],
+    ):
+        raise HTTPException(status_code=400, detail="INVALID_CURRENT_PASSWORD")
+
+    user_service.update_password(current_user["sub"], request.new_password)
+
+    return {"message": "Password changed"}
+
+
 @router.get("/auth/linkedin/cv-start")
 def start_linkedin_cv_import():
     _require_linkedin_config()
@@ -315,6 +359,7 @@ async def linkedin_login_callback(
             token=token,
             email=email,
             role=user["role"],
+            **_linkedin_profile_redirect_params(userinfo),
         )
     except Exception:
         return _frontend_redirect("/login", linkedinLogin="failed")
@@ -357,6 +402,7 @@ async def linkedin_register_callback(
             token=token,
             email=email,
             role=user["role"],
+            **_linkedin_profile_redirect_params(userinfo),
         )
     except Exception:
         return _frontend_redirect("/register", linkedinRegister="failed")

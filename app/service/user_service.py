@@ -71,5 +71,24 @@ class UserService:
             "role": role,
         }
 
+    def update_password(self, email: str, new_password: str) -> None:
+        normalized_email = email.strip().lower()
+        users = self._read_users()
+        updated = False
+
+        for user in users:
+            if user["email"].strip().lower() == normalized_email:
+                user["password_hash"] = self.hash_password(new_password)
+                updated = True
+                break
+
+        if not updated:
+            raise ValueError("USER_NOT_FOUND")
+
+        with open(USER_FILE, "w", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=["email", "password_hash", "role"])
+            writer.writeheader()
+            writer.writerows(users)
+
 
 user_service = UserService()
