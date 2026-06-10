@@ -8,6 +8,7 @@ __all__ = [
     "Language",
     "Certification",
     "CompatibilityScore",
+    "SavedJob",
 ]
 
 
@@ -17,7 +18,7 @@ def __getattr__(name):
 
         return Job
 
-    if name in {"CV", "Profile", "Experience", "Education", "Project", "Language", "Certification", "CompatibilityScore"}:
+    if name in {"CV", "Profile", "Experience", "Education", "Project", "Language", "Certification", "CompatibilityScore", "SavedJob"}:
         from .cv import (
             CV,
             Profile,
@@ -27,6 +28,7 @@ def __getattr__(name):
             Language,
             Certification,
             CompatibilityScore,
+            SavedJob,
         )
 
         return {
@@ -38,6 +40,7 @@ def __getattr__(name):
             "Language": Language,
             "Certification": Certification,
             "CompatibilityScore": CompatibilityScore,
+            "SavedJob": SavedJob,
         }[name]
 
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

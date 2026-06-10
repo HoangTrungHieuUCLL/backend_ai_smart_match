@@ -4,7 +4,9 @@ from pydantic import BaseModel
 from app.service.auth import auth_service, require_admin
 from app.service.user_service import user_service
 import re
-
+from app.service.profile import ProfileService
+from sqlalchemy.orm import Session
+from app.database import SessionLocal
 router = APIRouter()
 
 
@@ -20,6 +22,16 @@ class LoginResponse(BaseModel):
     access_token: str
     token_type: str
     email: str
+    profile_id: int | None = None
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
 
 def validate_password(password: str) -> bool:
     return (
@@ -29,7 +41,8 @@ def validate_password(password: str) -> bool:
     )
 
 @router.post("/auth/login", response_model=LoginResponse)
-def login(credentials: LoginRequest):
+def login(credentials: LoginRequest,
+           db: Session = Depends(get_db)):
 
     # ADMIN LOGIN (fallback)
     if auth_service.validate_admin_credentials(
@@ -45,6 +58,7 @@ def login(credentials: LoginRequest):
             "access_token": token,
             "token_type": "bearer",
             "email": credentials.email,
+            "profile_id": None,
         }
 
     # NORMAL USER LOGIN
@@ -58,7 +72,9 @@ def login(credentials: LoginRequest):
         user["password_hash"],
     ):
         raise HTTPException(status_code=401, detail="Invalid credentials")
-
+    
+    profile = ProfileService().get_by_email(db, credentials.email)
+    
     token = auth_service.create_access_token(
         credentials.email,
         user["role"],
@@ -68,6 +84,7 @@ def login(credentials: LoginRequest):
         "access_token": token,
         "token_type": "bearer",
         "email": credentials.email,
+        "profile_id": profile.id if profile else None,
     }
 
 

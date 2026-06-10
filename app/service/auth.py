@@ -7,7 +7,6 @@ from typing import Any
 
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-
 from app.config import (
     ADMIN_PASSWORD,
     ADMIN_USERNAME,
