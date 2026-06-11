@@ -43,6 +43,9 @@ class ChangePasswordRequest(BaseModel):
     current_password: str
     new_password: str
 
+class LinkedInLinkRequest(BaseModel):
+    link_token: str
+
 class LoginResponse(BaseModel):
     access_token: str
     token_type: str
@@ -132,6 +135,30 @@ def _linkedin_profile_redirect_params(userinfo: dict) -> dict[str, str | int | N
         "linkedinEmailVerified": str(bool(userinfo.get("email_verified"))).lower()
         if "email_verified" in userinfo
         else None,
+    }
+
+
+def _linkedin_profile_payload(userinfo: dict) -> dict[str, str | bool | None]:
+    return {
+        "name": userinfo.get("name"),
+        "given_name": userinfo.get("given_name"),
+        "family_name": userinfo.get("family_name"),
+        "picture": userinfo.get("picture"),
+        "email_verified": bool(userinfo.get("email_verified"))
+        if "email_verified" in userinfo
+        else None,
+    }
+
+
+def _linkedin_profile_response_payload(email: str, payload: dict) -> dict:
+    return {
+        "linked": True,
+        "email": email,
+        "emailVerified": payload.get("email_verified"),
+        "fullName": payload.get("name"),
+        "givenName": payload.get("given_name"),
+        "familyName": payload.get("family_name"),
+        "picture": payload.get("picture"),
     }
 
 
@@ -291,6 +318,36 @@ def change_password(
     return {"message": "Password changed"}
 
 
+@router.post("/auth/linkedin/link-existing")
+def link_existing_linkedin_account(request: LinkedInLinkRequest):
+    try:
+        payload = _verify_state(request.link_token)
+    except HTTPException:
+        raise HTTPException(status_code=400, detail="INVALID_LINK_TOKEN")
+
+    if payload.get("flow") != "linkedin-link-existing":
+        raise HTTPException(status_code=400, detail="INVALID_LINK_TOKEN")
+
+    email = (payload.get("email") or "").strip().lower()
+    if not email:
+        raise HTTPException(status_code=400, detail="INVALID_LINK_TOKEN")
+
+    user = user_service.find_by_email(email)
+    if not user:
+        raise HTTPException(status_code=404, detail="USER_NOT_FOUND")
+
+    token = auth_service.create_access_token(email, user["role"])
+    linkedin_profile = payload.get("linkedin_profile") or {}
+
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "email": email,
+        "role": user["role"],
+        "linkedin_profile": _linkedin_profile_response_payload(email, linkedin_profile),
+    }
+
+
 @router.get("/auth/linkedin/cv-start")
 def start_linkedin_cv_import():
     _require_linkedin_config()
@@ -388,6 +445,9 @@ async def linkedin_register_callback(
     state: str | None = Query(None),
     error: str | None = Query(None),
 ):
+    if error == "access_denied":
+        return _frontend_redirect("/register")
+
     if error or not code or not state:
         return _frontend_redirect("/register", linkedinRegister="failed")
 
@@ -411,6 +471,20 @@ async def linkedin_register_callback(
 
         if not user:
             user = user_service.create_oauth_user(email, role="user")
+        elif user.get("password_hash") != "LINKEDIN_OAUTH_ACCOUNT":
+            link_token = _sign_state(
+                {
+                    "iat": int(time.time()),
+                    "flow": "linkedin-link-existing",
+                    "email": email,
+                    "linkedin_profile": _linkedin_profile_payload(userinfo),
+                }
+            )
+            return _frontend_redirect(
+                "/register",
+                linkedinRegister="conflict",
+                linkToken=link_token,
+            )
 
         token = auth_service.create_access_token(email, user["role"])
 
