@@ -77,6 +77,12 @@ class Profile(Base):
         back_populates="profile",
         cascade="all, delete-orphan"
     )
+    
+    saved_jobs = relationship(
+        "SavedJob",
+        back_populates="profile",
+        cascade="all, delete-orphan"
+    )
 
 class Experience(Base):
     __tablename__ = "experiences"
@@ -161,3 +167,25 @@ class CompatibilityScore(Base):
 
     profile = relationship("Profile", back_populates="compatibility_scores")
     job = relationship("Job", back_populates="compatibility_scores")
+    
+    
+class SavedJob(Base):
+    __tablename__ = "saved_jobs"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    profile_id = Column(
+        Integer,
+        ForeignKey("profiles.id", ondelete="CASCADE"),
+        nullable=False
+    )
+
+    job_id = Column(
+        Integer,
+        ForeignKey("jobs.id", ondelete="CASCADE"),
+        nullable=False
+    )
+
+    saved_at = Column(DateTime, default=datetime.utcnow)
+
+    profile = relationship("Profile", back_populates="saved_jobs")
