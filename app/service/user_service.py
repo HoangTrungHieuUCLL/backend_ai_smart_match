@@ -31,9 +31,10 @@ class UserService:
             return list(reader)
 
     def find_by_email(self, email: str) -> Optional[Dict]:
+        normalized_email = email.strip().lower()
         users = self._read_users()
         for user in users:
-            if user["email"] == email:
+            if user["email"].strip().lower() == normalized_email:
                 return user
         return None
 
@@ -56,6 +57,38 @@ class UserService:
             "email": email,
             "role": role,
         }
+
+    def create_oauth_user(self, email: str, role: str = "user") -> dict:
+        if self.email_exists(email):
+            raise ValueError("EMAIL_EXISTS")
+
+        with open(USER_FILE, "a", newline="") as f:
+            writer = csv.writer(f)
+            writer.writerow([email.strip().lower(), "LINKEDIN_OAUTH_ACCOUNT", role])
+
+        return {
+            "email": email.strip().lower(),
+            "role": role,
+        }
+
+    def update_password(self, email: str, new_password: str) -> None:
+        normalized_email = email.strip().lower()
+        users = self._read_users()
+        updated = False
+
+        for user in users:
+            if user["email"].strip().lower() == normalized_email:
+                user["password_hash"] = self.hash_password(new_password)
+                updated = True
+                break
+
+        if not updated:
+            raise ValueError("USER_NOT_FOUND")
+
+        with open(USER_FILE, "w", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=["email", "password_hash", "role"])
+            writer.writeheader()
+            writer.writerows(users)
 
 
 user_service = UserService()
