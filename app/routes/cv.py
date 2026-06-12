@@ -1,0 +1,437 @@
+from typing import Any
+
+from fastapi import APIRouter, Body, Depends, File, Form, HTTPException, UploadFile
+from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import Session
+
+from app.database import SessionLocal
+from app.models.cv import CompatibilityScore, Profile
+from app.service.bert_cv_classifier import get_bert_classifier
+from app.service.auth import require_admin
+from app.service.cv import CVService
+from app.service.cv_embedding_service import embed_skills
+from app.service.cv_parsing_service import CVParsingService
+from app.service.job import JobService
+from app.service.pdf_extractor import PDFTextExtractor
+from app.service.layoutlm_pdf_processor import extract_words_and_boxes_from_pdf_bytes
+from app.utils.cv_filename import build_cv_filename
+from app.utils.text_cleaning import TextCleaner
+
+router = APIRouter()
+service = CVService()
+job_service = JobService()
+cleaner = TextCleaner()
+cv_parser_service = CVParsingService()
+extractor = PDFTextExtractor()
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+def _skills_as_list(value: Any) -> list[str]:
+    if value is None:
+        return []
+
+    if isinstance(value, list):
+        return [str(item).strip() for item in value if str(item).strip()]
+
+    if isinstance(value, str):
+        return [item.strip() for item in value.split(",") if item.strip()]
+
+    return [str(value).strip()] if str(value).strip() else []
+
+
+def _normalise_edited_cv_payload(payload: dict[str, Any]) -> dict[str, Any]:
+    data = dict(payload)
+    candidate_profile = data.get("candidate_profile")
+
+    if not isinstance(candidate_profile, dict):
+        candidate_profile = {}
+        data["candidate_profile"] = candidate_profile
+
+    for nested_key, canonical_key in (
+        ("work_experiences", "work_experience"),
+        ("educations", "education"),
+        ("projects", "projects"),
+        ("languages", "languages"),
+        ("certifications", "certifications"),
+    ):
+        if canonical_key not in data and nested_key in candidate_profile:
+            data[canonical_key] = candidate_profile.get(nested_key)
+
+    skills = _skills_as_list(candidate_profile.get("skills"))
+    candidate_profile["skills"] = skills
+    data["skills_embedding"] = embed_skills(skills)
+
+    return data
+
+
+def _prepare_ai_result_with_skills_embedding(
+    parsed_cv,
+    *,
+    given_name: str | None = None,
+    middle_name: str | None = None,
+    family_name: str | None = None,
+    email: str | None = None,
+) -> dict[str, Any]:
+    ai_result_dict = parsed_cv.model_dump()
+    candidate_profile = ai_result_dict.get("candidate_profile")
+
+    if not isinstance(candidate_profile, dict):
+        candidate_profile = {}
+        ai_result_dict["candidate_profile"] = candidate_profile
+
+    if given_name is not None:
+        candidate_profile["given_name"] = given_name
+    if middle_name is not None:
+        candidate_profile["middle_name"] = middle_name
+    if family_name is not None:
+        candidate_profile["family_name"] = family_name
+    if email is not None:
+        candidate_profile["email"] = email
+
+    skills = _skills_as_list(candidate_profile.get("skills"))
+    candidate_profile["skills"] = skills
+    ai_result_dict["skills_embedding"] = embed_skills(skills)
+
+    return ai_result_dict
+
+
+async def _parse_uploaded_cv(cv: UploadFile) -> tuple[Any, list[dict]]:
+    """
+    Extract text from the uploaded PDF, then:
+    1. Run the fine-tuned DistilBERT classifier over all extracted tokens.
+    2. Group the BIO-tagged tokens into structured entity spans.
+    3. Map the entities to a CVParsed object.
+    Returns (CVParsed, classified_tokens).
+    classified_tokens is a list of {"word": str, "label": str} dicts that the
+    frontend can render as an annotated word-level view for user review.
+    Falls back to the heuristic CVParsingService if the BERT model is unavailable.
+    """
+    file_bytes = await cv.read()
+    raw_text = extractor.extract_from_bytes(file_bytes)
+    cleaned_text = cleaner.clean(raw_text)
+
+    # --- BERT path (primary) -------------------------------------------
+    classified_tokens: list[dict] = []
+    try:
+        bert = get_bert_classifier()
+        parsed_cv, classified_tokens = bert.extract_cv_structure(cleaned_text)
+        return parsed_cv, classified_tokens
+    except Exception:
+        pass  # fall through to heuristic parser
+
+    # --- Heuristic fallback --------------------------------------------
+    pages = None
+    try:
+        pages = extract_words_and_boxes_from_pdf_bytes(file_bytes)
+    except Exception:
+        pages = None
+
+    try:
+        parsed_cv = cv_parser_service.parse_cv(cleaned_text, pages=pages)
+        return parsed_cv, classified_tokens
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "message": "CV parser failed to structure the CV",
+                "error": str(exc),
+            },
+        ) from exc
+
+
+def _save_compatibility_scores(
+    db: Session,
+    profile_id: int,
+    scores: list[dict],
+) -> None:
+    """Replace existing compatibility scores for a profile with new ones."""
+    db.query(CompatibilityScore).filter(
+        CompatibilityScore.profile_id == profile_id
+    ).delete()
+    db.flush()
+    for item in scores:
+        db.add(CompatibilityScore(
+            profile_id=profile_id,
+            job_id=item.get("job_id"),
+            score=item.get("compatibility_score"),
+        ))
+    db.commit()
+
+
+def _date_to_string(value: Any) -> str | None:
+    return value.isoformat() if value else None
+
+
+def _serialize_profile_for_review(profile: Profile) -> dict[str, Any]:
+    cv = profile.cv
+
+    return {
+        "message": "CV profile loaded",
+        "cv_id": profile.cv_id,
+        "profile_id": profile.id,
+        "cv_file_name": cv.filename if cv else None,
+        "ai_result": {
+            "candidate_profile": {
+                "given_name": profile.given_name,
+                "middle_name": profile.middle_name,
+                "family_name": profile.family_name,
+                "current_title": profile.current_title,
+                "phone": profile.phone,
+                "location": profile.location,
+                "email": profile.email,
+                "bio": profile.bio,
+                "skills": _skills_as_list(profile.skills),
+            },
+            "work_experience": [
+                {
+                    "job_title": item.job_title,
+                    "company_name": item.company_name,
+                    "start_date": _date_to_string(item.start_date),
+                    "end_date": _date_to_string(item.end_date),
+                }
+                for item in profile.work_experiences
+            ],
+            "education": [
+                {
+                    "institution": item.institution,
+                    "degree": item.degree,
+                    "field_of_study": item.field_of_study,
+                    "start_date": _date_to_string(item.start_date),
+                    "end_date": _date_to_string(item.end_date),
+                }
+                for item in profile.educations
+            ],
+            "projects": [
+                {
+                    "project_name": item.project_name,
+                    "description": item.description,
+                }
+                for item in profile.projects
+            ],
+            "languages": [
+                {
+                    "language_name": item.language_name,
+                    "proficiency_level": item.proficiency_level,
+                }
+                for item in profile.languages
+            ],
+            "certifications": [
+                {
+                    "certification_name": item.certification_name,
+                    "issue_date": _date_to_string(item.issue_date),
+                }
+                for item in profile.certifications
+            ],
+        },
+    }
+
+
+@router.post("/cv/upload")
+async def upload_cv_with_form_data(
+    givenName: str = Form(...),
+    middleName: str | None = Form(None),
+    familyName: str = Form(...),
+    email: str = Form(...),
+    cv: UploadFile = File(...),
+    db: Session = Depends(get_db),
+):
+    parsed_cv, classified_tokens = await _parse_uploaded_cv(cv)
+
+    ai_result_dict = _prepare_ai_result_with_skills_embedding(
+        parsed_cv,
+        given_name=givenName,
+        middle_name=middleName,
+        family_name=familyName,
+        email=email,
+    )
+
+    normalized_filename = build_cv_filename(
+        given_name=givenName,
+        middle_name=middleName,
+        family_name=familyName,
+    )
+    top_10_scores = job_service.calculate_top_compatibility_scores(
+        db,
+        ai_result_dict.get("skills_embedding"),
+        cv_skills=ai_result_dict.get("candidate_profile", {}).get("skills"),
+        limit=10,
+    )
+
+    try:
+        profile = service.save_ai_cv_result(
+            db,
+            filename=normalized_filename,
+            structured_data=ai_result_dict,
+            compatibility_scores=top_10_scores,
+        )
+    except Exception as exc:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"AI result was parsed, but saving to database failed: {exc}",
+        ) from exc
+
+    return {
+        "message": "CV processed and saved",
+        "cv_id": profile.cv_id,
+        "profile_id": profile.id,
+        "top_10_compatibility_scores": top_10_scores,
+        "ai_result": ai_result_dict,
+        "classified_tokens": classified_tokens,
+    }
+
+
+@router.put("/cv/{profile_id}/extracted-data")
+async def update_extracted_cv_data(
+    profile_id: int,
+    cv_data: dict[str, Any] = Body(...),
+    db: Session = Depends(get_db),
+):
+    structured_data = _normalise_edited_cv_payload(cv_data)
+
+    try:
+        profile = service.update_ai_cv_result(
+            db,
+            profile_id=profile_id,
+            structured_data=structured_data,
+        )
+    except Exception as exc:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"Edited CV data could not be saved: {exc}",
+        ) from exc
+
+    if profile is None:
+        raise HTTPException(status_code=404, detail="CV profile not found")
+
+    # Recalculate compatibility scores with the confirmed (possibly edited) skills.
+    top_10_scores = job_service.calculate_top_compatibility_scores(
+        db,
+        structured_data.get("skills_embedding"),
+        cv_skills=structured_data.get("candidate_profile", {}).get("skills"),
+        limit=10,
+    )
+
+    try:
+        _save_compatibility_scores(db, profile_id, top_10_scores)
+    except Exception:
+        pass  # scoring is best-effort; don't fail the save
+
+    response_data = dict(structured_data)
+    response_data.pop("skills_embedding", None)
+
+    return {
+        "message": "CV data updated",
+        "cv_id": profile.cv_id,
+        "profile_id": profile.id,
+        "ai_result": response_data,
+        "top_10_compatibility_scores": top_10_scores,
+    }
+
+
+@router.get("/cv/{profile_id}/extracted-data")
+def get_extracted_cv_data(
+    profile_id: int,
+    db: Session = Depends(get_db),
+):
+    profile = (
+        db.query(Profile)
+        .options(
+            joinedload(Profile.cv),
+            joinedload(Profile.work_experiences),
+            joinedload(Profile.educations),
+            joinedload(Profile.projects),
+            joinedload(Profile.languages),
+            joinedload(Profile.certifications),
+        )
+        .filter(Profile.id == profile_id)
+        .first()
+    )
+
+    if profile is None:
+        raise HTTPException(status_code=404, detail="CV profile not found")
+
+    return _serialize_profile_for_review(profile)
+
+
+@router.delete("/cv/{cv_id}")
+def delete_cv(
+    cv_id: int,
+    db: Session = Depends(get_db),
+    admin=Depends(require_admin),
+):
+    service.delete_CV_by_id(db, cv_id)
+
+    return {"message": "CV deleted successfully", "cv_id": cv_id}
+
+
+@router.post("/parse-cv")
+async def parse_cv(
+    cv: UploadFile = File(...),
+    given_name: str | None = Form(None),
+    middle_name: str | None = Form(None),
+    family_name: str | None = Form(None),
+    email: str | None = Form(None),
+    db: Session = Depends(get_db),
+):
+    parsed_cv, classified_tokens = await _parse_uploaded_cv(cv)
+
+    generated_cv_name = build_cv_filename(
+        given_name,
+        middle_name,
+        family_name,
+    )
+
+    ai_result_dict = _prepare_ai_result_with_skills_embedding(
+        parsed_cv,
+        given_name=given_name,
+        middle_name=middle_name,
+        family_name=family_name,
+        email=email,
+    )
+    top_10_scores = job_service.calculate_top_compatibility_scores(
+        db,
+        ai_result_dict.get("skills_embedding"),
+        cv_skills=ai_result_dict.get("candidate_profile", {}).get("skills"),
+        limit=10,
+    )
+
+    try:
+        profile = service.save_ai_cv_result(
+            db,
+            filename=generated_cv_name,
+            structured_data=ai_result_dict,
+            compatibility_scores=top_10_scores,
+        )
+    except Exception as exc:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=f"AI result was parsed, but saving to database failed: {exc}",
+        ) from exc
+
+    return {
+        "message": "CV processed and saved",
+        "cv_id": profile.cv_id,
+        "profile_id": profile.id,
+        "top_10_compatibility_scores": top_10_scores,
+        "cv_file_name": generated_cv_name,
+        "ai_result": ai_result_dict,
+        "classified_tokens": classified_tokens,
+    }
+
+
+@router.get("/profiles/{profile_id}/all")
+def calculate_all_compatibility_scores_for_profile(
+    profile_id: int,
+    db: Session = Depends(get_db),
+):
+    return job_service.calculate_and_save_scores_for_profile(db, profile_id)

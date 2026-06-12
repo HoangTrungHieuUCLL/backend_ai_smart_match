@@ -1,0 +1,154 @@
+id,company_name,position,date_posted,location,job_type,overview,responsibilities,requirements,offers,salary_usd,notes,requirements_simplified,requirements_embedding
+1,FPT Software,Database Administrator,2026-05-12,Hanoi,Data,"We are currently looking for a Database Administrator to join our project team, which is one of the UK’s leading financial and online retail corporations specializing in corporate travel solutions, with annual revenue exceeding £2.2 billion","Ensure stability, security, and performance of CTM’s database systems across on-premises and cloud environments.
+Install, configure, and maintain database management systems (e.g., SQL Server).
+Implement high-availability solutions such as replication, clustering, and Always On Availability Groups.
+Manage identity and access controls, encryption, and monitor database activity using SIEM tools.
+Optimize performance through query tuning, index optimization, and partitioning.
+Maintain documentation for configurations, maintenance procedures, and recovery plans.
+Conduct recovery tests and ensure compliance with disaster recovery and business continuity plans.","ITIL Foundation certification.
+Advanced knowledge of SQL Server and other DBMS platforms.
+Experience with backup strategies (full, incremental, differential) and recovery testing.
+Proficiency in performance monitoring tools (e.g., SQL Profiler, cloud-native tools).
+Strong analytical skills for identifying bottlenecks and system failures.
+Critical thinking for risk assessment and preventive measures.
+Ability to interpret system metrics and anticipate potential issues.
+Willingness to work rotational shifts in 24x7 or 24x5 services or UK time zone.","Performance-based bonuses up
+FPT Care insurance plan tailored for FPT employees
+Attractive annual summer vacation allowance
+Sponsored training courses for personal growth and up to 100% coverage for certification costs
+Global and inclusive workplace with monthly cross-cultural events
+International exposure and career growth across global locations
+Work-life balance benefits with a flexible leave policy and annual health check-ups to support employee well-being",2500,"3+ years of work experience with Database Administration"
+2,Crossing Hurdles,Site Reliability Engineer,2026-04-30,Vietnam,AI,"Position: Site Reliability Engineer
+Type: Hourly contract
+Compensation: $40 - $70/hour
+Location: Remote
+Commitment: 10–40 hours/week","Deploy, monitor, and recover containerized AI training environments.
+Troubleshoot infrastructure bottlenecks and resolve system failures in real time.
+Build and manage resilient systems for stability and performance optimization.
+Collaborate with engineering teams to improve CI/CD pipelines and automation.
+Manage filesystem structures, storage, and process scheduling in containerized environments.
+Execute dynamic replanning during runtime issues and system failures.
+Document system processes, solutions, and best practices.","Strong experience with terminal-based system administration and troubleshooting.
+Expertise in containerized environments such as Docker or Kubernetes.
+Strong Python skills for scripting, automation, and debugging.
+Proficiency in Bash and familiarity with additional programming languages.
+Strong understanding of infrastructure, build systems, and version control.
+Ability to manage dynamic infrastructure recovery in high-pressure scenarios.
+Excellent written and verbal communication skills.","",70/h,"Easy Apply on LinkedIn
+Check email for next steps
+Participate in resume evaluation & interview stage"
+3,Coc Coc,Data Engineer,2026-05-12,Hanoi,Data,"The Data Department’s mission is to consolidate company data (user, client, and internal), make it easily accessible, ensure its quality and trustworthiness, and enable teams across the company to build data-driven products, decisions, and processes.
+
+The Data Engineering team is responsible for building and operating the Data Platform, the foundation that stores, processes, serves, and governs data on a scale. We design reliable data pipelines, scalable storage systems, and self-service data capabilities that power analytics, BI, and advanced data use cases across the organization.","As a Senior Data Engineer, you will design, build, and operate large-scale data systems that serve the entire company.
+Design and develop robust data ingestion and transformation pipelines (batch & streaming)
+Build and optimize data storage and query layers (e.g. ClickHouse, PostgreSQL, Data Lake/Lakehouse)
+Develop reliable data services that support analytics, BI, and internal tools
+Ensure data quality, consistency, and observability across the platform
+Contribute to metadata, data governance, and data discoverability initiatives
+Research, design, and optimize complex components of the data platform for performance and scalability
+Participate in deployment, monitoring, and maintenance of production data systems
+Write high-quality, well-tested, well-documented code
+Review peers’ code and contribute to engineering best practices
+Collaborate closely with Data Analysts, Product teams, and Infrastructure teams on data-driven projects.","Must-have skills
+Strong experience with Python / Java / Go / C++
+Solid understanding of data structures, algorithms, and system design
+Strong experience working in Linux/UNIX environments
+Experience building or maintaining data pipelines (ETL/ELT)
+Experience working with databases or OLAP systems (e.g., ClickHouse, PostgreSQL, etc.)
+Understanding of data modeling and data warehousing concepts
+Ability to design systems for high throughput and scalability
+Willingness to learn new technologies and continuously improve
+
+Nice-to-have skills
+Experience with Kafka, Airflow, NiFi, or similar data tools
+Experience with large-scale data processing
+Familiarity with data lakehouse concepts (Parquet, Iceberg, object storage)
+Understanding of data quality, metadata, and data governance practices
+Experience supporting BI/Analytics teams
+Interest in exploring the meaning and impact of data
+Good communication skills in English and Vietnamese
+Experience or interest in machine learning / advanced analytics
+Strong analytical and problem-solving skills.","Competitive salary and bonus scheme with a 13th month salary.
+Performance review twice/year with opportunity to grow or rotate internally.
+Special annual leave policy with minimum 19 days/year, plus 1 day off on your birthday.
+Annual WFH policy.
+Advanced 24/7 Health Insurance for all employees.
+Great Trade Union benefits such as birthdays, marriage, new born child...","","Professional growth:
+Opportunities to learn and grow through regular training programs, coaching and internal sharing.
+Work in a diverse environment with talented colleagues and partners/customers, local and expats.
+
+Positive workplace:
+Different exciting internal events to make you part of the Cốc Cốc family.
+Cozy pantry with plenty of snacks, juice and coffee/tea every day.
+Many interesting hobby clubs to share your passions like English Club, Yoga, Billard or Football."
+4,Alignerr,Vietnamese Language Expert,2026-05-07,Vietnam,Language,"What if your fluency in Vietnamese could directly shape how AI communicates with millions of people around the world? We're looking for Vietnamese language experts to evaluate and improve AI-generated content — ensuring it sounds natural, accurate, and culturally right for real Vietnamese speakers.
+
+This is a fully remote, flexible contract role. No AI background needed — just a deep command of Vietnamese and a sharp eye for quality.","Review AI-generated Vietnamese translations and original content for accuracy and naturalness
+Identify mistranslations, unnatural phrasing, register mismatches, and cultural issues
+Suggest clear, idiomatic, and culturally appropriate improvements
+Provide structured, detailed feedback on linguistic and cultural quality
+Work independently and asynchronously — fully on your own schedule","Native or near-native fluency in Vietnamese
+Strong written communication skills in Vietnamese
+Solid command of contemporary Vietnamese usage across different contexts and registers
+Naturally detail-oriented with a consistent, methodical approach
+Comfortable evaluating written language quality across a variety of topics
+No prior AI or tech experience required
+
+Nice to Have
+Experience in translation, localization, editing, or linguistics
+Familiarity with AI tools or language evaluation workflows
+Knowledge of regional Vietnamese variations or dialectal differences
+Background in communications, education, journalism, or content review","",40 - 120/h,"Why join us
+Work on cutting-edge AI projects alongside leading research labs
+Fully remote and flexible — work when and where it suits you
+Freelance autonomy with the structure of meaningful, task-based work
+Contribute to work that meaningfully improves AI for Vietnamese speakers worldwide
+Potential for ongoing work and contract extension as new projects launch"
+5,Volga Partners,Language Data Quality Reviewer - Vietnamese (Entry-Level / L1),2026-04-13,Vietnam,Language,"This is a freelance, task-based role designed for individuals seeking flexible, supplemental work and hands-on experience in AI language data and quality operations.
+Work is offered on a first-come, first-served basis as tasks become available. Hours may be irregular and intermittent depending on client volume.
+This role is well suited for candidates who are detail-oriented, adaptable, and comfortable working within structured guidelines.
+Project hours may align with IST (Indian Standard Time) depending on workflow requirements.","Example Tasks
+Review content for grammar, spelling, and clarity
+Translate short, straightforward phrases
+Compare data against provided guidelines
+Apply basic data labels using step-by-step instructions
+Flag errors or inconsistencies
+
+Key Responsibilities
+Perform structured data and content reviews
+Execute quality checks (grammar, spelling, formatting)
+Apply data labeling and tagging
+Follow client workflows and instructions
+Maintain accuracy and quality standards
+Incorporate feedback to improve performance","You have advanced proficiency (C1/C2 or equivalent) in the required language(s)
+You are comfortable working on structured, guideline-based tasks
+You are detail-oriented and able to follow instructions closely
+You are interested in gaining experience in AI, data, and language operations
+You are flexible and able to work with intermittent task availability
+Must be able to read and write in required language(s)
+Must understand this is a task-based freelance role
+Must have a reliable computer or laptop
+Must have stable internet connection
+Must be comfortable with flexible and intermittent work
+
+Desired Qualifications
+Interest in AI, data, or language technology
+Prior experience in data entry, content review, QA, or similar (preferred, not required)
+Strong attention to detail
+Willingness to learn and adapt","","","This role is designed for supplemental, flexible engagement
+No guaranteed minimum hours
+No guaranteed end date
+Tasks are offered first-come, first-served
+While advancement is not guaranteed, future opportunities may evolve based on project needs, performance, and budget"
+
+6,FLC Vietnam,Head of Human Resource,2026-10-04,"Ha Long, Quang Ninh","Human Resource","Organize, operate and control all daily Personnel and Administrative activities of the Company and Construction Site Commands; ensure staffing plans, HR operations, compliance, labor safety, and administrative support across project stages.","Organize and implement project personnel plans; allocate and mobilize staff across projects; monitor personnel fluctuations; supervise HR administration staff; lead recruitment for construction roles; conduct onboarding and labor safety training; manage payroll, bonuses, insurance, and compliance; administer logistics, offices, transportation, and documentation; resolve labor relations and workplace incidents; prepare periodic HR reports.","Age 30-45; University degree in HR, Law, Economics or related field; strong knowledge of Labor Law, Social Insurance, PIT and labor safety; 5+ years HR experience; 2-3 years in HR leadership roles at construction companies or contractors; strong organization, communication, problem-solving skills; willing to travel to projects; preference for candidates in Ha Long/Quang Ninh.","Negotiable salary; performance, project-stage, holiday/Tet and 13th month bonuses; social/health/unemployment insurance; health checkups; annual travel; lunch, phone and travel allowances; Monday-Saturday morning schedule; practical and autonomous work environment.",,"Priority for candidates residing or working in Ha Long City, Quang Ninh."
+7,MD Food,Production Manager,2024-01-02,"Nam Dinh City","Management","Responsible for organizing, managing and controlling all factory production activities to achieve targets for output, quality, timeline and cost while maintaining 5S, ISO, safety and equipment efficiency.","Develop production plans; allocate manpower, machinery and materials; manage production teams and KPIs; monitor output, defects, productivity and downtime; manage and train staff; coordinate recruitment and evaluation; oversee machinery maintenance and technology improvements; manage quality, cost optimization, automation and Lean/Kaizen activities; ensure compliance with safety, ISO, 5S and reporting.","Male, age 30-45; University degree in Processing Technology, Industrial Electricity, Refrigeration, Electromechanical, Mechatronics or Automation; knowledge of production systems, automation, 5S, ISO, Kaizen; 5+ years FMCG factory experience; electromechanical/maintenance background; 2+ years managerial experience; strong planning, analysis, HR management and communication skills; proficient in Excel and Word; preference for candidates near Nam Dinh.",,"Salary negotiable; 13th month and productivity bonuses; statutory insurance; Monday-Saturday schedule; professional environment with promotion path to Production Director.","Priority for candidates residing within 30km of the factory."
+8,MD Food,Deputy Sales Director,2024-01-02,"Nam Dinh City","Management","Manage and take responsibility for all company sales and business activities; advise leadership on strategy; build and implement annual business plans; represent company with domestic and international partners; manage sales channels and teams.","Develop sales plans across GT, MT-XK and retail channels; manage work and sales teams; track market trends and competitors; coordinate trade marketing activities; classify and manage agents; maintain customer relationships; train and evaluate teams.","Male/Female, age 30-45; University degree in Business Administration or Economics; proficient with MISA, Excel and Word; 5+ years equivalent leadership experience; FMCG sales background preferred.","Salary up to 30M++; statutory insurance; sales bonuses and 13th month bonus; Monday-Saturday schedule; professional and dynamic workplace.",,"Details discussed during interview."
+9,AGRI VMA,Accounting Intern,2025-12-22,"Cuba","Accounting","Training-oriented accounting internship supporting accounting and finance operations for agricultural and production projects in Cuba, with a pathway toward long-term official employment.","Verify accounting documents; enter and maintain accounting records; track revenues, expenses and costs; assist with reports and data control; support reconciliations and financial analysis; comply with accounting procedures and company policies; coordinate with departments; perform assigned tasks under accounting leadership.","Male/Female born 1995-2004; University degree in Accounting, Finance-Banking or related field; basic accounting knowledge; no prior experience required; responsible, disciplined and willing to live/work in Cuba; commitment of at least 2 years.","Annual salary review; bonuses and allowances; social, health and unemployment insurance; accommodation covered in Cuba; 2 round-trip Vietnam-Cuba flights annually; professional training; career growth opportunities within AGRI VMA and FUJINUCO ecosystem.",1200,"Working hours 08:00-17:00; alternate Saturdays off; modern work environment; annual travel opportunities; employee family care and periodic health programs."
+10,DataNova Analytics,AI & Data Solutions Engineer,2026-06-04,"Leuven, Belgium (Hybrid)",Full-Time,"Build data products, AI solutions, dashboards, and predictive models for business decision-making.","Design ETL pipelines; Develop Power BI dashboards; Analyze business data; Build ML models; Create AI applications; Maintain cloud databases; Collaborate with stakeholders; Present findings.","Bachelor's or Master's degree; Python; SQL; Power BI; Machine Learning; PostgreSQL/MongoDB; Cloud knowledge; Communication skills; English.","Competitive salary; Hybrid work; Training budget; Health insurance; Pension plan; International environment; Flexible hours.",70000,"Strong fit for candidates with data analytics, engineering, BI, and applied AI experience.","Python, SQL, Power BI, Machine Learning, Databases, Cloud, English"
+11,InsightForge Consulting,Analytics Engineer,2026-06-04,"Brussels, Belgium (Hybrid)",Full-Time,Support business teams by transforming raw data into reliable reporting and analytical systems.,"Create data models; Build dashboards; Optimize SQL queries; Maintain data pipelines; Support reporting requests.","SQL, Power BI, Python, ETL concepts, stakeholder communication.","Flexible schedule, pension plan, annual training allowance.",65000,"~85% CV match. Less ML-focused but strongly aligned with BI and analytics experience.","SQL, Power BI, Python, Reporting, ETL"
+12,VisionAI Labs,Computer Vision Engineer,2026-06-04,"Antwerp, Belgium (On-site)",Full-Time,Develop computer vision systems for industrial automation and image analysis applications.,"Train detection models; Improve image processing pipelines; Deploy vision applications; Conduct model evaluation.","Python, OpenCV, YOLO, Deep Learning, Docker, Linux.","Research budget, conference sponsorship, health benefits.",75000,"~75% CV match. Strong project alignment but narrower than the candidate's broader analytics profile.","Python, OpenCV, YOLO, Deep Learning"
+13,CloudScale Technologies,Data Platform Engineer,2026-06-04,"Ghent, Belgium (Hybrid)",Full-Time,Build and maintain enterprise-scale cloud data infrastructure.,"Manage Airflow pipelines; Design cloud architectures; Maintain data warehouses; Monitor system performance.","Python, SQL, Airflow, GCP/AWS, Docker, Kubernetes.","Remote days, certification budget, stock options.",80000,"~65% CV match. Strong engineering fit but less emphasis on analytics and business-facing work.","Python, SQL, Airflow, Cloud, Docker"
+14,BrightPath Marketing,Digital Marketing Analyst,2026-06-04,"Brussels, Belgium (Remote)",Full-Time,Analyze marketing campaign performance and customer behavior across digital channels.,"Track KPIs; Create reports; Analyze campaign performance; Support marketing strategy.","Excel, Google Analytics, Marketing Analytics, Communication Skills.","Remote work, wellness allowance, bonus scheme.",50000,"~40% CV match. Some analytical overlap, but lacks technical depth matching the candidate's engineering and AI background.","Excel, Reporting, Analytics, Communication"
+15,Vantix,"Junior Full-Stack Developer (React / Node.js)",2026-06-11,"Leuven, Belgium (Hybrid)",Full-Time,"Vantix is a fast-growing Belgian SaaS startup building smart scheduling and workflow tools for mid-market enterprises. We're looking for a motivated Junior Full-Stack Developer to join our 12-person product team. You'll ship features in production from week one and grow under experienced engineers in a supportive Agile environment.","Build and maintain full-stack web features using React and Node.js; Develop and consume REST APIs and third-party integrations; Participate in Agile sprints and code reviews; Work with PostgreSQL and MongoDB databases; Implement responsive accessible UI/UX designs; Maintain CI/CD pipelines via GitHub Actions","Bachelor's in Computer Science or final-year equivalent; Proficiency in TypeScript and JavaScript; Hands-on experience with React and Node.js; Familiarity with SQL and/or NoSQL databases; Experience with Git and version control workflows; Dutch and English communication skills; Azure or AWS experience is a plus","Competitive junior salary + annual review; Hybrid schedule (2 days remote); €1500 learning and development budget; MacBook Pro setup; Mentorship from senior engineers; Flat team structure",38000,"Eren's SteamList (solo 8-month React/Next.js + API integration build) and Belfius enterprise scheduling team project are both directly relevant. CodeFever Educational Assistant role signals strong communication skills — valuable for code reviews and documentation.","React • Node.js • TypeScript • PostgreSQL • MongoDB • GitHub Actions • Agile • Dutch + English"

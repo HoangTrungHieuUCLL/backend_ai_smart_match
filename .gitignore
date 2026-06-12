@@ -1,0 +1,33 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE (JetBrains / PyCharm)
+.idea/
+
+# pytest / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS junk
+.DS_Store
+
+.venv/
+
+_pycache__/
+
+# Local secrets
+.env
+*.env
+**/.env
+**/*.env
+cv-dataset/
+
+# Model weights are too large for standard Git (253 MB).
+# Commit everything else in models/ so the directory structure is tracked.
+# Use `git lfs track "models/**/*.safetensors"` to push the weights via Git LFS,
+# or copy model.safetensors manually when deploying to a new machine.
+models/**/*.safetensors
+models/**/*.bin

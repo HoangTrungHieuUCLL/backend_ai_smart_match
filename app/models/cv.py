@@ -1,0 +1,191 @@
+from pgvector.sqlalchemy import Vector
+from sqlalchemy import Column, Integer, String, Text, DateTime, Date, ForeignKey, Float
+from sqlalchemy.orm import relationship
+from datetime import datetime
+
+from app.database import Base
+
+class CV(Base):
+    __tablename__ = "cv"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    filename = Column(String, nullable=False)
+    uploaded_at = Column(DateTime, default=datetime.utcnow)
+
+    candidate_profile = relationship(
+        "Profile",
+        back_populates="cv",
+        uselist=False,
+    )
+class Profile(Base):
+    __tablename__ = "profiles"
+
+    id = Column(Integer, primary_key=True, index=True)
+    cv_id = Column(
+        Integer, 
+        ForeignKey("cv.id", ondelete="SET NULL"), 
+        nullable=True, 
+        unique=True
+        )
+
+    given_name = Column(String, nullable=False)
+    middle_name = Column(String, nullable=True)
+    family_name = Column(String, nullable=False)
+    current_title = Column(String, nullable=True)
+    skills = Column(String, nullable=True)
+    phone = Column(String, nullable=True)
+    location = Column(String, nullable=True)
+    email = Column(String, nullable=True)
+    bio = Column(Text, nullable=True)
+    skills_embedding = Column(Vector(384), nullable=True)
+
+    cv = relationship("CV", back_populates="candidate_profile")
+
+    work_experiences = relationship(
+        "Experience",
+        back_populates="profile",
+        cascade="all, delete-orphan"
+    )
+
+    educations = relationship(
+        "Education",
+        back_populates="profile",
+        cascade="all, delete-orphan"
+    )
+
+    projects = relationship(
+        "Project",
+        back_populates="profile",
+        cascade="all, delete-orphan"
+    )
+
+    languages = relationship(
+        "Language",
+        back_populates="profile",
+        cascade="all, delete-orphan"
+    )
+
+    certifications = relationship(
+        "Certification",
+        back_populates="profile",
+        cascade="all, delete-orphan"
+    )
+
+    compatibility_scores = relationship(
+        "CompatibilityScore",
+        back_populates="profile",
+        cascade="all, delete-orphan"
+    )
+    
+    saved_jobs = relationship(
+        "SavedJob",
+        back_populates="profile",
+        cascade="all, delete-orphan"
+    )
+
+class Experience(Base):
+    __tablename__ = "experiences"
+
+    id = Column(Integer, primary_key=True, index=True)
+    profile_id = Column(Integer, ForeignKey("profiles.id", ondelete="CASCADE"), nullable=False)
+
+    job_title = Column(String, nullable=True)
+    company_name = Column(String, nullable=True)
+    start_date = Column(Date, nullable=True)
+    end_date = Column(Date, nullable=True)
+
+    profile = relationship("Profile", back_populates="work_experiences")
+
+
+class Education(Base):
+    __tablename__ = "educations"
+
+    id = Column(Integer, primary_key=True, index=True)
+    profile_id = Column(Integer, ForeignKey("profiles.id", ondelete="CASCADE"), nullable=False)
+
+    institution = Column(String, nullable=True)
+    degree = Column(String, nullable=True)
+    field_of_study = Column(String, nullable=True)
+    start_date = Column(Date, nullable=True)
+    end_date = Column(Date, nullable=True)
+
+    profile = relationship("Profile", back_populates="educations")
+
+
+class Project(Base):
+    __tablename__ = "projects"
+
+    id = Column(Integer, primary_key=True, index=True)
+    profile_id = Column(Integer, ForeignKey("profiles.id", ondelete="CASCADE"), nullable=False)
+
+    project_name = Column(String, nullable=True)
+    description = Column(Text, nullable=True)
+
+    profile = relationship("Profile", back_populates="projects")
+
+
+class Language(Base):
+    __tablename__ = "languages"
+
+    id = Column(Integer, primary_key=True, index=True)
+    profile_id = Column(Integer, ForeignKey("profiles.id", ondelete="CASCADE"), nullable=False)
+
+    language_name = Column(String, nullable=True)
+    proficiency_level = Column(String, nullable=True)
+
+    profile = relationship("Profile", back_populates="languages")
+
+class Certification(Base):
+    __tablename__ = "certifications"
+
+    id = Column(Integer, primary_key=True, index=True)
+    profile_id = Column(Integer, ForeignKey("profiles.id", ondelete="CASCADE"), nullable=False)
+
+    certification_name = Column(String, nullable=True)
+    issue_date = Column(Date, nullable=True)
+
+    profile = relationship("Profile", back_populates="certifications")
+
+class CompatibilityScore(Base):
+    __tablename__ = "compatibility_score"
+
+    id = Column(Integer, primary_key=True, index=True)
+    profile_id = Column(
+        Integer,
+        ForeignKey("profiles.id", ondelete="CASCADE"),
+        nullable=False
+    )
+
+    job_id = Column(
+        Integer,
+        ForeignKey("jobs.id", ondelete="SET NULL"),
+        nullable=True
+    )
+
+    score = Column(Float, nullable=True)
+
+    profile = relationship("Profile", back_populates="compatibility_scores")
+    job = relationship("Job", back_populates="compatibility_scores")
+    
+    
+class SavedJob(Base):
+    __tablename__ = "saved_jobs"
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    profile_id = Column(
+        Integer,
+        ForeignKey("profiles.id", ondelete="CASCADE"),
+        nullable=False
+    )
+
+    job_id = Column(
+        Integer,
+        ForeignKey("jobs.id", ondelete="CASCADE"),
+        nullable=False
+    )
+
+    saved_at = Column(DateTime, default=datetime.utcnow)
+
+    profile = relationship("Profile", back_populates="saved_jobs")
