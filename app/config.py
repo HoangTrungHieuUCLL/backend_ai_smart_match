@@ -4,8 +4,19 @@ from dotenv import load_dotenv
 load_dotenv()
 load_dotenv(os.path.join("app", ".env"))
 
+
+def _normalize_database_url(url: str) -> str:
+    # Some providers (Railway, Heroku) hand out "postgres://", which
+    # SQLAlchemy's create_engine no longer recognizes as a dialect.
+    if url.startswith("postgres://"):
+        return "postgresql://" + url[len("postgres://"):]
+    return url
+
+
 class Settings:
-    DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@db:5432/smartmatch")
+    DATABASE_URL = _normalize_database_url(
+        os.getenv("DATABASE_URL", "postgresql://postgres:postgres@db:5432/smartmatch")
+    )
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
     ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
     ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin")
