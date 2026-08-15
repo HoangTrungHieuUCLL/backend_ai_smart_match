@@ -11,6 +11,7 @@ from app.routes.auth import router as auth_router
 from app.routes.executive import router as executive_router
 from app.routes.savedJobs import router as saved_jobs_router
 from app.seed import seed_jobs
+from app.config import CORS_ORIGINS
 
 
 @asynccontextmanager
@@ -32,13 +33,16 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+default_origins = [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "http://localhost:3002",
+]
+env_origins = [origin.strip() for origin in CORS_ORIGINS.split(",") if origin.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://localhost:3001",
-        "http://localhost:3002",
-    ],
+    allow_origins=env_origins or default_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
