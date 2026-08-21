@@ -2,6 +2,7 @@ import csv
 import json
 import os
 from sqlalchemy import text
+from app.config import SEED_ON_STARTUP
 from app.database import SessionLocal, Base, engine, ensure_vector_extension
 from app.models.job import Job
 from app.service.requirements_vectorizer import simplify_requirements, vectorize_requirements
@@ -36,6 +37,11 @@ def seed_jobs():
     ensure_vector_extension()
     Base.metadata.create_all(bind=engine)
     ensure_job_columns()
+
+    if not SEED_ON_STARTUP:
+        print("SEED_ON_STARTUP is false; skipping job seeding.")
+        return
+
     db = SessionLocal()
 
     try:
@@ -44,9 +50,20 @@ def seed_jobs():
         with open(csv_path, newline="", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             seeded_count = 0
+            skipped_count = 0
 
             for row in reader:
                 job_id = int(row["id"])
+                existing_job = db.query(Job).filter(Job.id == job_id).first()
+
+                # Unchanged jobs don't need their requirements re-simplified
+                # or re-embedded, which is the expensive part (loads a
+                # transformer model + spaCy). This keeps restarts cheap
+                # once everything has already been seeded once.
+                if existing_job and existing_job.requirements == row["requirements"]:
+                    skipped_count += 1
+                    continue
+
                 simplified = get_requirements_simplified(row)
                 data = {
                     "id": job_id,
@@ -65,7 +82,6 @@ def seed_jobs():
                     "notes": row["notes"],
                 }
 
-                existing_job = db.query(Job).filter(Job.id == job_id).first()
                 if existing_job:
                     for key, value in data.items():
                         setattr(existing_job, key, value)
@@ -76,7 +92,7 @@ def seed_jobs():
 
             db.commit()
             reset_job_id_sequence()
-            print(f"Seeded {seeded_count} jobs.")
+            print(f"Seeded {seeded_count} jobs, skipped {skipped_count} unchanged jobs.")
     except Exception as e:
         db.rollback()
         raise e
