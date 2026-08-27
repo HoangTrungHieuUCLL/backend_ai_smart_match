@@ -1,154 +1,153 @@
 id,company_name,position,date_posted,location,job_type,overview,responsibilities,requirements,offers,salary_usd,notes,requirements_simplified,requirements_embedding
-1,FPT Software,Database Administrator,2026-05-12,Hanoi,Data,"We are currently looking for a Database Administrator to join our project team, which is one of the UK’s leading financial and online retail corporations specializing in corporate travel solutions, with annual revenue exceeding £2.2 billion","Ensure stability, security, and performance of CTM’s database systems across on-premises and cloud environments.
-Install, configure, and maintain database management systems (e.g., SQL Server).
-Implement high-availability solutions such as replication, clustering, and Always On Availability Groups.
-Manage identity and access controls, encryption, and monitor database activity using SIEM tools.
-Optimize performance through query tuning, index optimization, and partitioning.
-Maintain documentation for configurations, maintenance procedures, and recovery plans.
-Conduct recovery tests and ensure compliance with disaster recovery and business continuity plans.","ITIL Foundation certification.
-Advanced knowledge of SQL Server and other DBMS platforms.
-Experience with backup strategies (full, incremental, differential) and recovery testing.
-Proficiency in performance monitoring tools (e.g., SQL Profiler, cloud-native tools).
-Strong analytical skills for identifying bottlenecks and system failures.
-Critical thinking for risk assessment and preventive measures.
-Ability to interpret system metrics and anticipate potential issues.
-Willingness to work rotational shifts in 24x7 or 24x5 services or UK time zone.","Performance-based bonuses up
-FPT Care insurance plan tailored for FPT employees
-Attractive annual summer vacation allowance
-Sponsored training courses for personal growth and up to 100% coverage for certification costs
-Global and inclusive workplace with monthly cross-cultural events
-International exposure and career growth across global locations
-Work-life balance benefits with a flexible leave policy and annual health check-ups to support employee well-being",2500,"3+ years of work experience with Database Administration"
-2,Crossing Hurdles,Site Reliability Engineer,2026-04-30,Vietnam,AI,"Position: Site Reliability Engineer
-Type: Hourly contract
-Compensation: $40 - $70/hour
-Location: Remote
-Commitment: 10–40 hours/week","Deploy, monitor, and recover containerized AI training environments.
-Troubleshoot infrastructure bottlenecks and resolve system failures in real time.
-Build and manage resilient systems for stability and performance optimization.
-Collaborate with engineering teams to improve CI/CD pipelines and automation.
-Manage filesystem structures, storage, and process scheduling in containerized environments.
-Execute dynamic replanning during runtime issues and system failures.
-Document system processes, solutions, and best practices.","Strong experience with terminal-based system administration and troubleshooting.
-Expertise in containerized environments such as Docker or Kubernetes.
-Strong Python skills for scripting, automation, and debugging.
-Proficiency in Bash and familiarity with additional programming languages.
-Strong understanding of infrastructure, build systems, and version control.
-Ability to manage dynamic infrastructure recovery in high-pressure scenarios.
-Excellent written and verbal communication skills.","",70/h,"Easy Apply on LinkedIn
-Check email for next steps
-Participate in resume evaluation & interview stage"
-3,Coc Coc,Data Engineer,2026-05-12,Hanoi,Data,"The Data Department’s mission is to consolidate company data (user, client, and internal), make it easily accessible, ensure its quality and trustworthiness, and enable teams across the company to build data-driven products, decisions, and processes.
+1,FPT Software,Quản trị viên Cơ sở dữ liệu,2026-05-12,Hà Nội,Dữ liệu,"Chúng tôi hiện đang tìm kiếm một Quản trị viên Cơ sở dữ liệu để gia nhập đội ngũ dự án, một trong những tập đoàn tài chính và bán lẻ trực tuyến hàng đầu Vương quốc Anh chuyên về các giải pháp du lịch doanh nghiệp, với doanh thu hàng năm vượt 2,2 tỷ bảng Anh","Đảm bảo tính ổn định, bảo mật và hiệu suất của hệ thống cơ sở dữ liệu của CTM trên cả môi trường tại chỗ và trên nền tảng đám mây.
+Cài đặt, cấu hình và duy trì các hệ quản trị cơ sở dữ liệu (ví dụ: SQL Server).
+Triển khai các giải pháp tính sẵn sàng cao như nhân bản (replication), phân cụm (clustering) và Always On Availability Groups.
+Quản lý kiểm soát danh tính và quyền truy cập, mã hóa, và giám sát hoạt động cơ sở dữ liệu bằng các công cụ SIEM.
+Tối ưu hiệu suất thông qua điều chỉnh truy vấn, tối ưu chỉ mục (index) và phân vùng (partitioning).
+Duy trì tài liệu về cấu hình, quy trình bảo trì và kế hoạch khôi phục.
+Thực hiện kiểm tra khôi phục và đảm bảo tuân thủ các kế hoạch khôi phục sau thảm họa và duy trì hoạt động kinh doanh.","Chứng chỉ ITIL Foundation.
+Kiến thức nâng cao về SQL Server và các nền tảng DBMS khác.
+Kinh nghiệm với các chiến lược sao lưu (đầy đủ, gia tăng, khác biệt) và kiểm tra khôi phục.
+Thành thạo các công cụ giám sát hiệu suất (ví dụ: SQL Profiler, các công cụ trên nền tảng đám mây).
+Kỹ năng phân tích mạnh để xác định các điểm nghẽn và sự cố hệ thống.
+Tư duy phản biện để đánh giá rủi ro và các biện pháp phòng ngừa.
+Khả năng diễn giải các chỉ số hệ thống và dự đoán các vấn đề tiềm ẩn.
+Sẵn sàng làm việc theo ca luân phiên trong dịch vụ 24x7 hoặc 24x5 hoặc theo múi giờ Anh.","Thưởng theo hiệu suất
+Gói bảo hiểm FPT Care dành riêng cho nhân viên FPT
+Chế độ nghỉ hè hàng năm hấp dẫn
+Tài trợ các khóa đào tạo phát triển bản thân và hỗ trợ tới 100% chi phí chứng chỉ
+Môi trường làm việc toàn cầu, hòa nhập với các sự kiện giao lưu văn hóa hàng tháng
+Cơ hội tiếp xúc quốc tế và phát triển sự nghiệp tại các địa điểm toàn cầu
+Phúc lợi cân bằng công việc - cuộc sống với chính sách nghỉ phép linh hoạt và khám sức khỏe định kỳ hàng năm để hỗ trợ sức khỏe nhân viên",2500,3+ năm kinh nghiệm làm việc trong lĩnh vực Quản trị Cơ sở dữ liệu,,
+2,Crossing Hurdles,Kỹ sư Site Reliability (SRE),2026-04-30,Việt Nam,AI,"Vị trí: Kỹ sư Site Reliability (SRE)
+Loại hình: Hợp đồng theo giờ
+Mức lương: 40 - 70 USD/giờ
+Địa điểm: Từ xa
+Cam kết: 10–40 giờ/tuần","Triển khai, giám sát và khôi phục các môi trường huấn luyện AI đóng gói container.
+Xử lý sự cố nghẽn hạ tầng và khắc phục sự cố hệ thống theo thời gian thực.
+Xây dựng và quản lý các hệ thống có khả năng phục hồi cao để tối ưu độ ổn định và hiệu suất.
+Phối hợp với các đội kỹ thuật để cải thiện các pipeline CI/CD và tự động hóa.
+Quản lý cấu trúc hệ thống tệp, lưu trữ và lập lịch tiến trình trong môi trường container hóa.
+Thực hiện tái lập kế hoạch linh hoạt trong quá trình xảy ra sự cố vận hành và lỗi hệ thống.
+Ghi chép tài liệu về các quy trình hệ thống, giải pháp và các phương pháp thực hành tốt nhất.","Kinh nghiệm vững vàng về quản trị hệ thống và xử lý sự cố qua terminal.
+Am hiểu chuyên sâu về các môi trường container hóa như Docker hoặc Kubernetes.
+Kỹ năng Python tốt để viết script, tự động hóa và gỡ lỗi.
+Thành thạo Bash và quen thuộc với các ngôn ngữ lập trình khác.
+Hiểu biết vững chắc về hạ tầng, hệ thống build và quản lý phiên bản (version control).
+Khả năng quản lý khôi phục hạ tầng linh hoạt trong các tình huống áp lực cao.
+Kỹ năng giao tiếp viết và nói xuất sắc.",,70/giờ,"Ứng tuyển dễ dàng trên LinkedIn
+Kiểm tra email để biết các bước tiếp theo
+Tham gia vòng đánh giá hồ sơ & phỏng vấn",,
+3,Coc Coc,Kỹ sư Dữ liệu,2026-05-12,Hà Nội,Dữ liệu,"Sứ mệnh của Phòng Dữ liệu là hợp nhất dữ liệu của công ty (người dùng, khách hàng và nội bộ), giúp dữ liệu dễ dàng truy cập, đảm bảo chất lượng và độ tin cậy, đồng thời giúp các đội nhóm trong toàn công ty xây dựng các sản phẩm, quyết định và quy trình dựa trên dữ liệu.
 
-The Data Engineering team is responsible for building and operating the Data Platform, the foundation that stores, processes, serves, and governs data on a scale. We design reliable data pipelines, scalable storage systems, and self-service data capabilities that power analytics, BI, and advanced data use cases across the organization.","As a Senior Data Engineer, you will design, build, and operate large-scale data systems that serve the entire company.
-Design and develop robust data ingestion and transformation pipelines (batch & streaming)
-Build and optimize data storage and query layers (e.g. ClickHouse, PostgreSQL, Data Lake/Lakehouse)
-Develop reliable data services that support analytics, BI, and internal tools
-Ensure data quality, consistency, and observability across the platform
-Contribute to metadata, data governance, and data discoverability initiatives
-Research, design, and optimize complex components of the data platform for performance and scalability
-Participate in deployment, monitoring, and maintenance of production data systems
-Write high-quality, well-tested, well-documented code
-Review peers’ code and contribute to engineering best practices
-Collaborate closely with Data Analysts, Product teams, and Infrastructure teams on data-driven projects.","Must-have skills
-Strong experience with Python / Java / Go / C++
-Solid understanding of data structures, algorithms, and system design
-Strong experience working in Linux/UNIX environments
-Experience building or maintaining data pipelines (ETL/ELT)
-Experience working with databases or OLAP systems (e.g., ClickHouse, PostgreSQL, etc.)
-Understanding of data modeling and data warehousing concepts
-Ability to design systems for high throughput and scalability
-Willingness to learn new technologies and continuously improve
+Đội Kỹ thuật Dữ liệu chịu trách nhiệm xây dựng và vận hành Nền tảng Dữ liệu — nền móng lưu trữ, xử lý, cung cấp và quản trị dữ liệu ở quy mô lớn. Chúng tôi thiết kế các pipeline dữ liệu đáng tin cậy, hệ thống lưu trữ có khả năng mở rộng và các năng lực dữ liệu tự phục vụ, phục vụ cho phân tích, BI và các trường hợp sử dụng dữ liệu nâng cao trên toàn tổ chức.","Với vai trò Kỹ sư Dữ liệu Cấp cao, bạn sẽ thiết kế, xây dựng và vận hành các hệ thống dữ liệu quy mô lớn phục vụ toàn công ty.
+Thiết kế và phát triển các pipeline thu thập và biến đổi dữ liệu mạnh mẽ (theo lô & theo luồng thời gian thực)
+Xây dựng và tối ưu các lớp lưu trữ và truy vấn dữ liệu (ví dụ: ClickHouse, PostgreSQL, Data Lake/Lakehouse)
+Phát triển các dịch vụ dữ liệu đáng tin cậy hỗ trợ phân tích, BI và các công cụ nội bộ
+Đảm bảo chất lượng, tính nhất quán và khả năng quan sát dữ liệu trên toàn nền tảng
+Đóng góp vào các sáng kiến về metadata, quản trị dữ liệu và khả năng khám phá dữ liệu
+Nghiên cứu, thiết kế và tối ưu các thành phần phức tạp của nền tảng dữ liệu để đạt hiệu suất và khả năng mở rộng
+Tham gia triển khai, giám sát và bảo trì các hệ thống dữ liệu trong môi trường production
+Viết mã nguồn chất lượng cao, được kiểm thử và tài liệu hóa đầy đủ
+Review code của đồng nghiệp và đóng góp vào các phương pháp thực hành kỹ thuật tốt nhất
+Phối hợp chặt chẽ với các Chuyên viên Phân tích Dữ liệu, đội Sản phẩm và đội Hạ tầng trong các dự án dựa trên dữ liệu.","Kỹ năng bắt buộc
+Kinh nghiệm vững vàng với Python / Java / Go / C++
+Hiểu biết vững chắc về cấu trúc dữ liệu, giải thuật và thiết kế hệ thống
+Kinh nghiệm làm việc mạnh mẽ trong môi trường Linux/UNIX
+Kinh nghiệm xây dựng hoặc bảo trì các pipeline dữ liệu (ETL/ELT)
+Kinh nghiệm làm việc với cơ sở dữ liệu hoặc hệ thống OLAP (ví dụ: ClickHouse, PostgreSQL, v.v.)
+Hiểu biết về mô hình hóa dữ liệu và các khái niệm kho dữ liệu (data warehousing)
+Khả năng thiết kế hệ thống cho thông lượng cao và khả năng mở rộng
+Sẵn sàng học hỏi công nghệ mới và liên tục cải thiện
 
-Nice-to-have skills
-Experience with Kafka, Airflow, NiFi, or similar data tools
-Experience with large-scale data processing
-Familiarity with data lakehouse concepts (Parquet, Iceberg, object storage)
-Understanding of data quality, metadata, and data governance practices
-Experience supporting BI/Analytics teams
-Interest in exploring the meaning and impact of data
-Good communication skills in English and Vietnamese
-Experience or interest in machine learning / advanced analytics
-Strong analytical and problem-solving skills.","Competitive salary and bonus scheme with a 13th month salary.
-Performance review twice/year with opportunity to grow or rotate internally.
-Special annual leave policy with minimum 19 days/year, plus 1 day off on your birthday.
-Annual WFH policy.
-Advanced 24/7 Health Insurance for all employees.
-Great Trade Union benefits such as birthdays, marriage, new born child...","","Professional growth:
-Opportunities to learn and grow through regular training programs, coaching and internal sharing.
-Work in a diverse environment with talented colleagues and partners/customers, local and expats.
+Kỹ năng là lợi thế
+Kinh nghiệm với Kafka, Airflow, NiFi hoặc các công cụ dữ liệu tương tự
+Kinh nghiệm xử lý dữ liệu quy mô lớn
+Quen thuộc với các khái niệm data lakehouse (Parquet, Iceberg, object storage)
+Hiểu biết về chất lượng dữ liệu, metadata và các thực hành quản trị dữ liệu
+Kinh nghiệm hỗ trợ các đội BI/Phân tích
+Quan tâm đến việc khám phá ý nghĩa và tác động của dữ liệu
+Kỹ năng giao tiếp tốt bằng tiếng Anh và tiếng Việt
+Kinh nghiệm hoặc quan tâm đến machine learning / phân tích nâng cao
+Kỹ năng phân tích và giải quyết vấn đề tốt.","Lương cạnh tranh và chế độ thưởng bao gồm lương tháng 13.
+Đánh giá hiệu suất hai lần/năm với cơ hội thăng tiến hoặc luân chuyển nội bộ.
+Chính sách nghỉ phép đặc biệt với tối thiểu 19 ngày/năm, cộng thêm 1 ngày nghỉ sinh nhật.
+Chính sách làm việc tại nhà (WFH) hàng năm.
+Bảo hiểm Sức khỏe nâng cao 24/7 cho toàn thể nhân viên.
+Các phúc lợi Công đoàn tuyệt vời như sinh nhật, kết hôn, sinh con...",,"Phát triển chuyên môn:
+Cơ hội học hỏi và phát triển thông qua các chương trình đào tạo định kỳ, huấn luyện và chia sẻ nội bộ.
+Làm việc trong môi trường đa dạng với đồng nghiệp và đối tác/khách hàng tài năng, cả trong nước và quốc tế.
 
-Positive workplace:
-Different exciting internal events to make you part of the Cốc Cốc family.
-Cozy pantry with plenty of snacks, juice and coffee/tea every day.
-Many interesting hobby clubs to share your passions like English Club, Yoga, Billard or Football."
-4,Alignerr,Vietnamese Language Expert,2026-05-07,Vietnam,Language,"What if your fluency in Vietnamese could directly shape how AI communicates with millions of people around the world? We're looking for Vietnamese language experts to evaluate and improve AI-generated content — ensuring it sounds natural, accurate, and culturally right for real Vietnamese speakers.
+Môi trường làm việc tích cực:
+Nhiều sự kiện nội bộ thú vị để bạn trở thành một phần của gia đình Cốc Cốc.
+Pantry ấm cúng với đầy đủ đồ ăn vặt, nước ép và cà phê/trà mỗi ngày.
+Nhiều câu lạc bộ sở thích thú vị để chia sẻ đam mê như Câu lạc bộ Tiếng Anh, Yoga, Billiards hoặc Bóng đá.",,
+4,Alignerr,Chuyên gia Ngôn ngữ Tiếng Việt,2026-05-07,Việt Nam,Ngôn ngữ,"Nếu khả năng thông thạo tiếng Việt của bạn có thể trực tiếp định hình cách AI giao tiếp với hàng triệu người trên khắp thế giới thì sao? Chúng tôi đang tìm kiếm các chuyên gia ngôn ngữ tiếng Việt để đánh giá và cải thiện nội dung do AI tạo ra — đảm bảo nội dung nghe tự nhiên, chính xác và phù hợp văn hóa đối với người nói tiếng Việt thực thụ.
 
-This is a fully remote, flexible contract role. No AI background needed — just a deep command of Vietnamese and a sharp eye for quality.","Review AI-generated Vietnamese translations and original content for accuracy and naturalness
-Identify mistranslations, unnatural phrasing, register mismatches, and cultural issues
-Suggest clear, idiomatic, and culturally appropriate improvements
-Provide structured, detailed feedback on linguistic and cultural quality
-Work independently and asynchronously — fully on your own schedule","Native or near-native fluency in Vietnamese
-Strong written communication skills in Vietnamese
-Solid command of contemporary Vietnamese usage across different contexts and registers
-Naturally detail-oriented with a consistent, methodical approach
-Comfortable evaluating written language quality across a variety of topics
-No prior AI or tech experience required
+Đây là công việc hợp đồng làm việc từ xa hoàn toàn, linh hoạt. Không cần kiến thức nền về AI — chỉ cần khả năng làm chủ tiếng Việt sâu sắc và con mắt tinh tường về chất lượng.","Đánh giá các bản dịch tiếng Việt do AI tạo ra và nội dung gốc về độ chính xác và tự nhiên
+Xác định các lỗi dịch sai, cách diễn đạt không tự nhiên, sai văn phong và các vấn đề văn hóa
+Đề xuất các cải tiến rõ ràng, đúng ngữ và phù hợp văn hóa
+Cung cấp phản hồi chi tiết, có cấu trúc về chất lượng ngôn ngữ và văn hóa
+Làm việc độc lập và không đồng bộ — hoàn toàn theo lịch trình của riêng bạn","Thông thạo tiếng Việt như người bản xứ hoặc gần như bản xứ
+Kỹ năng viết tiếng Việt tốt
+Nắm vững cách sử dụng tiếng Việt hiện đại trong các ngữ cảnh và văn phong khác nhau
+Tỉ mỉ, có phương pháp làm việc nhất quán
+Thoải mái khi đánh giá chất lượng ngôn ngữ viết trên nhiều chủ đề khác nhau
+Không yêu cầu kinh nghiệm AI hoặc công nghệ trước đó
 
-Nice to Have
-Experience in translation, localization, editing, or linguistics
-Familiarity with AI tools or language evaluation workflows
-Knowledge of regional Vietnamese variations or dialectal differences
-Background in communications, education, journalism, or content review","",40 - 120/h,"Why join us
-Work on cutting-edge AI projects alongside leading research labs
-Fully remote and flexible — work when and where it suits you
-Freelance autonomy with the structure of meaningful, task-based work
-Contribute to work that meaningfully improves AI for Vietnamese speakers worldwide
-Potential for ongoing work and contract extension as new projects launch"
-5,Volga Partners,Language Data Quality Reviewer - Vietnamese (Entry-Level / L1),2026-04-13,Vietnam,Language,"This is a freelance, task-based role designed for individuals seeking flexible, supplemental work and hands-on experience in AI language data and quality operations.
-Work is offered on a first-come, first-served basis as tasks become available. Hours may be irregular and intermittent depending on client volume.
-This role is well suited for candidates who are detail-oriented, adaptable, and comfortable working within structured guidelines.
-Project hours may align with IST (Indian Standard Time) depending on workflow requirements.","Example Tasks
-Review content for grammar, spelling, and clarity
-Translate short, straightforward phrases
-Compare data against provided guidelines
-Apply basic data labels using step-by-step instructions
-Flag errors or inconsistencies
+Ưu tiên nếu có
+Kinh nghiệm dịch thuật, bản địa hóa, biên tập hoặc ngôn ngữ học
+Quen thuộc với các công cụ AI hoặc quy trình đánh giá ngôn ngữ
+Hiểu biết về các biến thể vùng miền hoặc khác biệt phương ngữ tiếng Việt
+Nền tảng về truyền thông, giáo dục, báo chí hoặc đánh giá nội dung",,40 - 120/giờ,"Lý do nên gia nhập
+Làm việc trên các dự án AI tiên tiến cùng các phòng nghiên cứu hàng đầu
+Làm việc từ xa hoàn toàn và linh hoạt — làm việc khi nào và ở đâu phù hợp với bạn
+Tự chủ freelance với cấu trúc công việc có ý nghĩa, theo nhiệm vụ
+Đóng góp vào công việc thực sự cải thiện AI cho người nói tiếng Việt trên toàn thế giới
+Tiềm năng có công việc liên tục và gia hạn hợp đồng khi có dự án mới",,
+5,Volga Partners,Chuyên viên Đánh giá Chất lượng Dữ liệu Ngôn ngữ - Tiếng Việt (Mới vào nghề / L1),2026-04-13,Việt Nam,Ngôn ngữ,"Đây là vị trí freelance theo nhiệm vụ, dành cho những cá nhân đang tìm kiếm công việc bổ sung linh hoạt và kinh nghiệm thực tế trong lĩnh vực dữ liệu ngôn ngữ AI và vận hành chất lượng.
+Công việc được cung cấp theo nguyên tắc ai đến trước được phục vụ trước khi có nhiệm vụ. Giờ làm việc có thể không đều đặn và gián đoạn tùy theo khối lượng công việc của khách hàng.
+Vị trí này phù hợp với các ứng viên tỉ mỉ, linh hoạt và thoải mái khi làm việc theo các hướng dẫn có cấu trúc.
+Giờ làm việc dự án có thể theo múi giờ IST (giờ chuẩn Ấn Độ) tùy theo yêu cầu quy trình làm việc.","Ví dụ về nhiệm vụ
+Đánh giá nội dung về ngữ pháp, chính tả và độ rõ ràng
+Dịch các cụm từ ngắn, đơn giản
+So sánh dữ liệu với các hướng dẫn được cung cấp
+Áp dụng nhãn dữ liệu cơ bản theo hướng dẫn từng bước
+Đánh dấu các lỗi hoặc sự không nhất quán
 
-Key Responsibilities
-Perform structured data and content reviews
-Execute quality checks (grammar, spelling, formatting)
-Apply data labeling and tagging
-Follow client workflows and instructions
-Maintain accuracy and quality standards
-Incorporate feedback to improve performance","You have advanced proficiency (C1/C2 or equivalent) in the required language(s)
-You are comfortable working on structured, guideline-based tasks
-You are detail-oriented and able to follow instructions closely
-You are interested in gaining experience in AI, data, and language operations
-You are flexible and able to work with intermittent task availability
-Must be able to read and write in required language(s)
-Must understand this is a task-based freelance role
-Must have a reliable computer or laptop
-Must have stable internet connection
-Must be comfortable with flexible and intermittent work
+Trách nhiệm chính
+Thực hiện đánh giá dữ liệu và nội dung có cấu trúc
+Thực hiện kiểm tra chất lượng (ngữ pháp, chính tả, định dạng)
+Áp dụng gán nhãn và phân loại dữ liệu
+Tuân theo quy trình và hướng dẫn của khách hàng
+Duy trì độ chính xác và tiêu chuẩn chất lượng
+Tiếp thu phản hồi để cải thiện hiệu suất","Bạn có trình độ nâng cao (C1/C2 hoặc tương đương) ở (các) ngôn ngữ yêu cầu
+Bạn thoải mái khi làm việc với các nhiệm vụ có cấu trúc, dựa trên hướng dẫn
+Bạn tỉ mỉ và có khả năng tuân thủ hướng dẫn chặt chẽ
+Bạn quan tâm đến việc tích lũy kinh nghiệm trong lĩnh vực AI, dữ liệu và vận hành ngôn ngữ
+Bạn linh hoạt và có thể làm việc với tính sẵn có nhiệm vụ không liên tục
+Phải có khả năng đọc và viết (các) ngôn ngữ yêu cầu
+Phải hiểu rằng đây là công việc freelance theo nhiệm vụ
+Phải có máy tính hoặc laptop đáng tin cậy
+Phải có kết nối internet ổn định
+Phải thoải mái với công việc linh hoạt và không liên tục
 
-Desired Qualifications
-Interest in AI, data, or language technology
-Prior experience in data entry, content review, QA, or similar (preferred, not required)
-Strong attention to detail
-Willingness to learn and adapt","","","This role is designed for supplemental, flexible engagement
-No guaranteed minimum hours
-No guaranteed end date
-Tasks are offered first-come, first-served
-While advancement is not guaranteed, future opportunities may evolve based on project needs, performance, and budget"
-
-6,FLC Vietnam,Head of Human Resource,2026-10-04,"Ha Long, Quang Ninh","Human Resource","Organize, operate and control all daily Personnel and Administrative activities of the Company and Construction Site Commands; ensure staffing plans, HR operations, compliance, labor safety, and administrative support across project stages.","Organize and implement project personnel plans; allocate and mobilize staff across projects; monitor personnel fluctuations; supervise HR administration staff; lead recruitment for construction roles; conduct onboarding and labor safety training; manage payroll, bonuses, insurance, and compliance; administer logistics, offices, transportation, and documentation; resolve labor relations and workplace incidents; prepare periodic HR reports.","Age 30-45; University degree in HR, Law, Economics or related field; strong knowledge of Labor Law, Social Insurance, PIT and labor safety; 5+ years HR experience; 2-3 years in HR leadership roles at construction companies or contractors; strong organization, communication, problem-solving skills; willing to travel to projects; preference for candidates in Ha Long/Quang Ninh.","Negotiable salary; performance, project-stage, holiday/Tet and 13th month bonuses; social/health/unemployment insurance; health checkups; annual travel; lunch, phone and travel allowances; Monday-Saturday morning schedule; practical and autonomous work environment.",,"Priority for candidates residing or working in Ha Long City, Quang Ninh."
-7,MD Food,Production Manager,2024-01-02,"Nam Dinh City","Management","Responsible for organizing, managing and controlling all factory production activities to achieve targets for output, quality, timeline and cost while maintaining 5S, ISO, safety and equipment efficiency.","Develop production plans; allocate manpower, machinery and materials; manage production teams and KPIs; monitor output, defects, productivity and downtime; manage and train staff; coordinate recruitment and evaluation; oversee machinery maintenance and technology improvements; manage quality, cost optimization, automation and Lean/Kaizen activities; ensure compliance with safety, ISO, 5S and reporting.","Male, age 30-45; University degree in Processing Technology, Industrial Electricity, Refrigeration, Electromechanical, Mechatronics or Automation; knowledge of production systems, automation, 5S, ISO, Kaizen; 5+ years FMCG factory experience; electromechanical/maintenance background; 2+ years managerial experience; strong planning, analysis, HR management and communication skills; proficient in Excel and Word; preference for candidates near Nam Dinh.",,"Salary negotiable; 13th month and productivity bonuses; statutory insurance; Monday-Saturday schedule; professional environment with promotion path to Production Director.","Priority for candidates residing within 30km of the factory."
-8,MD Food,Deputy Sales Director,2024-01-02,"Nam Dinh City","Management","Manage and take responsibility for all company sales and business activities; advise leadership on strategy; build and implement annual business plans; represent company with domestic and international partners; manage sales channels and teams.","Develop sales plans across GT, MT-XK and retail channels; manage work and sales teams; track market trends and competitors; coordinate trade marketing activities; classify and manage agents; maintain customer relationships; train and evaluate teams.","Male/Female, age 30-45; University degree in Business Administration or Economics; proficient with MISA, Excel and Word; 5+ years equivalent leadership experience; FMCG sales background preferred.","Salary up to 30M++; statutory insurance; sales bonuses and 13th month bonus; Monday-Saturday schedule; professional and dynamic workplace.",,"Details discussed during interview."
-9,AGRI VMA,Accounting Intern,2025-12-22,"Cuba","Accounting","Training-oriented accounting internship supporting accounting and finance operations for agricultural and production projects in Cuba, with a pathway toward long-term official employment.","Verify accounting documents; enter and maintain accounting records; track revenues, expenses and costs; assist with reports and data control; support reconciliations and financial analysis; comply with accounting procedures and company policies; coordinate with departments; perform assigned tasks under accounting leadership.","Male/Female born 1995-2004; University degree in Accounting, Finance-Banking or related field; basic accounting knowledge; no prior experience required; responsible, disciplined and willing to live/work in Cuba; commitment of at least 2 years.","Annual salary review; bonuses and allowances; social, health and unemployment insurance; accommodation covered in Cuba; 2 round-trip Vietnam-Cuba flights annually; professional training; career growth opportunities within AGRI VMA and FUJINUCO ecosystem.",1200,"Working hours 08:00-17:00; alternate Saturdays off; modern work environment; annual travel opportunities; employee family care and periodic health programs."
-10,DataNova Analytics,AI & Data Solutions Engineer,2026-06-04,"Leuven, Belgium (Hybrid)",Full-Time,"Build data products, AI solutions, dashboards, and predictive models for business decision-making.","Design ETL pipelines; Develop Power BI dashboards; Analyze business data; Build ML models; Create AI applications; Maintain cloud databases; Collaborate with stakeholders; Present findings.","Bachelor's or Master's degree; Python; SQL; Power BI; Machine Learning; PostgreSQL/MongoDB; Cloud knowledge; Communication skills; English.","Competitive salary; Hybrid work; Training budget; Health insurance; Pension plan; International environment; Flexible hours.",70000,"Strong fit for candidates with data analytics, engineering, BI, and applied AI experience.","Python, SQL, Power BI, Machine Learning, Databases, Cloud, English"
-11,InsightForge Consulting,Analytics Engineer,2026-06-04,"Brussels, Belgium (Hybrid)",Full-Time,Support business teams by transforming raw data into reliable reporting and analytical systems.,"Create data models; Build dashboards; Optimize SQL queries; Maintain data pipelines; Support reporting requests.","SQL, Power BI, Python, ETL concepts, stakeholder communication.","Flexible schedule, pension plan, annual training allowance.",65000,"~85% CV match. Less ML-focused but strongly aligned with BI and analytics experience.","SQL, Power BI, Python, Reporting, ETL"
-12,VisionAI Labs,Computer Vision Engineer,2026-06-04,"Antwerp, Belgium (On-site)",Full-Time,Develop computer vision systems for industrial automation and image analysis applications.,"Train detection models; Improve image processing pipelines; Deploy vision applications; Conduct model evaluation.","Python, OpenCV, YOLO, Deep Learning, Docker, Linux.","Research budget, conference sponsorship, health benefits.",75000,"~75% CV match. Strong project alignment but narrower than the candidate's broader analytics profile.","Python, OpenCV, YOLO, Deep Learning"
-13,CloudScale Technologies,Data Platform Engineer,2026-06-04,"Ghent, Belgium (Hybrid)",Full-Time,Build and maintain enterprise-scale cloud data infrastructure.,"Manage Airflow pipelines; Design cloud architectures; Maintain data warehouses; Monitor system performance.","Python, SQL, Airflow, GCP/AWS, Docker, Kubernetes.","Remote days, certification budget, stock options.",80000,"~65% CV match. Strong engineering fit but less emphasis on analytics and business-facing work.","Python, SQL, Airflow, Cloud, Docker"
-14,BrightPath Marketing,Digital Marketing Analyst,2026-06-04,"Brussels, Belgium (Remote)",Full-Time,Analyze marketing campaign performance and customer behavior across digital channels.,"Track KPIs; Create reports; Analyze campaign performance; Support marketing strategy.","Excel, Google Analytics, Marketing Analytics, Communication Skills.","Remote work, wellness allowance, bonus scheme.",50000,"~40% CV match. Some analytical overlap, but lacks technical depth matching the candidate's engineering and AI background.","Excel, Reporting, Analytics, Communication"
-15,Vantix,"Junior Full-Stack Developer (React / Node.js)",2026-06-11,"Leuven, Belgium (Hybrid)",Full-Time,"Vantix is a fast-growing Belgian SaaS startup building smart scheduling and workflow tools for mid-market enterprises. We're looking for a motivated Junior Full-Stack Developer to join our 12-person product team. You'll ship features in production from week one and grow under experienced engineers in a supportive Agile environment.","Build and maintain full-stack web features using React and Node.js; Develop and consume REST APIs and third-party integrations; Participate in Agile sprints and code reviews; Work with PostgreSQL and MongoDB databases; Implement responsive accessible UI/UX designs; Maintain CI/CD pipelines via GitHub Actions","Bachelor's in Computer Science or final-year equivalent; Proficiency in TypeScript and JavaScript; Hands-on experience with React and Node.js; Familiarity with SQL and/or NoSQL databases; Experience with Git and version control workflows; Dutch and English communication skills; Azure or AWS experience is a plus","Competitive junior salary + annual review; Hybrid schedule (2 days remote); €1500 learning and development budget; MacBook Pro setup; Mentorship from senior engineers; Flat team structure",38000,"Eren's SteamList (solo 8-month React/Next.js + API integration build) and Belfius enterprise scheduling team project are both directly relevant. CodeFever Educational Assistant role signals strong communication skills — valuable for code reviews and documentation.","React • Node.js • TypeScript • PostgreSQL • MongoDB • GitHub Actions • Agile • Dutch + English"
+Yêu cầu mong muốn
+Quan tâm đến AI, dữ liệu hoặc công nghệ ngôn ngữ
+Có kinh nghiệm nhập liệu, đánh giá nội dung, QA hoặc tương tự (ưu tiên, không bắt buộc)
+Chú ý tỉ mỉ đến chi tiết
+Sẵn sàng học hỏi và thích nghi",,,"Vị trí này được thiết kế cho công việc bổ sung, linh hoạt
+Không đảm bảo số giờ tối thiểu
+Không đảm bảo ngày kết thúc
+Nhiệm vụ được cung cấp theo nguyên tắc ai đến trước được phục vụ trước
+Mặc dù không đảm bảo thăng tiến, các cơ hội trong tương lai có thể phát triển dựa trên nhu cầu dự án, hiệu suất và ngân sách",,
+6,FLC Vietnam,Trưởng phòng Nhân sự,2026-10-04,"Hạ Long, Quảng Ninh",Nhân sự,"Tổ chức, vận hành và kiểm soát toàn bộ các hoạt động Nhân sự và Hành chính hàng ngày của Công ty và các Ban Chỉ huy Công trường; đảm bảo kế hoạch nhân sự, vận hành nhân sự, tuân thủ quy định, an toàn lao động và hỗ trợ hành chính xuyên suốt các giai đoạn dự án.","Tổ chức và triển khai kế hoạch nhân sự dự án; phân bổ và điều động nhân sự giữa các dự án; theo dõi biến động nhân sự; giám sát nhân viên hành chính nhân sự; dẫn dắt tuyển dụng cho các vị trí xây dựng; tổ chức hội nhập và đào tạo an toàn lao động; quản lý lương, thưởng, bảo hiểm và tuân thủ quy định; quản lý hậu cần, văn phòng, phương tiện đi lại và hồ sơ tài liệu; giải quyết quan hệ lao động và sự cố tại nơi làm việc; lập báo cáo nhân sự định kỳ.","Độ tuổi 30-45; Tốt nghiệp Đại học chuyên ngành Nhân sự, Luật, Kinh tế hoặc liên quan; am hiểu sâu về Luật Lao động, Bảo hiểm Xã hội, Thuế TNCN và an toàn lao động; 5+ năm kinh nghiệm nhân sự; 2-3 năm ở vị trí lãnh đạo nhân sự tại các công ty xây dựng hoặc nhà thầu; kỹ năng tổ chức, giao tiếp, giải quyết vấn đề tốt; sẵn sàng công tác tại các dự án; ưu tiên ứng viên tại Hạ Long/Quảng Ninh.","Lương thỏa thuận; thưởng hiệu suất, thưởng theo giai đoạn dự án, thưởng lễ/Tết và lương tháng 13; bảo hiểm xã hội/y tế/thất nghiệp; khám sức khỏe định kỳ; du lịch hàng năm; phụ cấp ăn trưa, điện thoại và đi lại; lịch làm việc thứ Hai đến sáng thứ Bảy; môi trường làm việc thực tế và tự chủ.",,"Ưu tiên ứng viên đang sinh sống hoặc làm việc tại thành phố Hạ Long, Quảng Ninh.",,
+7,MD Food,Quản đốc Sản xuất,2024-01-02,Thành phố Nam Định,Quản lý,"Chịu trách nhiệm tổ chức, quản lý và kiểm soát toàn bộ hoạt động sản xuất của nhà máy nhằm đạt các mục tiêu về sản lượng, chất lượng, tiến độ và chi phí, đồng thời duy trì 5S, ISO, an toàn và hiệu suất thiết bị.","Xây dựng kế hoạch sản xuất; phân bổ nhân lực, máy móc và nguyên vật liệu; quản lý các đội sản xuất và KPI; theo dõi sản lượng, tỷ lệ lỗi, năng suất và thời gian dừng máy; quản lý và đào tạo nhân viên; điều phối tuyển dụng và đánh giá; giám sát bảo trì máy móc và cải tiến công nghệ; quản lý chất lượng, tối ưu chi phí, tự động hóa và các hoạt động Lean/Kaizen; đảm bảo tuân thủ an toàn, ISO, 5S và báo cáo.","Nam, độ tuổi 30-45; Tốt nghiệp Đại học chuyên ngành Công nghệ Chế biến, Điện Công nghiệp, Kỹ thuật Lạnh, Cơ điện tử hoặc Tự động hóa; am hiểu hệ thống sản xuất, tự động hóa, 5S, ISO, Kaizen; 5+ năm kinh nghiệm trong nhà máy FMCG; có nền tảng cơ điện/bảo trì; 2+ năm kinh nghiệm quản lý; kỹ năng lập kế hoạch, phân tích, quản lý nhân sự và giao tiếp tốt; thành thạo Excel và Word; ưu tiên ứng viên gần Nam Định.",,Lương thỏa thuận; thưởng tháng 13 và thưởng năng suất; bảo hiểm theo quy định; lịch làm việc thứ Hai đến thứ Bảy; môi trường chuyên nghiệp với lộ trình thăng tiến lên Giám đốc Sản xuất.,Ưu tiên ứng viên sinh sống trong bán kính 30km quanh nhà máy.,,
+8,MD Food,Phó Giám đốc Kinh doanh,2024-01-02,Thành phố Nam Định,Quản lý,Quản lý và chịu trách nhiệm toàn bộ hoạt động kinh doanh và bán hàng của công ty; tham mưu cho ban lãnh đạo về chiến lược; xây dựng và triển khai kế hoạch kinh doanh hàng năm; đại diện công ty làm việc với các đối tác trong nước và quốc tế; quản lý các kênh bán hàng và đội ngũ nhân viên.,"Xây dựng kế hoạch bán hàng trên các kênh GT, MT-XK và bán lẻ; quản lý công việc và đội ngũ bán hàng; theo dõi xu hướng thị trường và đối thủ cạnh tranh; điều phối các hoạt động trade marketing; phân loại và quản lý đại lý; duy trì quan hệ khách hàng; đào tạo và đánh giá đội ngũ.","Nam/Nữ, độ tuổi 30-45; Tốt nghiệp Đại học chuyên ngành Quản trị Kinh doanh hoặc Kinh tế; thành thạo MISA, Excel và Word; 5+ năm kinh nghiệm quản lý tương đương; ưu tiên có nền tảng bán hàng FMCG.",Lương lên đến 30 triệu++; bảo hiểm theo quy định; thưởng doanh số và thưởng tháng 13; lịch làm việc thứ Hai đến thứ Bảy; môi trường làm việc chuyên nghiệp và năng động.,,Chi tiết sẽ được trao đổi trong buổi phỏng vấn.,,
+9,AGRI VMA,Thực tập sinh Kế toán,2025-12-22,Cuba,Kế toán,"Chương trình thực tập kế toán định hướng đào tạo, hỗ trợ các hoạt động kế toán và tài chính cho các dự án nông nghiệp và sản xuất tại Cuba, với lộ trình trở thành nhân viên chính thức lâu dài.","Kiểm tra chứng từ kế toán; nhập liệu và duy trì sổ sách kế toán; theo dõi doanh thu, chi phí và giá thành; hỗ trợ lập báo cáo và kiểm soát dữ liệu; hỗ trợ đối chiếu và phân tích tài chính; tuân thủ quy trình kế toán và chính sách công ty; phối hợp với các phòng ban; thực hiện các công việc được giao dưới sự chỉ đạo của lãnh đạo kế toán.","Nam/Nữ sinh năm 1995-2004; Tốt nghiệp Đại học chuyên ngành Kế toán, Tài chính-Ngân hàng hoặc liên quan; có kiến thức kế toán cơ bản; không yêu cầu kinh nghiệm; có trách nhiệm, kỷ luật và sẵn sàng sinh sống/làm việc tại Cuba; cam kết tối thiểu 2 năm.","Xét tăng lương hàng năm; thưởng và phụ cấp; bảo hiểm xã hội, y tế và thất nghiệp; được hỗ trợ chỗ ở tại Cuba; 2 vé khứ hồi Việt Nam-Cuba mỗi năm; đào tạo chuyên môn; cơ hội phát triển sự nghiệp trong hệ sinh thái AGRI VMA và FUJINUCO.",1200,Giờ làm việc 08:00-17:00; nghỉ luân phiên thứ Bảy; môi trường làm việc hiện đại; cơ hội du lịch hàng năm; chương trình chăm sóc gia đình nhân viên và khám sức khỏe định kỳ.,,
+10,DataNova Analytics,Kỹ sư Giải pháp AI & Dữ liệu,2026-06-04,"Leuven, Bỉ (Kết hợp)",Toàn thời gian,"Xây dựng các sản phẩm dữ liệu, giải pháp AI, dashboard và mô hình dự đoán phục vụ ra quyết định kinh doanh.",Thiết kế các pipeline ETL; Phát triển dashboard Power BI; Phân tích dữ liệu kinh doanh; Xây dựng mô hình ML; Tạo các ứng dụng AI; Duy trì cơ sở dữ liệu trên nền tảng đám mây; Phối hợp với các bên liên quan; Trình bày kết quả.,Tốt nghiệp Cử nhân hoặc Thạc sĩ; Python; SQL; Power BI; Machine Learning; PostgreSQL/MongoDB; kiến thức về Cloud; kỹ năng giao tiếp; tiếng Anh.,Lương cạnh tranh; hình thức làm việc kết hợp (Hybrid); ngân sách đào tạo; bảo hiểm y tế; chế độ hưu trí; môi trường quốc tế; giờ làm việc linh hoạt.,70000,"Rất phù hợp với các ứng viên có kinh nghiệm về phân tích dữ liệu, kỹ thuật dữ liệu, BI và ứng dụng AI.","Python, SQL, Power BI, Machine Learning, Databases, Cloud, English",
+11,InsightForge Consulting,Kỹ sư Phân tích Dữ liệu (Analytics Engineer),2026-06-04,"Brussels, Bỉ (Kết hợp)",Toàn thời gian,Hỗ trợ các đội kinh doanh bằng cách chuyển đổi dữ liệu thô thành hệ thống báo cáo và phân tích đáng tin cậy.,Xây dựng các mô hình dữ liệu; Xây dựng dashboard; Tối ưu truy vấn SQL; Duy trì các pipeline dữ liệu; Hỗ trợ các yêu cầu báo cáo.,"SQL, Power BI, Python, các khái niệm ETL, kỹ năng giao tiếp với các bên liên quan.","Lịch làm việc linh hoạt, chế độ hưu trí, trợ cấp đào tạo hàng năm.",65000,~85% phù hợp với CV. Ít tập trung vào ML hơn nhưng phù hợp mạnh với kinh nghiệm BI và phân tích.,"SQL, Power BI, Python, Reporting, ETL",
+12,VisionAI Labs,Kỹ sư Thị giác Máy tính (Computer Vision),2026-06-04,"Antwerp, Bỉ (Tại văn phòng)",Toàn thời gian,Phát triển các hệ thống thị giác máy tính cho ứng dụng tự động hóa công nghiệp và phân tích hình ảnh.,Huấn luyện các mô hình phát hiện đối tượng; Cải thiện các pipeline xử lý ảnh; Triển khai các ứng dụng thị giác máy tính; Thực hiện đánh giá mô hình.,"Python, OpenCV, YOLO, Deep Learning, Docker, Linux.","Ngân sách nghiên cứu, tài trợ tham dự hội nghị, phúc lợi sức khỏe.",75000,~75% phù hợp với CV. Phù hợp mạnh với dự án nhưng hẹp hơn so với hồ sơ phân tích tổng quát của ứng viên.,"Python, OpenCV, YOLO, Deep Learning",
+13,CloudScale Technologies,Kỹ sư Nền tảng Dữ liệu,2026-06-04,"Ghent, Bỉ (Kết hợp)",Toàn thời gian,Xây dựng và duy trì hạ tầng dữ liệu đám mây quy mô doanh nghiệp.,Quản lý các pipeline Airflow; Thiết kế kiến trúc đám mây; Duy trì kho dữ liệu; Giám sát hiệu suất hệ thống.,"Python, SQL, Airflow, GCP/AWS, Docker, Kubernetes.","Ngày làm việc từ xa, ngân sách chứng chỉ, quyền chọn cổ phiếu (stock options).",80000,~65% phù hợp với CV. Phù hợp mạnh về kỹ thuật nhưng ít tập trung vào phân tích và công việc hướng khách hàng doanh nghiệp.,"Python, SQL, Airflow, Cloud, Docker",
+14,BrightPath Marketing,Chuyên viên Phân tích Marketing Kỹ thuật số,2026-06-04,"Brussels, Bỉ (Từ xa)",Toàn thời gian,Phân tích hiệu quả chiến dịch marketing và hành vi khách hàng trên các kênh kỹ thuật số.,Theo dõi các chỉ số KPI; Lập báo cáo; Phân tích hiệu quả chiến dịch; Hỗ trợ chiến lược marketing.,"Excel, Google Analytics, phân tích marketing, kỹ năng giao tiếp.","Làm việc từ xa, trợ cấp chăm sóc sức khỏe tinh thần (wellness), chế độ thưởng.",50000,"~40% phù hợp với CV. Có một số điểm chung về phân tích, nhưng thiếu chiều sâu kỹ thuật phù hợp với nền tảng kỹ thuật và AI của ứng viên.","Excel, Reporting, Analytics, Communication",
+15,Vantix,Lập trình viên Full-Stack Junior (React / Node.js),2026-06-11,"Leuven, Bỉ (Kết hợp)",Toàn thời gian,"Vantix là một startup SaaS đang phát triển nhanh tại Bỉ, xây dựng các công cụ lập lịch thông minh và quản lý quy trình làm việc cho các doanh nghiệp vừa. Chúng tôi đang tìm kiếm một Lập trình viên Full-Stack Junior nhiệt huyết để gia nhập đội ngũ sản phẩm gồm 12 người. Bạn sẽ triển khai các tính năng lên production ngay từ tuần đầu tiên và phát triển bản thân dưới sự hướng dẫn của các kỹ sư giàu kinh nghiệm trong môi trường Agile hỗ trợ tốt.","Xây dựng và duy trì các tính năng web full-stack sử dụng React và Node.js; Phát triển và tích hợp REST API cùng các dịch vụ bên thứ ba; Tham gia các sprint Agile và review code; Làm việc với cơ sở dữ liệu PostgreSQL và MongoDB; Triển khai thiết kế UI/UX responsive, dễ tiếp cận; Duy trì các pipeline CI/CD qua GitHub Actions",Tốt nghiệp Cử nhân Khoa học Máy tính hoặc sinh viên năm cuối tương đương; Thành thạo TypeScript và JavaScript; Có kinh nghiệm thực tế với React và Node.js; Quen thuộc với cơ sở dữ liệu SQL và/hoặc NoSQL; Có kinh nghiệm với Git và quy trình quản lý phiên bản; Kỹ năng giao tiếp tiếng Hà Lan và tiếng Anh; Có kinh nghiệm Azure hoặc AWS là một lợi thế,Lương junior cạnh tranh + xét tăng lương hàng năm; lịch làm việc kết hợp (2 ngày từ xa); ngân sách học tập và phát triển 1500€; trang bị MacBook Pro; được cố vấn bởi các kỹ sư cấp cao; cơ cấu đội ngũ phẳng,38000,Dự án SteamList của Eren (tự xây dựng trong 8 tháng với React/Next.js + tích hợp API) và dự án đội lập lịch doanh nghiệp Belfius đều liên quan trực tiếp. Vai trò Trợ lý Giáo dục tại CodeFever cho thấy kỹ năng giao tiếp tốt — hữu ích cho việc review code và viết tài liệu.,React • Node.js • TypeScript • PostgreSQL • MongoDB • GitHub Actions • Agile • Dutch + English,
