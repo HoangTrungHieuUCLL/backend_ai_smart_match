@@ -10,6 +10,7 @@ from app.routes.cv import router as cv_router
 from app.routes.auth import router as auth_router
 from app.routes.executive import router as executive_router
 from app.routes.savedJobs import router as saved_jobs_router
+from app.seed import seed_jobs
 from app.config import CORS_ORIGINS
 
 
@@ -22,6 +23,7 @@ async def lifespan(app: FastAPI):
     # Startup
     ensure_vector_extension()
     Base.metadata.create_all(bind=engine)
+    seed_jobs()
 
     yield
 

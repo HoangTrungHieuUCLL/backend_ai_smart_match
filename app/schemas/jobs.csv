@@ -1,0 +1,153 @@
+id,company_name,position,date_posted,location,job_type,overview,responsibilities,requirements,offers,salary_usd,notes,requirements_simplified,requirements_embedding
+1,FPT Software,Quản trị viên Cơ sở dữ liệu,2026-05-12,Hà Nội,Dữ liệu,"Chúng tôi hiện đang tìm kiếm một Quản trị viên Cơ sở dữ liệu để gia nhập đội ngũ dự án, một trong những tập đoàn tài chính và bán lẻ trực tuyến hàng đầu Vương quốc Anh chuyên về các giải pháp du lịch doanh nghiệp, với doanh thu hàng năm vượt 2,2 tỷ bảng Anh","Đảm bảo tính ổn định, bảo mật và hiệu suất của hệ thống cơ sở dữ liệu của CTM trên cả môi trường tại chỗ và trên nền tảng đám mây.
+Cài đặt, cấu hình và duy trì các hệ quản trị cơ sở dữ liệu (ví dụ: SQL Server).
+Triển khai các giải pháp tính sẵn sàng cao như nhân bản (replication), phân cụm (clustering) và Always On Availability Groups.
+Quản lý kiểm soát danh tính và quyền truy cập, mã hóa, và giám sát hoạt động cơ sở dữ liệu bằng các công cụ SIEM.
+Tối ưu hiệu suất thông qua điều chỉnh truy vấn, tối ưu chỉ mục (index) và phân vùng (partitioning).
+Duy trì tài liệu về cấu hình, quy trình bảo trì và kế hoạch khôi phục.
+Thực hiện kiểm tra khôi phục và đảm bảo tuân thủ các kế hoạch khôi phục sau thảm họa và duy trì hoạt động kinh doanh.","Chứng chỉ ITIL Foundation.
+Kiến thức nâng cao về SQL Server và các nền tảng DBMS khác.
+Kinh nghiệm với các chiến lược sao lưu (đầy đủ, gia tăng, khác biệt) và kiểm tra khôi phục.
+Thành thạo các công cụ giám sát hiệu suất (ví dụ: SQL Profiler, các công cụ trên nền tảng đám mây).
+Kỹ năng phân tích mạnh để xác định các điểm nghẽn và sự cố hệ thống.
+Tư duy phản biện để đánh giá rủi ro và các biện pháp phòng ngừa.
+Khả năng diễn giải các chỉ số hệ thống và dự đoán các vấn đề tiềm ẩn.
+Sẵn sàng làm việc theo ca luân phiên trong dịch vụ 24x7 hoặc 24x5 hoặc theo múi giờ Anh.","Thưởng theo hiệu suất
+Gói bảo hiểm FPT Care dành riêng cho nhân viên FPT
+Chế độ nghỉ hè hàng năm hấp dẫn
+Tài trợ các khóa đào tạo phát triển bản thân và hỗ trợ tới 100% chi phí chứng chỉ
+Môi trường làm việc toàn cầu, hòa nhập với các sự kiện giao lưu văn hóa hàng tháng
+Cơ hội tiếp xúc quốc tế và phát triển sự nghiệp tại các địa điểm toàn cầu
+Phúc lợi cân bằng công việc - cuộc sống với chính sách nghỉ phép linh hoạt và khám sức khỏe định kỳ hàng năm để hỗ trợ sức khỏe nhân viên",2500,3+ năm kinh nghiệm làm việc trong lĩnh vực Quản trị Cơ sở dữ liệu,,
+2,Crossing Hurdles,Kỹ sư Site Reliability (SRE),2026-04-30,Việt Nam,AI,"Vị trí: Kỹ sư Site Reliability (SRE)
+Loại hình: Hợp đồng theo giờ
+Mức lương: 40 - 70 USD/giờ
+Địa điểm: Từ xa
+Cam kết: 10–40 giờ/tuần","Triển khai, giám sát và khôi phục các môi trường huấn luyện AI đóng gói container.
+Xử lý sự cố nghẽn hạ tầng và khắc phục sự cố hệ thống theo thời gian thực.
+Xây dựng và quản lý các hệ thống có khả năng phục hồi cao để tối ưu độ ổn định và hiệu suất.
+Phối hợp với các đội kỹ thuật để cải thiện các pipeline CI/CD và tự động hóa.
+Quản lý cấu trúc hệ thống tệp, lưu trữ và lập lịch tiến trình trong môi trường container hóa.
+Thực hiện tái lập kế hoạch linh hoạt trong quá trình xảy ra sự cố vận hành và lỗi hệ thống.
+Ghi chép tài liệu về các quy trình hệ thống, giải pháp và các phương pháp thực hành tốt nhất.","Kinh nghiệm vững vàng về quản trị hệ thống và xử lý sự cố qua terminal.
+Am hiểu chuyên sâu về các môi trường container hóa như Docker hoặc Kubernetes.
+Kỹ năng Python tốt để viết script, tự động hóa và gỡ lỗi.
+Thành thạo Bash và quen thuộc với các ngôn ngữ lập trình khác.
+Hiểu biết vững chắc về hạ tầng, hệ thống build và quản lý phiên bản (version control).
+Khả năng quản lý khôi phục hạ tầng linh hoạt trong các tình huống áp lực cao.
+Kỹ năng giao tiếp viết và nói xuất sắc.",,70/giờ,"Ứng tuyển dễ dàng trên LinkedIn
+Kiểm tra email để biết các bước tiếp theo
+Tham gia vòng đánh giá hồ sơ & phỏng vấn",,
+3,Coc Coc,Kỹ sư Dữ liệu,2026-05-12,Hà Nội,Dữ liệu,"Sứ mệnh của Phòng Dữ liệu là hợp nhất dữ liệu của công ty (người dùng, khách hàng và nội bộ), giúp dữ liệu dễ dàng truy cập, đảm bảo chất lượng và độ tin cậy, đồng thời giúp các đội nhóm trong toàn công ty xây dựng các sản phẩm, quyết định và quy trình dựa trên dữ liệu.
+
+Đội Kỹ thuật Dữ liệu chịu trách nhiệm xây dựng và vận hành Nền tảng Dữ liệu — nền móng lưu trữ, xử lý, cung cấp và quản trị dữ liệu ở quy mô lớn. Chúng tôi thiết kế các pipeline dữ liệu đáng tin cậy, hệ thống lưu trữ có khả năng mở rộng và các năng lực dữ liệu tự phục vụ, phục vụ cho phân tích, BI và các trường hợp sử dụng dữ liệu nâng cao trên toàn tổ chức.","Với vai trò Kỹ sư Dữ liệu Cấp cao, bạn sẽ thiết kế, xây dựng và vận hành các hệ thống dữ liệu quy mô lớn phục vụ toàn công ty.
+Thiết kế và phát triển các pipeline thu thập và biến đổi dữ liệu mạnh mẽ (theo lô & theo luồng thời gian thực)
+Xây dựng và tối ưu các lớp lưu trữ và truy vấn dữ liệu (ví dụ: ClickHouse, PostgreSQL, Data Lake/Lakehouse)
+Phát triển các dịch vụ dữ liệu đáng tin cậy hỗ trợ phân tích, BI và các công cụ nội bộ
+Đảm bảo chất lượng, tính nhất quán và khả năng quan sát dữ liệu trên toàn nền tảng
+Đóng góp vào các sáng kiến về metadata, quản trị dữ liệu và khả năng khám phá dữ liệu
+Nghiên cứu, thiết kế và tối ưu các thành phần phức tạp của nền tảng dữ liệu để đạt hiệu suất và khả năng mở rộng
+Tham gia triển khai, giám sát và bảo trì các hệ thống dữ liệu trong môi trường production
+Viết mã nguồn chất lượng cao, được kiểm thử và tài liệu hóa đầy đủ
+Review code của đồng nghiệp và đóng góp vào các phương pháp thực hành kỹ thuật tốt nhất
+Phối hợp chặt chẽ với các Chuyên viên Phân tích Dữ liệu, đội Sản phẩm và đội Hạ tầng trong các dự án dựa trên dữ liệu.","Kỹ năng bắt buộc
+Kinh nghiệm vững vàng với Python / Java / Go / C++
+Hiểu biết vững chắc về cấu trúc dữ liệu, giải thuật và thiết kế hệ thống
+Kinh nghiệm làm việc mạnh mẽ trong môi trường Linux/UNIX
+Kinh nghiệm xây dựng hoặc bảo trì các pipeline dữ liệu (ETL/ELT)
+Kinh nghiệm làm việc với cơ sở dữ liệu hoặc hệ thống OLAP (ví dụ: ClickHouse, PostgreSQL, v.v.)
+Hiểu biết về mô hình hóa dữ liệu và các khái niệm kho dữ liệu (data warehousing)
+Khả năng thiết kế hệ thống cho thông lượng cao và khả năng mở rộng
+Sẵn sàng học hỏi công nghệ mới và liên tục cải thiện
+
+Kỹ năng là lợi thế
+Kinh nghiệm với Kafka, Airflow, NiFi hoặc các công cụ dữ liệu tương tự
+Kinh nghiệm xử lý dữ liệu quy mô lớn
+Quen thuộc với các khái niệm data lakehouse (Parquet, Iceberg, object storage)
+Hiểu biết về chất lượng dữ liệu, metadata và các thực hành quản trị dữ liệu
+Kinh nghiệm hỗ trợ các đội BI/Phân tích
+Quan tâm đến việc khám phá ý nghĩa và tác động của dữ liệu
+Kỹ năng giao tiếp tốt bằng tiếng Anh và tiếng Việt
+Kinh nghiệm hoặc quan tâm đến machine learning / phân tích nâng cao
+Kỹ năng phân tích và giải quyết vấn đề tốt.","Lương cạnh tranh và chế độ thưởng bao gồm lương tháng 13.
+Đánh giá hiệu suất hai lần/năm với cơ hội thăng tiến hoặc luân chuyển nội bộ.
+Chính sách nghỉ phép đặc biệt với tối thiểu 19 ngày/năm, cộng thêm 1 ngày nghỉ sinh nhật.
+Chính sách làm việc tại nhà (WFH) hàng năm.
+Bảo hiểm Sức khỏe nâng cao 24/7 cho toàn thể nhân viên.
+Các phúc lợi Công đoàn tuyệt vời như sinh nhật, kết hôn, sinh con...",,"Phát triển chuyên môn:
+Cơ hội học hỏi và phát triển thông qua các chương trình đào tạo định kỳ, huấn luyện và chia sẻ nội bộ.
+Làm việc trong môi trường đa dạng với đồng nghiệp và đối tác/khách hàng tài năng, cả trong nước và quốc tế.
+
+Môi trường làm việc tích cực:
+Nhiều sự kiện nội bộ thú vị để bạn trở thành một phần của gia đình Cốc Cốc.
+Pantry ấm cúng với đầy đủ đồ ăn vặt, nước ép và cà phê/trà mỗi ngày.
+Nhiều câu lạc bộ sở thích thú vị để chia sẻ đam mê như Câu lạc bộ Tiếng Anh, Yoga, Billiards hoặc Bóng đá.",,
+4,Alignerr,Chuyên gia Ngôn ngữ Tiếng Việt,2026-05-07,Việt Nam,Ngôn ngữ,"Nếu khả năng thông thạo tiếng Việt của bạn có thể trực tiếp định hình cách AI giao tiếp với hàng triệu người trên khắp thế giới thì sao? Chúng tôi đang tìm kiếm các chuyên gia ngôn ngữ tiếng Việt để đánh giá và cải thiện nội dung do AI tạo ra — đảm bảo nội dung nghe tự nhiên, chính xác và phù hợp văn hóa đối với người nói tiếng Việt thực thụ.
+
+Đây là công việc hợp đồng làm việc từ xa hoàn toàn, linh hoạt. Không cần kiến thức nền về AI — chỉ cần khả năng làm chủ tiếng Việt sâu sắc và con mắt tinh tường về chất lượng.","Đánh giá các bản dịch tiếng Việt do AI tạo ra và nội dung gốc về độ chính xác và tự nhiên
+Xác định các lỗi dịch sai, cách diễn đạt không tự nhiên, sai văn phong và các vấn đề văn hóa
+Đề xuất các cải tiến rõ ràng, đúng ngữ và phù hợp văn hóa
+Cung cấp phản hồi chi tiết, có cấu trúc về chất lượng ngôn ngữ và văn hóa
+Làm việc độc lập và không đồng bộ — hoàn toàn theo lịch trình của riêng bạn","Thông thạo tiếng Việt như người bản xứ hoặc gần như bản xứ
+Kỹ năng viết tiếng Việt tốt
+Nắm vững cách sử dụng tiếng Việt hiện đại trong các ngữ cảnh và văn phong khác nhau
+Tỉ mỉ, có phương pháp làm việc nhất quán
+Thoải mái khi đánh giá chất lượng ngôn ngữ viết trên nhiều chủ đề khác nhau
+Không yêu cầu kinh nghiệm AI hoặc công nghệ trước đó
+
+Ưu tiên nếu có
+Kinh nghiệm dịch thuật, bản địa hóa, biên tập hoặc ngôn ngữ học
+Quen thuộc với các công cụ AI hoặc quy trình đánh giá ngôn ngữ
+Hiểu biết về các biến thể vùng miền hoặc khác biệt phương ngữ tiếng Việt
+Nền tảng về truyền thông, giáo dục, báo chí hoặc đánh giá nội dung",,40 - 120/giờ,"Lý do nên gia nhập
+Làm việc trên các dự án AI tiên tiến cùng các phòng nghiên cứu hàng đầu
+Làm việc từ xa hoàn toàn và linh hoạt — làm việc khi nào và ở đâu phù hợp với bạn
+Tự chủ freelance với cấu trúc công việc có ý nghĩa, theo nhiệm vụ
+Đóng góp vào công việc thực sự cải thiện AI cho người nói tiếng Việt trên toàn thế giới
+Tiềm năng có công việc liên tục và gia hạn hợp đồng khi có dự án mới",,
+5,Volga Partners,Chuyên viên Đánh giá Chất lượng Dữ liệu Ngôn ngữ - Tiếng Việt (Mới vào nghề / L1),2026-04-13,Việt Nam,Ngôn ngữ,"Đây là vị trí freelance theo nhiệm vụ, dành cho những cá nhân đang tìm kiếm công việc bổ sung linh hoạt và kinh nghiệm thực tế trong lĩnh vực dữ liệu ngôn ngữ AI và vận hành chất lượng.
+Công việc được cung cấp theo nguyên tắc ai đến trước được phục vụ trước khi có nhiệm vụ. Giờ làm việc có thể không đều đặn và gián đoạn tùy theo khối lượng công việc của khách hàng.
+Vị trí này phù hợp với các ứng viên tỉ mỉ, linh hoạt và thoải mái khi làm việc theo các hướng dẫn có cấu trúc.
+Giờ làm việc dự án có thể theo múi giờ IST (giờ chuẩn Ấn Độ) tùy theo yêu cầu quy trình làm việc.","Ví dụ về nhiệm vụ
+Đánh giá nội dung về ngữ pháp, chính tả và độ rõ ràng
+Dịch các cụm từ ngắn, đơn giản
+So sánh dữ liệu với các hướng dẫn được cung cấp
+Áp dụng nhãn dữ liệu cơ bản theo hướng dẫn từng bước
+Đánh dấu các lỗi hoặc sự không nhất quán
+
+Trách nhiệm chính
+Thực hiện đánh giá dữ liệu và nội dung có cấu trúc
+Thực hiện kiểm tra chất lượng (ngữ pháp, chính tả, định dạng)
+Áp dụng gán nhãn và phân loại dữ liệu
+Tuân theo quy trình và hướng dẫn của khách hàng
+Duy trì độ chính xác và tiêu chuẩn chất lượng
+Tiếp thu phản hồi để cải thiện hiệu suất","Bạn có trình độ nâng cao (C1/C2 hoặc tương đương) ở (các) ngôn ngữ yêu cầu
+Bạn thoải mái khi làm việc với các nhiệm vụ có cấu trúc, dựa trên hướng dẫn
+Bạn tỉ mỉ và có khả năng tuân thủ hướng dẫn chặt chẽ
+Bạn quan tâm đến việc tích lũy kinh nghiệm trong lĩnh vực AI, dữ liệu và vận hành ngôn ngữ
+Bạn linh hoạt và có thể làm việc với tính sẵn có nhiệm vụ không liên tục
+Phải có khả năng đọc và viết (các) ngôn ngữ yêu cầu
+Phải hiểu rằng đây là công việc freelance theo nhiệm vụ
+Phải có máy tính hoặc laptop đáng tin cậy
+Phải có kết nối internet ổn định
+Phải thoải mái với công việc linh hoạt và không liên tục
+
+Yêu cầu mong muốn
+Quan tâm đến AI, dữ liệu hoặc công nghệ ngôn ngữ
+Có kinh nghiệm nhập liệu, đánh giá nội dung, QA hoặc tương tự (ưu tiên, không bắt buộc)
+Chú ý tỉ mỉ đến chi tiết
+Sẵn sàng học hỏi và thích nghi",,,"Vị trí này được thiết kế cho công việc bổ sung, linh hoạt
+Không đảm bảo số giờ tối thiểu
+Không đảm bảo ngày kết thúc
+Nhiệm vụ được cung cấp theo nguyên tắc ai đến trước được phục vụ trước
+Mặc dù không đảm bảo thăng tiến, các cơ hội trong tương lai có thể phát triển dựa trên nhu cầu dự án, hiệu suất và ngân sách",,
+6,FLC Vietnam,Trưởng phòng Nhân sự,2026-10-04,"Hạ Long, Quảng Ninh",Nhân sự,"Tổ chức, vận hành và kiểm soát toàn bộ các hoạt động Nhân sự và Hành chính hàng ngày của Công ty và các Ban Chỉ huy Công trường; đảm bảo kế hoạch nhân sự, vận hành nhân sự, tuân thủ quy định, an toàn lao động và hỗ trợ hành chính xuyên suốt các giai đoạn dự án.","Tổ chức và triển khai kế hoạch nhân sự dự án; phân bổ và điều động nhân sự giữa các dự án; theo dõi biến động nhân sự; giám sát nhân viên hành chính nhân sự; dẫn dắt tuyển dụng cho các vị trí xây dựng; tổ chức hội nhập và đào tạo an toàn lao động; quản lý lương, thưởng, bảo hiểm và tuân thủ quy định; quản lý hậu cần, văn phòng, phương tiện đi lại và hồ sơ tài liệu; giải quyết quan hệ lao động và sự cố tại nơi làm việc; lập báo cáo nhân sự định kỳ.","Độ tuổi 30-45; Tốt nghiệp Đại học chuyên ngành Nhân sự, Luật, Kinh tế hoặc liên quan; am hiểu sâu về Luật Lao động, Bảo hiểm Xã hội, Thuế TNCN và an toàn lao động; 5+ năm kinh nghiệm nhân sự; 2-3 năm ở vị trí lãnh đạo nhân sự tại các công ty xây dựng hoặc nhà thầu; kỹ năng tổ chức, giao tiếp, giải quyết vấn đề tốt; sẵn sàng công tác tại các dự án; ưu tiên ứng viên tại Hạ Long/Quảng Ninh.","Lương thỏa thuận; thưởng hiệu suất, thưởng theo giai đoạn dự án, thưởng lễ/Tết và lương tháng 13; bảo hiểm xã hội/y tế/thất nghiệp; khám sức khỏe định kỳ; du lịch hàng năm; phụ cấp ăn trưa, điện thoại và đi lại; lịch làm việc thứ Hai đến sáng thứ Bảy; môi trường làm việc thực tế và tự chủ.",,"Ưu tiên ứng viên đang sinh sống hoặc làm việc tại thành phố Hạ Long, Quảng Ninh.",,
+7,MD Food,Quản đốc Sản xuất,2024-01-02,Thành phố Nam Định,Quản lý,"Chịu trách nhiệm tổ chức, quản lý và kiểm soát toàn bộ hoạt động sản xuất của nhà máy nhằm đạt các mục tiêu về sản lượng, chất lượng, tiến độ và chi phí, đồng thời duy trì 5S, ISO, an toàn và hiệu suất thiết bị.","Xây dựng kế hoạch sản xuất; phân bổ nhân lực, máy móc và nguyên vật liệu; quản lý các đội sản xuất và KPI; theo dõi sản lượng, tỷ lệ lỗi, năng suất và thời gian dừng máy; quản lý và đào tạo nhân viên; điều phối tuyển dụng và đánh giá; giám sát bảo trì máy móc và cải tiến công nghệ; quản lý chất lượng, tối ưu chi phí, tự động hóa và các hoạt động Lean/Kaizen; đảm bảo tuân thủ an toàn, ISO, 5S và báo cáo.","Nam, độ tuổi 30-45; Tốt nghiệp Đại học chuyên ngành Công nghệ Chế biến, Điện Công nghiệp, Kỹ thuật Lạnh, Cơ điện tử hoặc Tự động hóa; am hiểu hệ thống sản xuất, tự động hóa, 5S, ISO, Kaizen; 5+ năm kinh nghiệm trong nhà máy FMCG; có nền tảng cơ điện/bảo trì; 2+ năm kinh nghiệm quản lý; kỹ năng lập kế hoạch, phân tích, quản lý nhân sự và giao tiếp tốt; thành thạo Excel và Word; ưu tiên ứng viên gần Nam Định.",,Lương thỏa thuận; thưởng tháng 13 và thưởng năng suất; bảo hiểm theo quy định; lịch làm việc thứ Hai đến thứ Bảy; môi trường chuyên nghiệp với lộ trình thăng tiến lên Giám đốc Sản xuất.,Ưu tiên ứng viên sinh sống trong bán kính 30km quanh nhà máy.,,
+8,MD Food,Phó Giám đốc Kinh doanh,2024-01-02,Thành phố Nam Định,Quản lý,Quản lý và chịu trách nhiệm toàn bộ hoạt động kinh doanh và bán hàng của công ty; tham mưu cho ban lãnh đạo về chiến lược; xây dựng và triển khai kế hoạch kinh doanh hàng năm; đại diện công ty làm việc với các đối tác trong nước và quốc tế; quản lý các kênh bán hàng và đội ngũ nhân viên.,"Xây dựng kế hoạch bán hàng trên các kênh GT, MT-XK và bán lẻ; quản lý công việc và đội ngũ bán hàng; theo dõi xu hướng thị trường và đối thủ cạnh tranh; điều phối các hoạt động trade marketing; phân loại và quản lý đại lý; duy trì quan hệ khách hàng; đào tạo và đánh giá đội ngũ.","Nam/Nữ, độ tuổi 30-45; Tốt nghiệp Đại học chuyên ngành Quản trị Kinh doanh hoặc Kinh tế; thành thạo MISA, Excel và Word; 5+ năm kinh nghiệm quản lý tương đương; ưu tiên có nền tảng bán hàng FMCG.",Lương lên đến 30 triệu++; bảo hiểm theo quy định; thưởng doanh số và thưởng tháng 13; lịch làm việc thứ Hai đến thứ Bảy; môi trường làm việc chuyên nghiệp và năng động.,,Chi tiết sẽ được trao đổi trong buổi phỏng vấn.,,
+9,AGRI VMA,Thực tập sinh Kế toán,2025-12-22,Cuba,Kế toán,"Chương trình thực tập kế toán định hướng đào tạo, hỗ trợ các hoạt động kế toán và tài chính cho các dự án nông nghiệp và sản xuất tại Cuba, với lộ trình trở thành nhân viên chính thức lâu dài.","Kiểm tra chứng từ kế toán; nhập liệu và duy trì sổ sách kế toán; theo dõi doanh thu, chi phí và giá thành; hỗ trợ lập báo cáo và kiểm soát dữ liệu; hỗ trợ đối chiếu và phân tích tài chính; tuân thủ quy trình kế toán và chính sách công ty; phối hợp với các phòng ban; thực hiện các công việc được giao dưới sự chỉ đạo của lãnh đạo kế toán.","Nam/Nữ sinh năm 1995-2004; Tốt nghiệp Đại học chuyên ngành Kế toán, Tài chính-Ngân hàng hoặc liên quan; có kiến thức kế toán cơ bản; không yêu cầu kinh nghiệm; có trách nhiệm, kỷ luật và sẵn sàng sinh sống/làm việc tại Cuba; cam kết tối thiểu 2 năm.","Xét tăng lương hàng năm; thưởng và phụ cấp; bảo hiểm xã hội, y tế và thất nghiệp; được hỗ trợ chỗ ở tại Cuba; 2 vé khứ hồi Việt Nam-Cuba mỗi năm; đào tạo chuyên môn; cơ hội phát triển sự nghiệp trong hệ sinh thái AGRI VMA và FUJINUCO.",1200,Giờ làm việc 08:00-17:00; nghỉ luân phiên thứ Bảy; môi trường làm việc hiện đại; cơ hội du lịch hàng năm; chương trình chăm sóc gia đình nhân viên và khám sức khỏe định kỳ.,,
+10,DataNova Analytics,Kỹ sư Giải pháp AI & Dữ liệu,2026-06-04,"Leuven, Bỉ (Kết hợp)",Toàn thời gian,"Xây dựng các sản phẩm dữ liệu, giải pháp AI, dashboard và mô hình dự đoán phục vụ ra quyết định kinh doanh.",Thiết kế các pipeline ETL; Phát triển dashboard Power BI; Phân tích dữ liệu kinh doanh; Xây dựng mô hình ML; Tạo các ứng dụng AI; Duy trì cơ sở dữ liệu trên nền tảng đám mây; Phối hợp với các bên liên quan; Trình bày kết quả.,Tốt nghiệp Cử nhân hoặc Thạc sĩ; Python; SQL; Power BI; Machine Learning; PostgreSQL/MongoDB; kiến thức về Cloud; kỹ năng giao tiếp; tiếng Anh.,Lương cạnh tranh; hình thức làm việc kết hợp (Hybrid); ngân sách đào tạo; bảo hiểm y tế; chế độ hưu trí; môi trường quốc tế; giờ làm việc linh hoạt.,70000,"Rất phù hợp với các ứng viên có kinh nghiệm về phân tích dữ liệu, kỹ thuật dữ liệu, BI và ứng dụng AI.","Python, SQL, Power BI, Machine Learning, Databases, Cloud, English",
+11,InsightForge Consulting,Kỹ sư Phân tích Dữ liệu (Analytics Engineer),2026-06-04,"Brussels, Bỉ (Kết hợp)",Toàn thời gian,Hỗ trợ các đội kinh doanh bằng cách chuyển đổi dữ liệu thô thành hệ thống báo cáo và phân tích đáng tin cậy.,Xây dựng các mô hình dữ liệu; Xây dựng dashboard; Tối ưu truy vấn SQL; Duy trì các pipeline dữ liệu; Hỗ trợ các yêu cầu báo cáo.,"SQL, Power BI, Python, các khái niệm ETL, kỹ năng giao tiếp với các bên liên quan.","Lịch làm việc linh hoạt, chế độ hưu trí, trợ cấp đào tạo hàng năm.",65000,~85% phù hợp với CV. Ít tập trung vào ML hơn nhưng phù hợp mạnh với kinh nghiệm BI và phân tích.,"SQL, Power BI, Python, Reporting, ETL",
+12,VisionAI Labs,Kỹ sư Thị giác Máy tính (Computer Vision),2026-06-04,"Antwerp, Bỉ (Tại văn phòng)",Toàn thời gian,Phát triển các hệ thống thị giác máy tính cho ứng dụng tự động hóa công nghiệp và phân tích hình ảnh.,Huấn luyện các mô hình phát hiện đối tượng; Cải thiện các pipeline xử lý ảnh; Triển khai các ứng dụng thị giác máy tính; Thực hiện đánh giá mô hình.,"Python, OpenCV, YOLO, Deep Learning, Docker, Linux.","Ngân sách nghiên cứu, tài trợ tham dự hội nghị, phúc lợi sức khỏe.",75000,~75% phù hợp với CV. Phù hợp mạnh với dự án nhưng hẹp hơn so với hồ sơ phân tích tổng quát của ứng viên.,"Python, OpenCV, YOLO, Deep Learning",
+13,CloudScale Technologies,Kỹ sư Nền tảng Dữ liệu,2026-06-04,"Ghent, Bỉ (Kết hợp)",Toàn thời gian,Xây dựng và duy trì hạ tầng dữ liệu đám mây quy mô doanh nghiệp.,Quản lý các pipeline Airflow; Thiết kế kiến trúc đám mây; Duy trì kho dữ liệu; Giám sát hiệu suất hệ thống.,"Python, SQL, Airflow, GCP/AWS, Docker, Kubernetes.","Ngày làm việc từ xa, ngân sách chứng chỉ, quyền chọn cổ phiếu (stock options).",80000,~65% phù hợp với CV. Phù hợp mạnh về kỹ thuật nhưng ít tập trung vào phân tích và công việc hướng khách hàng doanh nghiệp.,"Python, SQL, Airflow, Cloud, Docker",
+14,BrightPath Marketing,Chuyên viên Phân tích Marketing Kỹ thuật số,2026-06-04,"Brussels, Bỉ (Từ xa)",Toàn thời gian,Phân tích hiệu quả chiến dịch marketing và hành vi khách hàng trên các kênh kỹ thuật số.,Theo dõi các chỉ số KPI; Lập báo cáo; Phân tích hiệu quả chiến dịch; Hỗ trợ chiến lược marketing.,"Excel, Google Analytics, phân tích marketing, kỹ năng giao tiếp.","Làm việc từ xa, trợ cấp chăm sóc sức khỏe tinh thần (wellness), chế độ thưởng.",50000,"~40% phù hợp với CV. Có một số điểm chung về phân tích, nhưng thiếu chiều sâu kỹ thuật phù hợp với nền tảng kỹ thuật và AI của ứng viên.","Excel, Reporting, Analytics, Communication",
+15,Vantix,Lập trình viên Full-Stack Junior (React / Node.js),2026-06-11,"Leuven, Bỉ (Kết hợp)",Toàn thời gian,"Vantix là một startup SaaS đang phát triển nhanh tại Bỉ, xây dựng các công cụ lập lịch thông minh và quản lý quy trình làm việc cho các doanh nghiệp vừa. Chúng tôi đang tìm kiếm một Lập trình viên Full-Stack Junior nhiệt huyết để gia nhập đội ngũ sản phẩm gồm 12 người. Bạn sẽ triển khai các tính năng lên production ngay từ tuần đầu tiên và phát triển bản thân dưới sự hướng dẫn của các kỹ sư giàu kinh nghiệm trong môi trường Agile hỗ trợ tốt.","Xây dựng và duy trì các tính năng web full-stack sử dụng React và Node.js; Phát triển và tích hợp REST API cùng các dịch vụ bên thứ ba; Tham gia các sprint Agile và review code; Làm việc với cơ sở dữ liệu PostgreSQL và MongoDB; Triển khai thiết kế UI/UX responsive, dễ tiếp cận; Duy trì các pipeline CI/CD qua GitHub Actions",Tốt nghiệp Cử nhân Khoa học Máy tính hoặc sinh viên năm cuối tương đương; Thành thạo TypeScript và JavaScript; Có kinh nghiệm thực tế với React và Node.js; Quen thuộc với cơ sở dữ liệu SQL và/hoặc NoSQL; Có kinh nghiệm với Git và quy trình quản lý phiên bản; Kỹ năng giao tiếp tiếng Hà Lan và tiếng Anh; Có kinh nghiệm Azure hoặc AWS là một lợi thế,Lương junior cạnh tranh + xét tăng lương hàng năm; lịch làm việc kết hợp (2 ngày từ xa); ngân sách học tập và phát triển 1500€; trang bị MacBook Pro; được cố vấn bởi các kỹ sư cấp cao; cơ cấu đội ngũ phẳng,38000,Dự án SteamList của Eren (tự xây dựng trong 8 tháng với React/Next.js + tích hợp API) và dự án đội lập lịch doanh nghiệp Belfius đều liên quan trực tiếp. Vai trò Trợ lý Giáo dục tại CodeFever cho thấy kỹ năng giao tiếp tốt — hữu ích cho việc review code và viết tài liệu.,React • Node.js • TypeScript • PostgreSQL • MongoDB • GitHub Actions • Agile • Dutch + English,
