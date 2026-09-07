@@ -11,6 +11,7 @@ from app.routes.auth import router as auth_router
 from app.routes.executive import router as executive_router
 from app.routes.savedJobs import router as saved_jobs_router
 from app.seed import seed_jobs
+from app.config import settings
 
 
 @asynccontextmanager
@@ -34,11 +35,14 @@ app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://localhost:3001",
-        "http://localhost:3002",
-    ],
+    allow_origins=list(
+        {
+            "http://localhost:3000",
+            "http://localhost:3001",
+            "http://localhost:3002",
+            settings.FRONTEND_URL,
+        }
+    ),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
