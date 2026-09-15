@@ -7,6 +7,17 @@ class JobRepository:
     def get_all(self, db: Session):
         return db.query(Job).all()
 
+    def get_distinct_values(self, db: Session, column_name: str) -> list[str]:
+        column = getattr(Job, column_name)
+        rows = (
+            db.query(column)
+            .filter(column.isnot(None), column != "")
+            .distinct()
+            .order_by(column)
+            .all()
+        )
+        return [value for (value,) in rows]
+
     def create(self, db: Session, data: dict):
         job = Job(**data)
         db.add(job)

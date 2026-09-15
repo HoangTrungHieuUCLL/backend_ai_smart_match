@@ -10,9 +10,31 @@ from sentence_transformers import util
 from app.repository.job import JobRepository
 from app.models.cv import CompatibilityScore
 from app.schemas.job import JobCreate, JobUpdate
+from app.constants.job_taxonomy import allowed_slugs
 from app.service.compatibility_calibration import load_scoring_config
 from app.service.requirements_vectorizer import simplify_requirements, vectorize_requirements
 from app.service.skill_taxonomy import canonicalize_skill_phrase
+
+
+# Fixed-enum Job fields validated against app/constants/job_taxonomy.py.
+# category_l2/l3, salary_min/max/negotiable, is_featured_employer are free-form
+# (AI-assigned or admin free text), not validated against a closed set.
+ENUM_FIELDS = [
+    "category_l1",
+    "experience_level",
+    "seniority",
+    "employment_type",
+    "work_arrangement",
+    "saturday_work",
+    "work_schedule",
+    "salary_unit",
+    "company_industry",
+]
+
+# Distinct-value fields surfaced via GET /jobs/filter-options because they
+# aren't a fixed enum owned by us (see plan: don't invent taxonomy the client
+# didn't give us).
+FILTER_OPTION_FIELDS = ["category_l2", "category_l3", "location"]
 
 
 class JobService:
@@ -22,6 +44,12 @@ class JobService:
 
     def get_all_jobs(self, db: Session):
         return self.repo.get_all(db)
+
+    def get_filter_options(self, db: Session) -> dict[str, list[str]]:
+        return {
+            field: self.repo.get_distinct_values(db, field)
+            for field in FILTER_OPTION_FIELDS
+        }
 
     def create_job(self, db: Session, job_data: JobCreate):
         data = self._prepare_job_data(job_data.model_dump())
@@ -80,6 +108,18 @@ class JobService:
         data["requirements_embedding"] = vectorize_requirements(
             data["requirements_simplified"]
         )
+
+        for field in ENUM_FIELDS:
+            value = data.get(field)
+            if not value:
+                data[field] = None
+                continue
+
+            if value not in allowed_slugs(field):
+                raise HTTPException(
+                    status_code=422,
+                    detail=f"Invalid value {value!r} for {field}",
+                )
 
         return data
 

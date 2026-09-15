@@ -20,6 +20,10 @@ def get_db():
 def get_all_jobs(db: Session = Depends(get_db)):
     return service.get_all_jobs(db)
 
+@router.get("/jobs/filter-options")
+def get_job_filter_options(db: Session = Depends(get_db)):
+    return service.get_filter_options(db)
+
 @router.post("/jobs", response_model=Job)
 def create_job(
     job: JobCreate,

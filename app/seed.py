@@ -20,6 +20,28 @@ def ensure_job_columns():
             text("ALTER TABLE jobs ADD COLUMN IF NOT EXISTS requirements_embedding vector(384)")
         )
 
+        # Filter taxonomy (client feedback v2) — additive, nullable columns.
+        for column, col_type in [
+            ("category_l1", "VARCHAR"),
+            ("category_l2", "VARCHAR"),
+            ("category_l3", "VARCHAR"),
+            ("experience_level", "VARCHAR"),
+            ("seniority", "VARCHAR"),
+            ("employment_type", "VARCHAR"),
+            ("work_arrangement", "VARCHAR"),
+            ("saturday_work", "VARCHAR"),
+            ("work_schedule", "VARCHAR"),
+            ("salary_min", "INTEGER"),
+            ("salary_max", "INTEGER"),
+            ("salary_unit", "VARCHAR"),
+            ("salary_negotiable", "BOOLEAN DEFAULT FALSE"),
+            ("company_industry", "VARCHAR"),
+            ("is_featured_employer", "BOOLEAN DEFAULT FALSE"),
+        ]:
+            connection.execute(
+                text(f"ALTER TABLE jobs ADD COLUMN IF NOT EXISTS {column} {col_type}")
+            )
+
 
 def get_requirements_simplified(row: dict) -> str:
     return row.get("requirements_simplified") or simplify_requirements(row["requirements"])

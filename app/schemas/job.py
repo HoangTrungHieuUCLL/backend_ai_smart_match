@@ -1,7 +1,24 @@
 from pydantic import BaseModel, validator
 from typing import Optional
 
-class JobCreate(BaseModel):
+class _JobTaxonomyFields(BaseModel):
+    category_l1: Optional[str] = None
+    category_l2: Optional[str] = None
+    category_l3: Optional[str] = None
+    experience_level: Optional[str] = None
+    seniority: Optional[str] = None
+    employment_type: Optional[str] = None
+    work_arrangement: Optional[str] = None
+    saturday_work: Optional[str] = None
+    work_schedule: Optional[str] = None
+    salary_min: Optional[int] = None
+    salary_max: Optional[int] = None
+    salary_unit: Optional[str] = None
+    salary_negotiable: Optional[bool] = False
+    company_industry: Optional[str] = None
+    is_featured_employer: Optional[bool] = False
+
+class JobCreate(_JobTaxonomyFields):
     company_name: str
     position: str
     date: Optional[str] = None
@@ -15,7 +32,7 @@ class JobCreate(BaseModel):
     salary: Optional[str] = None
     notes: Optional[str] = None
 
-class JobUpdate(BaseModel):
+class JobUpdate(_JobTaxonomyFields):
     company_name: str
     position: str
     date: Optional[str] = None
@@ -29,7 +46,7 @@ class JobUpdate(BaseModel):
     salary: Optional[str] = None
     notes: Optional[str] = None
 
-class Job(BaseModel):
+class Job(_JobTaxonomyFields):
     id: int
     company_name: str
     position: str
