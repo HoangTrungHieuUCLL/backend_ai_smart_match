@@ -11,7 +11,7 @@ def _stub_module(name, attrs=None):
     return module
 
 _stub_module("fitz", {"open": lambda *args, **kwargs: None})
-_stub_module("pytesseract", {"image_to_string": lambda img: ""})
+_stub_module("pytesseract", {"image_to_string": lambda img, **kwargs: ""})
 PIL = _stub_module("PIL")
 PIL_Image = _stub_module("PIL.Image", {"open": lambda *args, **kwargs: None})
 setattr(PIL, "Image", PIL_Image)

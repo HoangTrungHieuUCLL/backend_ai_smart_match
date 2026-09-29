@@ -57,7 +57,7 @@ class PDFTextExtractor:
 
         pix = page.get_pixmap(dpi=200)
         img = Image.open(io.BytesIO(pix.tobytes("png")))
-        return pytesseract.image_to_string(img).strip()
+        return pytesseract.image_to_string(img, lang="vie+eng").strip()
 
     def _extract_structured_page_text(self, page) -> str:
         blocks = []
