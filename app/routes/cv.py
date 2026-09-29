@@ -1,6 +1,7 @@
 from typing import Any
 
 from fastapi import APIRouter, Body, Depends, File, Form, HTTPException, UploadFile
+from fastapi.concurrency import run_in_threadpool
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import Session
 
@@ -112,8 +113,14 @@ async def _parse_uploaded_cv(cv: UploadFile) -> tuple[Any, list[dict]]:
     classified_tokens is a list of {"word": str, "label": str} dicts that the
     frontend can render as an annotated word-level view for user review.
     Falls back to the heuristic CVParsingService if the BERT model is unavailable.
+    The CPU-bound work (PDF/OCR extraction, BERT inference) runs in a worker
+    thread so it doesn't block the event loop for other requests.
     """
     file_bytes = await cv.read()
+    return await run_in_threadpool(_parse_cv_bytes_sync, file_bytes)
+
+
+def _parse_cv_bytes_sync(file_bytes: bytes) -> tuple[Any, list[dict]]:
     raw_text = extractor.extract_from_bytes(file_bytes)
     cleaned_text = cleaner.clean(raw_text)
 

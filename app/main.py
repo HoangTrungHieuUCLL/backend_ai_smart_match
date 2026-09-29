@@ -12,11 +12,13 @@ from app.routes.executive import router as executive_router
 from app.routes.savedJobs import router as saved_jobs_router
 from app.seed import seed_jobs
 from app.config import CORS_ORIGINS
+from app.service.bert_cv_classifier import get_bert_classifier
+from app.service.cv_embedding_service import get_model as get_embedding_model
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    
+
     with engine.connect() as conn:
         conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
         conn.commit()
@@ -24,6 +26,16 @@ async def lifespan(app: FastAPI):
     ensure_vector_extension()
     Base.metadata.create_all(bind=engine)
     seed_jobs()
+
+    # Preload CV-parsing models so the first upload isn't the one paying for it.
+    try:
+        get_bert_classifier()._load()
+    except Exception:
+        pass  # falls back to heuristic parser at request time if unavailable
+    try:
+        get_embedding_model()
+    except Exception:
+        pass
 
     yield
 
