@@ -10,15 +10,6 @@ def _stub_module(name, attrs=None):
     sys.modules[name] = module
     return module
 
-google = _stub_module("google")
-genai = _stub_module(
-    "google.genai",
-    {
-        "Client": lambda api_key=None: None,
-    },
-)
-setattr(google, "genai", genai)
-
 _stub_module("fitz", {"open": lambda *args, **kwargs: None})
 _stub_module("pytesseract", {"image_to_string": lambda img: ""})
 PIL = _stub_module("PIL")
@@ -49,17 +40,6 @@ _stub_module(
             "PDFTextExtractor",
             (),
             {"extract_from_bytes": lambda self, data: "dummy text"},
-        ),
-    },
-)
-
-_stub_module(
-    "app.service.gemini_cv_service",
-    {
-        "GeminiCVService": type(
-            "GeminiCVService",
-            (),
-            {"parse_cv": lambda self, text: type("DummyParsedCV", (), {"model_dump": lambda self: {"candidate_profile": {"skills": ["Python"]}}})()},
         ),
     },
 )

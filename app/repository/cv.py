@@ -65,7 +65,7 @@ class CVRepository:
 
         profile = None
 
-        # Use e-mail as the safest candidate identifier if Gemini extracted one.
+        # Use e-mail as the safest candidate identifier if one was extracted.
         if email is not None:
             profile = db.query(Profile).filter(Profile.email == email).first()
 
@@ -225,8 +225,7 @@ class CVRepository:
                 )
             )
 
-        # Your current Gemini schema may not return certifications yet,
-        # but this is ready if you add certifications to cv_schema.py.
+        # Ready if certifications are added to cv_schema.py.
         for item in self._get_collection(structured_data, "certifications"):
             profile.certifications.append(
                 Certification(
@@ -269,7 +268,7 @@ class CVRepository:
     def _required_name(self, value: Any, fallback: str) -> str:
         """
         Your database has given_name and family_name as nullable=False.
-        This helper prevents database errors when Gemini cannot find a name.
+        This helper prevents database errors when no name is found.
         """
 
         return self._clean_string(value) or fallback
@@ -277,7 +276,7 @@ class CVRepository:
     def _skills_to_string(self, value: Any) -> str | None:
         """
         Your Profile.skills column is a String, not a separate skills table.
-        Therefore Gemini's list of skills is stored as a comma-separated string.
+        Therefore the list of skills is stored as a comma-separated string.
         """
 
         if value is None:
@@ -292,7 +291,7 @@ class CVRepository:
     @staticmethod
     def _parse_date(value: Any) -> date | None:
         """
-        Convert common Gemini date outputs into a SQLAlchemy Date value.
+        Convert common date outputs into a SQLAlchemy Date value.
 
         Supported examples:
         - 2024-05-20
