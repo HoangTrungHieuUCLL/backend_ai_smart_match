@@ -263,7 +263,7 @@ def test_linkedin_register_callback_logs_in_existing_user(monkeypatch):
     monkeypatch.setattr(
         auth_routes.user_service,
         "find_by_email",
-        lambda email: {"email": email, "password_hash": "hash", "role": "user"},
+        lambda email: {"email": email, "password_hash": "LINKEDIN_OAUTH_ACCOUNT", "role": "user"},
     )
     monkeypatch.setattr(
         auth_routes.user_service,
@@ -281,3 +281,38 @@ def test_linkedin_register_callback_logs_in_existing_user(monkeypatch):
     assert response.status_code == 307
     assert response.headers["location"].startswith("http://localhost:3000/linkedin-login-callback?")
     assert "email=existing%40example.com" in response.headers["location"]
+
+
+def test_linkedin_register_callback_redirects_password_user_to_link_conflict(monkeypatch):
+    app = FastAPI()
+    app.include_router(auth_routes.router)
+
+    async def fake_fetch_linkedin_userinfo(code, redirect_uri):
+        return {"email": "existing@example.com"}
+
+    monkeypatch.setattr(auth_routes.settings, "LINKEDIN_CLIENT_ID", "client-id")
+    monkeypatch.setattr(auth_routes.settings, "LINKEDIN_CLIENT_SECRET", "client-secret")
+    monkeypatch.setattr(auth_routes.settings, "FRONTEND_URL", "http://localhost:3000")
+    monkeypatch.setattr(auth_routes, "_fetch_linkedin_userinfo", fake_fetch_linkedin_userinfo)
+    monkeypatch.setattr(
+        auth_routes.user_service,
+        "find_by_email",
+        lambda email: {"email": email, "password_hash": "hash", "role": "user"},
+    )
+    monkeypatch.setattr(
+        auth_routes.user_service,
+        "create_oauth_user",
+        lambda email, role="user": (_ for _ in ()).throw(AssertionError("should not create duplicate user")),
+    )
+
+    state = auth_routes._sign_state({"iat": int(auth_routes.time.time()), "flow": "register"})
+    client = TestClient(app)
+    response = client.get(
+        f"/auth/linkedin/register-callback?code=abc&state={state}",
+        follow_redirects=False,
+    )
+
+    assert response.status_code == 307
+    assert response.headers["location"].startswith("http://localhost:3000/register?")
+    assert "linkedinRegister=conflict" in response.headers["location"]
+    assert "linkToken=" in response.headers["location"]
