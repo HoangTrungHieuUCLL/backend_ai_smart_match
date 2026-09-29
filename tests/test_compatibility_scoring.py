@@ -168,3 +168,44 @@ def test_scoring_config_with_zero_weights_is_unchanged():
     )
 
     assert config.normalized() == config
+
+
+def test_calculate_and_save_scores_returns_all_jobs_sorted_and_replaces_old_scores(real_job_module):
+    jobs = [
+        SimpleNamespace(id=job_id, company_name="", position="", location="", type="",
+                        requirements="x", requirements_simplified="x", requirements_embedding=None)
+        for job_id in range(1, 13)
+    ]
+    service = real_job_module.JobService.__new__(real_job_module.JobService)
+    service.repo = SimpleNamespace(
+        get_profile_by_id=lambda db, profile_id: SimpleNamespace(skills="Python", skills_embedding=None),
+        get_all_with_requirements_embedding=lambda db: jobs,
+    )
+    scores_by_job = iter([30, 90, 10, 50, 70, 20, 80, 40, 60, 100, 5, 15])
+    service._dbscan_compatibility_score = lambda cv_skills, job_requirements: next(scores_by_job)
+    real_job_module.CompatibilityScore = lambda **kwargs: SimpleNamespace(**kwargs)
+    real_job_module.CompatibilityScore.profile_id = None
+
+    calls = []
+
+    class FakeQuery:
+        def filter(self, *args):
+            return self
+
+        def delete(self):
+            calls.append("delete")
+
+    db = SimpleNamespace(
+        query=lambda model: FakeQuery(),
+        add=lambda row: calls.append("add"),
+        commit=lambda: calls.append("commit"),
+    )
+
+    result = service.calculate_and_save_scores_for_profile(db, profile_id=7)
+
+    scores = [item["compatibility_score"] for item in result["jobs"]]
+    assert len(scores) == 12
+    assert scores == sorted(scores, reverse=True)
+    assert calls[0] == "delete"
+    assert calls.count("add") == 12
+    assert calls[-1] == "commit"

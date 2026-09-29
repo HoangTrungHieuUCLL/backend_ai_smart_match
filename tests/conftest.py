@@ -114,7 +114,7 @@ class DummyJobService:
 
         return self.repo.create(db, data)
 
-    def calculate_top_compatibility_scores(self, db, skills_embedding, *, cv_skills=None, limit=10):
+    def calculate_compatibility_scores(self, db, skills_embedding, *, cv_skills=None):
         return []
 
     def calculate_and_save_scores_for_profile(self, db, profile_id):

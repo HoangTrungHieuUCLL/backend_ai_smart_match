@@ -264,11 +264,10 @@ async def upload_cv_with_form_data(
         middle_name=middleName,
         family_name=familyName,
     )
-    top_10_scores = job_service.calculate_top_compatibility_scores(
+    scores = job_service.calculate_compatibility_scores(
         db,
         ai_result_dict.get("skills_embedding"),
         cv_skills=ai_result_dict.get("candidate_profile", {}).get("skills"),
-        limit=10,
     )
 
     try:
@@ -276,7 +275,7 @@ async def upload_cv_with_form_data(
             db,
             filename=normalized_filename,
             structured_data=ai_result_dict,
-            compatibility_scores=top_10_scores,
+            compatibility_scores=scores,
         )
     except Exception as exc:
         db.rollback()
@@ -289,7 +288,7 @@ async def upload_cv_with_form_data(
         "message": "CV processed and saved",
         "cv_id": profile.cv_id,
         "profile_id": profile.id,
-        "top_10_compatibility_scores": top_10_scores,
+        "compatibility_scores": scores,
         "ai_result": ai_result_dict,
         "classified_tokens": classified_tokens,
     }
@@ -320,15 +319,14 @@ async def update_extracted_cv_data(
         raise HTTPException(status_code=404, detail="CV profile not found")
 
     # Recalculate compatibility scores with the confirmed (possibly edited) skills.
-    top_10_scores = job_service.calculate_top_compatibility_scores(
+    scores = job_service.calculate_compatibility_scores(
         db,
         structured_data.get("skills_embedding"),
         cv_skills=structured_data.get("candidate_profile", {}).get("skills"),
-        limit=10,
     )
 
     try:
-        _save_compatibility_scores(db, profile_id, top_10_scores)
+        _save_compatibility_scores(db, profile_id, scores)
     except Exception:
         pass  # scoring is best-effort; don't fail the save
 
@@ -340,7 +338,7 @@ async def update_extracted_cv_data(
         "cv_id": profile.cv_id,
         "profile_id": profile.id,
         "ai_result": response_data,
-        "top_10_compatibility_scores": top_10_scores,
+        "compatibility_scores": scores,
     }
 
 
@@ -404,11 +402,10 @@ async def parse_cv(
         family_name=family_name,
         email=email,
     )
-    top_10_scores = job_service.calculate_top_compatibility_scores(
+    scores = job_service.calculate_compatibility_scores(
         db,
         ai_result_dict.get("skills_embedding"),
         cv_skills=ai_result_dict.get("candidate_profile", {}).get("skills"),
-        limit=10,
     )
 
     try:
@@ -416,7 +413,7 @@ async def parse_cv(
             db,
             filename=generated_cv_name,
             structured_data=ai_result_dict,
-            compatibility_scores=top_10_scores,
+            compatibility_scores=scores,
         )
     except Exception as exc:
         db.rollback()
@@ -429,7 +426,7 @@ async def parse_cv(
         "message": "CV processed and saved",
         "cv_id": profile.cv_id,
         "profile_id": profile.id,
-        "top_10_compatibility_scores": top_10_scores,
+        "compatibility_scores": scores,
         "cv_file_name": generated_cv_name,
         "ai_result": ai_result_dict,
         "classified_tokens": classified_tokens,

@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from app.models.job import Job
-from app.models.cv import CompatibilityScore, Profile
+from app.models.cv import Profile
 
 class JobRepository:
     def get_all(self, db: Session):
@@ -59,33 +59,3 @@ class JobRepository:
         db.delete(job)
         db.commit()
         return job
-
-    def get_top_compatibility_scores_for_profile(
-        self,
-        db: Session,
-        profile_id: int,
-        *,
-        limit: int = 10,
-    ):
-        rows = (
-            db.query(CompatibilityScore, Job)
-            .join(Job, CompatibilityScore.job_id == Job.id)
-            .filter(CompatibilityScore.profile_id == profile_id)
-            .order_by(CompatibilityScore.score.desc())
-            .limit(limit)
-            .all()
-        )
-
-        return [
-            {
-                "job_id": job.id,
-                "company_name": job.company_name,
-                "position": job.position,
-                "location": job.location,
-                "type": job.type,
-                "requirements": job.requirements,
-                "requirements_simplified": job.requirements_simplified,
-                "compatibility_score": compatibility_score.score,
-            }
-            for compatibility_score, job in rows
-        ]

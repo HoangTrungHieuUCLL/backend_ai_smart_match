@@ -123,24 +123,6 @@ class JobService:
 
         return data
 
-    def get_top_compatibility_scores_for_profile(
-        self,
-        db: Session,
-        profile_id: int,
-        *,
-        limit: int | None = 10,
-    ) -> dict[str, Any]:
-        scores = self.repo.get_top_compatibility_scores_for_profile(
-            db,
-            profile_id,
-            limit=limit or 10,
-        )
-
-        return {
-            "profile_id": profile_id,
-            "compatibility_scores": scores,
-        }
-
     def calculate_and_save_scores_for_profile(
         self,
         db: Session,
@@ -159,18 +141,15 @@ class JobService:
                 detail="Profile does not have extracted skills",
             )
 
-        all_scores = self.calculate_top_compatibility_scores(
+        all_scores = self.calculate_compatibility_scores(
             db,
             profile.skills_embedding,
             cv_skills=cv_skills,
-            limit=None,
         )
 
-        """
         db.query(CompatibilityScore).filter(
             CompatibilityScore.profile_id == profile_id
         ).delete()
-        """
         for item in all_scores:
             db.add(
                 CompatibilityScore(
@@ -188,13 +167,12 @@ class JobService:
             "jobs": all_scores,
         }
 
-    def calculate_top_compatibility_scores(
+    def calculate_compatibility_scores(
         self,
         db: Session,
         cv_skills_embedding: list[float] | None,
         *,
         cv_skills: list[str] | str | None = None,
-        limit: int | None = 10,
     ) -> list[dict[str, Any]]:
         cv_skill_list = self._skills_as_list(cv_skills)
 
@@ -232,7 +210,8 @@ class JobService:
                 }
             )
 
-        return scores if limit is None else scores[:limit]
+        scores.sort(key=lambda item: item["compatibility_score"], reverse=True)
+        return scores
 
     @staticmethod
     def _skills_as_list(value: list[str] | str | None) -> list[str]:
