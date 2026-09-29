@@ -201,7 +201,6 @@ class JobService:
         if not cv_skill_list and cv_skills_embedding is None:
             return []
 
-        cv_vector = self._to_float_list(cv_skills_embedding)
         jobs = self.repo.get_all_with_requirements_embedding(db)
 
         scores: list[dict[str, Any]] = []

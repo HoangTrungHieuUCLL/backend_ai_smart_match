@@ -33,9 +33,6 @@ class PDFTextExtractor:
         doc.close()
         return text
 
-    def _extract(self, pdf_path):
-        return self.extract_from_path(pdf_path)
-
     def _extract_doc(self, doc, file_bytes: bytes | None = None):
         if file_bytes is not None and self._can_use_doctr() and len(doc) > 0:
             first_page_text = self._extract_structured_page_text(doc[0])

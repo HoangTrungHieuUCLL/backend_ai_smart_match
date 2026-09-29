@@ -15,7 +15,7 @@ from app.config import settings
 from app.database import SessionLocal
 from app.service.cv import CVService
 from app.service.cv_embedding_service import embed_skills
-from app.service.auth import auth_service, require_admin, require_authenticated
+from app.service.auth import auth_service, require_authenticated
 from app.service.user_service import user_service
 import re
 from app.service.profile import ProfileService
@@ -250,13 +250,6 @@ def login(credentials: LoginRequest,
         "profile_id": profile.id if profile else None,
     }
 
-
-@router.get("/auth/me")
-def get_current_admin(admin=Depends(require_admin)):
-    return {
-        "email": admin["sub"],
-        "role": admin["role"],
-    }
 
 @router.post("/auth/register")
 def register(request: RegisterRequest):

@@ -1,8 +1,5 @@
 import re
 
-from app.service.skill_taxonomy import canonicalize_skill_phrase
-
-
 
 _STOPWORDS = {
     "able",
@@ -77,18 +74,3 @@ def extract_key_phrases(text: str | None) -> list[str]:
             add_candidate(segment)
 
     return phrases
-
-
-def canonicalize_phrases(phrases: list[str]) -> list[str]:
-    canonical_phrases: list[str] = []
-    seen: set[str] = set()
-
-    for phrase in phrases:
-        canonical_phrase = canonicalize_skill_phrase(phrase)
-        if not canonical_phrase or canonical_phrase in seen:
-            continue
-
-        seen.add(canonical_phrase)
-        canonical_phrases.append(canonical_phrase)
-
-    return canonical_phrases

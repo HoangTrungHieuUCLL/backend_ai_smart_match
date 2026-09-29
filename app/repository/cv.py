@@ -17,12 +17,6 @@ from app.models.cv import (
 
 class CVRepository:
 
-    def get_all(self, db: Session):
-        return db.query(CV).all()
-
-    def get_by_id(self, db: Session, cv_id: int):
-        return db.query(CV).filter(CV.id == cv_id).first()
-
     def delete_by_id(self, db: Session, cv_id: int):
         cv = db.query(CV).filter(CV.id == cv_id).first()
 

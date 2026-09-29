@@ -168,7 +168,7 @@ class CVParsingService:
             # box-aware encoding, use that path.
             if block is not None and hasattr(model, "encode_with_boxes"):
                 words = [w.get("text") for w in block.get("words", []) if w.get("text")]
-                boxes = [normalize_bbox_for_layoutlm(w.get("bbox"), block_page_width := block.get("page_width", 1) if block.get("page_width") else 1, block_page_height := block.get("page_height", 1) if block.get("page_height") else 1) for w in block.get("words", []) if w.get("text")]
+                boxes = [normalize_bbox_for_layoutlm(w.get("bbox"), block.get("page_width") or 1, block.get("page_height") or 1) for w in block.get("words", []) if w.get("text")]
 
                 # If block doesn't include page size, fall back to 1000-normalized boxes
                 if not any(block.get("page_width") for _ in [block]):
