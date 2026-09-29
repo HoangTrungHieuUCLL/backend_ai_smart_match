@@ -106,3 +106,18 @@ def test_create_job_vectorizes_simplified_requirements(monkeypatch):
     assert captured["requirements_simplified"] == "Python, SQL"
     assert captured["salary"] == ""
     assert captured["notes"] == ""
+
+
+def test_text_cleaner_keeps_diacritics_emails_and_bullets():
+    cleaner = TextCleaner()
+
+    assert "Nguyễn Văn Anh Kỹ sư phần mềm" in cleaner.clean("Nguyễn Văn Anh\nKỹ sư phần mềm")
+    assert "email: a@b.com" in cleaner.clean("email: a@b.com")
+    assert cleaner.clean("experienced engineer").startswith("experienced")
+    assert cleaner.clean("• Built APIs\n• Led team") == "- Built APIs\n- Led team"
+
+
+def test_text_cleaner_puts_each_section_heading_on_its_own_line_once():
+    cleaned = TextCleaner().clean("WORK EXPERIENCE\nAcme\nSKILLS & COMPETENCIES\nPython")
+
+    assert cleaned == "WORK EXPERIENCE\nAcme\n\nSKILLS & COMPETENCIES\nPython"
