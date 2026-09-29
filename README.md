@@ -35,6 +35,8 @@ projects/
 └── frontend_ai_smart_match_team19/
 ```
 
+If you cloned the frontend under a different folder name, set `FRONTEND_PATH` in the backend's `.env` file, e.g. `FRONTEND_PATH=../frontend_ai_smart_match`.
+
 ### 3. Start the Docker containers
 
 Open a terminal (on Mac: **Terminal**; on Windows: **Command Prompt** or **PowerShell**) and navigate to the backend repo folder:
@@ -61,7 +63,7 @@ Once running, the following are available locally:
 |---|---|
 | Frontend | http://localhost:3000 |
 | Backend | http://localhost:8000 |
-| SQL Database | localhost:5432 |
+| SQL Database | localhost:5434 |
 
 ---
 
