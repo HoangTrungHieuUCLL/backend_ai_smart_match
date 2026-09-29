@@ -43,6 +43,22 @@ def ensure_job_columns():
             )
 
 
+# Job attribute -> jobs.csv column, compared to decide whether a row changed.
+CSV_COLUMNS = {
+    "company_name": "company_name",
+    "position": "position",
+    "date": "date_posted",
+    "location": "location",
+    "type": "job_type",
+    "overview": "overview",
+    "responsibilities": "responsibilities",
+    "requirements": "requirements",
+    "offers": "offers",
+    "salary": "salary_usd",
+    "notes": "notes",
+}
+
+
 def get_requirements_simplified(row: dict) -> str:
     return row.get("requirements_simplified") or simplify_requirements(row["requirements"])
 
@@ -82,7 +98,10 @@ def seed_jobs():
                 # or re-embedded, which is the expensive part (loads a
                 # transformer model + spaCy). This keeps restarts cheap
                 # once everything has already been seeded once.
-                if existing_job and existing_job.requirements == row["requirements"]:
+                if existing_job and all(
+                    getattr(existing_job, attr) == row.get(column)
+                    for attr, column in CSV_COLUMNS.items()
+                ):
                     skipped_count += 1
                     continue
 
