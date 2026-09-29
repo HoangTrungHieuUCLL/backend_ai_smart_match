@@ -16,7 +16,7 @@ This guide walks you through setting up the local development environment, which
 From inside the backend repo, clone it to your machine:
 
 ```
-git clone https://github.com/HoangTrungHieuUCLL/backend_ai_smart_match_team19
+git clone https://github.com/HoangTrungHieuUCLL/backend_ai_smart_match
 ```
 
 ### 2. Clone the frontend repository
@@ -24,25 +24,25 @@ git clone https://github.com/HoangTrungHieuUCLL/backend_ai_smart_match_team19
 Clone the frontend repo **into the same parent folder** as the backend:
 
 ```
-git clone https://github.com/HoangTrungHieuUCLL/frontend_ai_smart_match_team19
+git clone https://github.com/HoangTrungHieuUCLL/frontend_ai_smart_match
 ```
 
 Your folder structure should look like this:
 
 ```
 projects/
-├── backend_ai_smart_match_team19/
-└── frontend_ai_smart_match_team19/
+├── backend_ai_smart_match/
+└── frontend_ai_smart_match/
 ```
 
-If you cloned the frontend under a different folder name, set `FRONTEND_PATH` in the backend's `.env` file, e.g. `FRONTEND_PATH=../frontend_ai_smart_match`.
+If you cloned the frontend under a different folder name, set `FRONTEND_PATH` in the backend's `.env` file, e.g. `FRONTEND_PATH=../my-frontend`.
 
 ### 3. Start the Docker containers
 
 Open a terminal (on Mac: **Terminal**; on Windows: **Command Prompt** or **PowerShell**) and navigate to the backend repo folder:
 
 ```
-cd backend_ai_smart_match_team19
+cd backend_ai_smart_match
 ```
 
 Then run:
