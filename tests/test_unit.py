@@ -121,3 +121,34 @@ def test_text_cleaner_puts_each_section_heading_on_its_own_line_once():
     cleaned = TextCleaner().clean("WORK EXPERIENCE\nAcme\nSKILLS & COMPETENCIES\nPython")
 
     assert cleaned == "WORK EXPERIENCE\nAcme\n\nSKILLS & COMPETENCIES\nPython"
+
+
+def _fake_cv(skills):
+    profile = type("Profile", (), {"skills": skills})()
+    return type("ParsedCV", (), {"candidate_profile": profile})()
+
+
+def test_parse_cv_uses_bert_skills_filtered_to_taxonomy(monkeypatch):
+    heuristic_cv = _fake_cv(["heuristic skill"])
+    bert = type("Bert", (), {"extract_cv_structure": lambda self, text: (_fake_cv(["python", "munich", "sql"]), [{"word": "x", "label": "O"}])})()
+    monkeypatch.setattr(cv_routes.cv_parser_service, "parse_cv", lambda text, pages=None: heuristic_cv, raising=False)
+    monkeypatch.setattr(cv_routes, "extract_words_and_boxes_from_pdf_bytes", lambda data: None)
+    monkeypatch.setattr(cv_routes, "get_bert_classifier", lambda: bert)
+
+    parsed, tokens = cv_routes._parse_cv_bytes_sync(b"pdf")
+
+    assert parsed is heuristic_cv
+    assert parsed.candidate_profile.skills == ["python", "sql"]
+    assert tokens == [{"word": "x", "label": "O"}]
+
+
+def test_parse_cv_keeps_heuristic_skills_when_bert_fails(monkeypatch):
+    heuristic_cv = _fake_cv(["heuristic skill"])
+    monkeypatch.setattr(cv_routes.cv_parser_service, "parse_cv", lambda text, pages=None: heuristic_cv, raising=False)
+    monkeypatch.setattr(cv_routes, "extract_words_and_boxes_from_pdf_bytes", lambda data: None)
+    monkeypatch.setattr(cv_routes, "get_bert_classifier", lambda: (_ for _ in ()).throw(OSError("no weights")))
+
+    parsed, tokens = cv_routes._parse_cv_bytes_sync(b"pdf")
+
+    assert parsed.candidate_profile.skills == ["heuristic skill"]
+    assert tokens == []

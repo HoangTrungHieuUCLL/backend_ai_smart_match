@@ -1,3 +1,4 @@
+import logging
 from typing import Any
 
 from fastapi import APIRouter, Body, Depends, File, Form, HTTPException, UploadFile
@@ -15,8 +16,12 @@ from app.service.cv_parsing_service import CVParsingService
 from app.service.job import JobService
 from app.service.pdf_extractor import PDFTextExtractor
 from app.service.layoutlm_pdf_processor import extract_words_and_boxes_from_pdf_bytes
+from app.service.skill_taxonomy import canonical_skill_labels
 from app.utils.cv_filename import build_cv_filename
 from app.utils.text_cleaning import TextCleaner
+
+logger = logging.getLogger(__name__)
+_CANONICAL_SKILLS = frozenset(canonical_skill_labels())
 
 router = APIRouter()
 service = CVService()
@@ -106,13 +111,13 @@ def _prepare_ai_result_with_skills_embedding(
 async def _parse_uploaded_cv(cv: UploadFile) -> tuple[Any, list[dict]]:
     """
     Extract text from the uploaded PDF, then:
-    1. Run the fine-tuned DistilBERT classifier over all extracted tokens.
-    2. Group the BIO-tagged tokens into structured entity spans.
-    3. Map the entities to a CVParsed object.
+    1. Structure the CV with the heuristic CVParsingService.
+    2. Replace its skills with the fine-tuned DistilBERT skills, filtered to
+       the canonical skill taxonomy.
     Returns (CVParsed, classified_tokens).
     classified_tokens is a list of {"word": str, "label": str} dicts that the
     frontend can render as an annotated word-level view for user review.
-    Falls back to the heuristic CVParsingService if the BERT model is unavailable.
+    Keeps the heuristic skills if the BERT model is unavailable.
     The CPU-bound work (PDF/OCR extraction, BERT inference) runs in a worker
     thread so it doesn't block the event loop for other requests.
     """
@@ -124,16 +129,7 @@ def _parse_cv_bytes_sync(file_bytes: bytes) -> tuple[Any, list[dict]]:
     raw_text = extractor.extract_from_bytes(file_bytes)
     cleaned_text = cleaner.clean(raw_text)
 
-    # --- BERT path (primary) -------------------------------------------
-    classified_tokens: list[dict] = []
-    try:
-        bert = get_bert_classifier()
-        parsed_cv, classified_tokens = bert.extract_cv_structure(cleaned_text)
-        return parsed_cv, classified_tokens
-    except Exception:
-        pass  # fall through to heuristic parser
-
-    # --- Heuristic fallback --------------------------------------------
+    # --- Heuristic parser: profile, experience, education, ... ----------
     pages = None
     try:
         pages = extract_words_and_boxes_from_pdf_bytes(file_bytes)
@@ -142,7 +138,6 @@ def _parse_cv_bytes_sync(file_bytes: bytes) -> tuple[Any, list[dict]]:
 
     try:
         parsed_cv = cv_parser_service.parse_cv(cleaned_text, pages=pages)
-        return parsed_cv, classified_tokens
     except ValueError as exc:
         raise HTTPException(
             status_code=502,
@@ -151,6 +146,22 @@ def _parse_cv_bytes_sync(file_bytes: bytes) -> tuple[Any, list[dict]]:
                 "error": str(exc),
             },
         ) from exc
+
+    # --- BERT: skills only ---------------------------------------------
+    # The model tags cities, companies and prose as SKILL, so keep only
+    # skills that map to the canonical taxonomy.
+    # ponytail: skills missing from the taxonomy are dropped. Extend
+    # _CANONICAL_SKILL_ALIASES when matching needs them.
+    classified_tokens: list[dict] = []
+    try:
+        bert_cv, classified_tokens = get_bert_classifier().extract_cv_structure(cleaned_text)
+        parsed_cv.candidate_profile.skills = [
+            skill for skill in bert_cv.candidate_profile.skills if skill in _CANONICAL_SKILLS
+        ]
+    except Exception:
+        logger.exception("BERT skill extraction failed; keeping heuristic skills")
+
+    return parsed_cv, classified_tokens
 
 
 def _save_compatibility_scores(
