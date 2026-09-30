@@ -58,19 +58,6 @@ class UserService:
             "role": role,
         }
 
-    def create_oauth_user(self, email: str, role: str = "user") -> dict:
-        if self.email_exists(email):
-            raise ValueError("EMAIL_EXISTS")
-
-        with open(USER_FILE, "a", newline="") as f:
-            writer = csv.writer(f)
-            writer.writerow([email.strip().lower(), "LINKEDIN_OAUTH_ACCOUNT", role])
-
-        return {
-            "email": email.strip().lower(),
-            "role": role,
-        }
-
     def update_password(self, email: str, new_password: str) -> None:
         normalized_email = email.strip().lower()
         users = self._read_users()
