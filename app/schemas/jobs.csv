@@ -152,3 +152,85 @@ While advancement is not guaranteed, future opportunities may evolve based on pr
 13,CloudScale Technologies,Data Platform Engineer,2026-06-04,"Ghent, Belgium (Hybrid)",Full-Time,Build and maintain enterprise-scale cloud data infrastructure.,"Manage Airflow pipelines; Design cloud architectures; Maintain data warehouses; Monitor system performance.","Python, SQL, Airflow, GCP/AWS, Docker, Kubernetes.","Remote days, certification budget, stock options.",80000,"~65% CV match. Strong engineering fit but less emphasis on analytics and business-facing work.","Python, SQL, Airflow, Cloud, Docker"
 14,BrightPath Marketing,Digital Marketing Analyst,2026-06-04,"Brussels, Belgium (Remote)",Full-Time,Analyze marketing campaign performance and customer behavior across digital channels.,"Track KPIs; Create reports; Analyze campaign performance; Support marketing strategy.","Excel, Google Analytics, Marketing Analytics, Communication Skills.","Remote work, wellness allowance, bonus scheme.",50000,"~40% CV match. Some analytical overlap, but lacks technical depth matching the candidate's engineering and AI background.","Excel, Reporting, Analytics, Communication"
 15,Vantix,"Junior Full-Stack Developer (React / Node.js)",2026-06-11,"Leuven, Belgium (Hybrid)",Full-Time,"Vantix is a fast-growing Belgian SaaS startup building smart scheduling and workflow tools for mid-market enterprises. We're looking for a motivated Junior Full-Stack Developer to join our 12-person product team. You'll ship features in production from week one and grow under experienced engineers in a supportive Agile environment.","Build and maintain full-stack web features using React and Node.js; Develop and consume REST APIs and third-party integrations; Participate in Agile sprints and code reviews; Work with PostgreSQL and MongoDB databases; Implement responsive accessible UI/UX designs; Maintain CI/CD pipelines via GitHub Actions","Bachelor's in Computer Science or final-year equivalent; Proficiency in TypeScript and JavaScript; Hands-on experience with React and Node.js; Familiarity with SQL and/or NoSQL databases; Experience with Git and version control workflows; Dutch and English communication skills; Azure or AWS experience is a plus","Competitive junior salary + annual review; Hybrid schedule (2 days remote); €1500 learning and development budget; MacBook Pro setup; Mentorship from senior engineers; Flat team structure",38000,"Eren's SteamList (solo 8-month React/Next.js + API integration build) and Belfius enterprise scheduling team project are both directly relevant. CodeFever Educational Assistant role signals strong communication skills — valuable for code reviews and documentation.","React • Node.js • TypeScript • PostgreSQL • MongoDB • GitHub Actions • Agile • Dutch + English"
+16,Lexora Labs,Machine Learning Engineer - Document AI,2026-10-01,"Munich, Germany (Hybrid)",AI,"Lexora Labs builds document understanding for HR and legal teams. You will train and ship the models that turn CVs, contracts and forms into structured data, from fine-tuning transformers to running them behind an API.","Fine-tune BERT-style models for named-entity recognition on CVs and contracts
+Use layout-aware models and OCR to read scanned and multi-column documents
+Cluster and match extracted profiles against job requirements
+Serve models through FastAPI services backed by PostgreSQL
+Package and deploy services with Docker on Google Cloud
+Write tests and evaluation sets alongside the model code",Python; PyTorch; NLP and named-entity recognition; BERT or other transformers; LLM experience; OCR and document layout models; scikit-learn; Clustering (e.g. DBSCAN); FastAPI; PostgreSQL; Docker; Google Cloud Platform; Git; English (C1); German (B1 or higher),"Hybrid work: 3 days in the Munich office
+30 days of paid holiday
+EUR 1,500 yearly learning budget
+GPU budget for experiments
+Visa and relocation support",72000,Start date flexible from November 2026.,"python, pytorch, nlp, machine learning, deep learning, computer vision, scikit-learn, backend, sql, devops, cloud, git, english, german",
+17,Visiontrace GmbH,Computer Vision Engineer - Industrial Inspection,2026-10-01,"Munich, Germany (On-site)",AI,"Visiontrace builds camera-based quality inspection for manufacturing and gas cylinder plants. You will own detection, tracking and OCR models from labelled data to production lines.","Train object detection models (YOLO) and image classifiers (ConvNeXt) for defect detection
+Add multi-object tracking and OCR to read serial numbers on moving parts
+Choose metrics that reflect the customer's cost of a missed defect
+Build data labelling and evaluation pipelines in Python
+Deploy models in Docker containers on edge devices and cloud
+Work directly with plant engineers to validate results",Python; PyTorch; Computer vision; YOLO; OpenCV; OCR (e.g. EasyOCR); Deep learning; scikit-learn; Machine learning evaluation; Docker; Git; SQL; English (C1); German (B1 or higher),"Hands-on work with real production lines
+Company pension plan
+30 days of paid holiday
+Deutschlandticket paid by the company",70000,Occasional travel to customer plants in Bavaria.,"python, pytorch, computer vision, deep learning, machine learning, scikit-learn, devops, git, sql, english, german",
+18,Talentgrid,Applied AI Engineer - HR Tech,2026-10-02,"Munich, Germany (Remote-friendly)",AI,"Talentgrid matches candidates and jobs across Europe and Asia. We are hiring an engineer who can take matching models from research to a production API, and who enjoys working with recruiters in several languages.","Build semantic matching between CVs and job descriptions with transformer embeddings and LLMs
+Extract skills and experience from unstructured CVs
+Design reverse search so employers can find candidates directly
+Ship Python APIs with PostgreSQL and a TypeScript frontend
+Monitor model quality and retrain on new data
+Support recruiters in Japan and Vietnam during market launches","Python; NLP (BERT, LLMs); Machine learning; PyTorch; Deep learning; FastAPI; PostgreSQL; TypeScript; Docker; Google Cloud Platform; Git; Testing; English (C1); German; Japanese or Vietnamese","Remote-friendly with a Munich office
+Equity package
+28 days of paid holiday
+Team trips to Tokyo and Ho Chi Minh City",75000,Japanese or Vietnamese is a strong plus for the APAC launch.,"python, nlp, machine learning, pytorch, deep learning, backend, sql, javascript, devops, cloud, git, testing, english, german, japanese, vietnamese",
+19,Nordhaus Retail Group,Data Analyst - E-commerce,2026-10-01,"Munich, Germany (Hybrid)",Data,"Nordhaus runs 40 home furnishing stores and a growing online shop. The e-commerce team needs an analyst who can turn store and web data into decisions on pricing, Click & Collect and assortment.","Analyse the drivers behind online and Click & Collect growth
+Build and maintain Power BI dashboards for the executive team
+Write BigQuery SQL and data models other analysts can reuse
+Reconcile KPIs reported differently by individual stores
+Build simple forecasting and predictive models in Python
+Present findings to marketing, sales and design teams",SQL; Python; Power BI; BigQuery; Data analysis; Data visualisation; Excel; Data modelling; Machine learning basics; Forecasting; Stakeholder communication; English (C1); German (B1 or higher),"Hybrid work: 2 days in the office
+Staff discount in all stores
+30 days of paid holiday
+Paid German courses",58000,Experience in retail or e-commerce is a plus.,"sql, python, power bi, bigquery, data analysis, data visualization, excel, data modeling, machine learning, time series, communication, english, german",
+20,Alpenmark Logistics,BI Analyst (Power BI & BigQuery),2026-10-02,"Munich, Germany (Hybrid)",Data,"Alpenmark moves freight across the Alps for 300 customers. Our BI team is replacing spreadsheet reports with one trusted reporting layer, and we need an analyst who can own dashboards end to end.","Design Power BI and Looker Studio dashboards for operations and finance
+Model warehouse data in BigQuery for fast, reliable reporting
+Automate recurring Excel reports with VBA or Python
+Define KPI logic together with data owners across teams
+Document data cleaning steps so every number is auditable
+Train business users to self-serve their reports",Power BI; SQL; BigQuery; Looker Studio; Excel (advanced); VBA; Data visualisation; Data modelling; Data analysis; Python; English (C1); German (B1 or higher),"Hybrid work
+Company car or Deutschlandticket
+30 days of paid holiday
+Annual bonus",56000,Start date from November 2026.,"power bi, sql, bigquery, looker studio, excel, vba, data visualization, data modeling, data analysis, python, english, german",
+21,Sakura Bridge Trading,Commercial Data Analyst - APAC Markets,2026-10-02,"Munich, Germany (Hybrid)",Data,Sakura Bridge imports and distributes European consumer goods in Japan and Vietnam. The commercial team needs an analyst who can forecast demand per market and explain the numbers to partners in their own language.,"Forecast weekly demand per product and market
+Build sales and margin dashboards in Power BI
+Run exploratory and statistical analysis on partner sales data
+Clean and combine data from Japanese and Vietnamese distributors
+Present findings to partners and the management team
+Support pricing decisions with predictive models",SQL; Python; Data analysis; Hypothesis testing; Data visualisation; Power BI; Excel; Forecasting and time series; Predictive modelling; English (C1); German; Japanese (business level); Vietnamese,"Hybrid work
+Two trips a year to Tokyo and Ho Chi Minh City
+30 days of paid holiday
+Relocation support",60000,Japanese at business level is required; Vietnamese is a strong plus.,"sql, python, data analysis, data visualization, power bi, excel, time series, machine learning, english, german, japanese, vietnamese",
+22,Isarflow Analytics,Data Engineer - Google Cloud,2026-10-01,"Munich, Germany (Hybrid)",Data,"Isarflow builds forecasting and reporting platforms for retail clients on Google Cloud. You will build the pipelines that replace hand-assembled numbers with scheduled, tested data flows.","Build end-to-end pipelines on GCP covering ingestion, transformation, scheduling and delivery
+Orchestrate jobs with Apache Airflow
+Process large datasets with PySpark
+Model data in BigQuery for analysts and dashboards
+Containerise services with Docker and deploy them on Cloud Run
+Own monitoring, backups and runbooks for the pipelines",Python; SQL; BigQuery; Apache Airflow; PySpark; Data engineering and ETL; Data modelling; Google Cloud Platform; Docker; Git; English (C1); German (B1 or higher),"Hybrid work: 2 days in the office
+Google Cloud certification paid by us
+30 days of paid holiday
+Company pension plan",68000,Start date from November 2026.,"python, sql, bigquery, airflow, spark, data engineering, data modeling, cloud, devops, git, english, german",
+23,Brenner Mobility,Junior Data Platform Engineer,2026-10-02,"Munich, Germany (Hybrid)",Data,"Brenner Mobility runs ride-sharing in five German cities. Our platform team keeps trip and payment data flowing to analysts, and we are looking for an engineer who likes reliable, boring infrastructure.","Maintain batch pipelines with Airflow and PySpark
+Run PostgreSQL and MongoDB databases, including backups and recovery
+Build internal APIs with FastAPI
+Containerise services with Docker and keep local and production setups in sync
+Write tests and standard operating procedures for the team
+Help analysts get fast, correct access to data",Python; SQL; PostgreSQL; MongoDB; Data engineering and ETL; Apache Airflow; PySpark; Docker; FastAPI; Cloud; Git; English (C1); German (B1 or higher),"Hybrid work
+Free rides and Deutschlandticket
+28 days of paid holiday
+Mentoring from senior engineers",60000,Graduates with production IT operations experience are welcome.,"python, sql, mongodb, data engineering, airflow, spark, devops, backend, cloud, git, english, german",
+24,Kaufwerk Digital,Analytics Engineer,2026-10-02,"Munich, Germany (Hybrid)",Data,Kaufwerk Digital runs online shops for mid-sized German retailers. Our analytics engineers sit between data engineering and BI: they own the models every dashboard is built on.,"Build and test data models in BigQuery
+Schedule transformations with Airflow
+Harmonise definitions across source systems with data owners
+Serve models to Power BI and Looker Studio dashboards
+Automate data quality checks in Python
+Keep transformation code in Git with code review",SQL; BigQuery; Data modelling; Data engineering and ETL; Apache Airflow; Python; Looker Studio; Power BI; Git; Google Cloud Platform; English (C1); German (B1 or higher),"Hybrid work
+EUR 1,000 yearly learning budget
+30 days of paid holiday
+Home office equipment budget",64000,Experience with dbt is a plus but not required.,"sql, bigquery, data modeling, data engineering, airflow, python, looker studio, power bi, git, cloud, english, german",
