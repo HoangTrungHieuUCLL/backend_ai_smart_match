@@ -1,7 +1,8 @@
 import logging
 from typing import Any
 
-from fastapi import APIRouter, Body, Depends, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, Body, Depends, File, Form, Header, HTTPException, UploadFile
+from fastapi.security import HTTPAuthorizationCredentials
 from fastapi.concurrency import run_in_threadpool
 from sqlalchemy.orm import joinedload
 from sqlalchemy.orm import Session
@@ -9,7 +10,7 @@ from sqlalchemy.orm import Session
 from app.database import SessionLocal
 from app.models.cv import CompatibilityScore, Profile
 from app.service.bert_cv_classifier import get_bert_classifier
-from app.service.auth import require_admin
+from app.service.auth import auth_service, security
 from app.service.cv import CVService
 from app.service.cv_embedding_service import embed_skills
 from app.service.cv_parsing_service import CVParsingService
@@ -298,6 +299,7 @@ async def upload_cv_with_form_data(
     return {
         "message": "CV processed and saved",
         "cv_id": profile.cv_id,
+        "delete_token": auth_service.create_cv_delete_token(profile.cv_id),
         "profile_id": profile.id,
         "compatibility_scores": scores,
         "ai_result": ai_result_dict,
@@ -382,8 +384,21 @@ def get_extracted_cv_data(
 def delete_cv(
     cv_id: int,
     db: Session = Depends(get_db),
-    admin=Depends(require_admin),
+    credentials: HTTPAuthorizationCredentials | None = Depends(security),
+    x_cv_delete_token: str | None = Header(None),
 ):
+    # Uploader (incl. guests) proves ownership with the delete token returned on upload.
+    # Otherwise: admins can delete any CV, users only the one matching their login email.
+    if not auth_service.verify_cv_delete_token(cv_id, x_cv_delete_token):
+        if credentials is None or credentials.scheme.lower() != "bearer":
+            raise HTTPException(status_code=401, detail="Authentication required")
+        user = auth_service.verify_access_token(credentials.credentials)
+        if user.get("role") != "admin":
+            profile = db.query(Profile).filter(Profile.cv_id == cv_id).first()
+            owner_email = (profile.email or "").strip().lower() if profile else ""
+            if not owner_email or owner_email != str(user.get("sub", "")).strip().lower():
+                raise HTTPException(status_code=403, detail="You can only delete your own CV")
+
     service.delete_CV_by_id(db, cv_id)
 
     return {"message": "CV deleted successfully", "cv_id": cv_id}
@@ -436,6 +451,7 @@ async def parse_cv(
     return {
         "message": "CV processed and saved",
         "cv_id": profile.cv_id,
+        "delete_token": auth_service.create_cv_delete_token(profile.cv_id),
         "profile_id": profile.id,
         "compatibility_scores": scores,
         "cv_file_name": generated_cv_name,

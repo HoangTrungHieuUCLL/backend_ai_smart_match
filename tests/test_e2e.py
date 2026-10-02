@@ -140,3 +140,37 @@ def test_create_job_endpoint_returns_created_job(monkeypatch):
     assert response.json()["id"] == 123
     assert response.json()["position"] == "Data Analyst"
     assert response.json()["requirements_embedding"] == [0.1, 0.2, 0.3]
+
+
+def test_delete_cv_allows_uploader_owner_and_admin_only(monkeypatch):
+    class OwnedProfileDB:
+        def query(self, model):
+            return self
+
+        def filter(self, *args):
+            return self
+
+        def first(self):
+            return SimpleNamespace(email="Owner@Example.com")
+
+    app = FastAPI()
+    app.include_router(cv_routes.router)
+    app.dependency_overrides[cv_routes.get_db] = lambda: OwnedProfileDB()
+    deleted = []
+    monkeypatch.setattr(cv_routes.service, "delete_CV_by_id", lambda db, cv_id: deleted.append(cv_id), raising=False)
+    client = TestClient(app)
+
+    def delete_as(email, role):
+        token = auth_service.create_access_token(email, role)
+        return client.delete("/cv/5", headers={"Authorization": f"Bearer {token}"})
+
+    assert client.delete("/cv/5").status_code == 401
+    assert delete_as("someone@example.com", "user").status_code == 403
+    assert delete_as("owner@example.com", "user").status_code == 200
+    assert delete_as("admin", "admin").status_code == 200
+
+    guest_token = auth_service.create_cv_delete_token(5)
+    assert client.delete("/cv/5", headers={"X-CV-Delete-Token": guest_token}).status_code == 200
+    assert client.delete("/cv/6", headers={"X-CV-Delete-Token": guest_token}).status_code == 401
+    assert client.delete("/cv/5", headers={"X-CV-Delete-Token": "forged"}).status_code == 401
+    assert deleted == [5, 5, 5]

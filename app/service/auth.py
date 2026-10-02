@@ -56,6 +56,13 @@ class AuthService:
 
         return payload
 
+    def create_cv_delete_token(self, cv_id: int) -> str:
+        # Handed to whoever uploaded the CV so guests (no account) can delete it later.
+        return self._sign(f"cv-delete:{cv_id}")
+
+    def verify_cv_delete_token(self, cv_id: int, token: str | None) -> bool:
+        return bool(token) and hmac.compare_digest(token, self.create_cv_delete_token(cv_id))
+
     def _sign(self, value: str) -> str:
         digest = hmac.new(
             AUTH_SECRET_KEY.encode("utf-8"),
