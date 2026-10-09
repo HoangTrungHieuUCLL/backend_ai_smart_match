@@ -27,14 +27,6 @@ class Settings:
         "LINKEDIN_REDIRECT_URI",
         "http://localhost:8000/auth/linkedin/cv-callback",
     )
-    LINKEDIN_LOGIN_REDIRECT_URI = os.getenv(
-        "LINKEDIN_LOGIN_REDIRECT_URI",
-        "http://localhost:8000/auth/linkedin/login-callback",
-    )
-    LINKEDIN_REGISTER_REDIRECT_URI = os.getenv(
-        "LINKEDIN_REGISTER_REDIRECT_URI",
-        "http://localhost:8000/auth/linkedin/register-callback",
-    )
     FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
     CORS_ORIGINS = os.getenv("CORS_ORIGINS", "")
     SEED_ON_STARTUP = os.getenv("SEED_ON_STARTUP", "true").lower() == "true"
@@ -56,8 +48,6 @@ AUTH_TOKEN_EXPIRE_SECONDS = settings.AUTH_TOKEN_EXPIRE_SECONDS
 LINKEDIN_CLIENT_ID = settings.LINKEDIN_CLIENT_ID
 LINKEDIN_CLIENT_SECRET = settings.LINKEDIN_CLIENT_SECRET
 LINKEDIN_REDIRECT_URI = settings.LINKEDIN_REDIRECT_URI
-LINKEDIN_LOGIN_REDIRECT_URI = settings.LINKEDIN_LOGIN_REDIRECT_URI
-LINKEDIN_REGISTER_REDIRECT_URI = settings.LINKEDIN_REGISTER_REDIRECT_URI
 FRONTEND_URL = settings.FRONTEND_URL
 CORS_ORIGINS = settings.CORS_ORIGINS
 SEED_ON_STARTUP = settings.SEED_ON_STARTUP
